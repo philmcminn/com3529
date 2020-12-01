@@ -1,0 +1,8 @@
+#########
+# BUILD #
+#########
+*.pdf
+
+# re-include subdirectories here
+# e.g.
+# !slides/*

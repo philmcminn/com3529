@@ -1,0 +1,43 @@
+\input{common/setup}
+
+\begin{document}
+
+\title{Week 1 Practical --- Fundamentals of Software Testing}
+
+\begin{enumerate}
+
+    \item Do the ``Who Wants To Be A Software Tester?'' Quiz for this week.
+    If you're unclear about any of the answers then ask!
+
+    \item Clone the examples repository (\examplesrepourl) for the module, and
+    set things up on your own machine (or on Codio) following the instructions
+    in the {\tt README.md} file.
+
+    \item Navigate to the \examplespackage~package, and open the \weekonepracticalclass
+    class. The class contains four methods. For each method:
+
+        \begin{enumerate}
+
+            \item Identify the fault.
+            
+            \item If possible, write a JUnit test case that does {\it not} execute the fault.
+            
+            \item If possible, write a JUnit test case that executes the fault, but
+            does not infect the program state.
+
+            \item If possible, write a JUnit test case that causes an infection,
+            but {\it not} a failure.
+
+            \item For the given test case, identify the first infected
+            (i.e., erroneous) program state. Be sure to describe the complete
+            state.
+            
+            \item Fix the fault and verify that the given test now produces the
+            expected output.
+
+
+        \end{enumerate}
+
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,200 @@
+\input{common/setup}
+
+\begin{document}
+
+\title{2.1 An Introduction to Coverage Criteria for Testing}
+
+\section{Recap --- Why Testing is a Hard Problem}
+
+\note{Video}{Talking Head}
+
+Last week, we discussed three key reasons why exhaustive testing of a problem is
+generally impossible:
+
+\note{Video}{First Slide}
+
+\begin{enumerate}
+
+    % Video suggestion! get a false beard and stroke it in a difficult
+    % decision-making way
+
+    \item {\bf Testing is Undecidable}. Testing is equivalent to the
+    {\it The halting problem}. In general, we cannot know if the program will
+    terminate with our test inputs.
+
+    % Video suggestion! chuck a load of balls on me or throw marbles everywhere
+
+    \item {\bf Exhaustive Testing is Intractable} for any reasonably-sized
+    program, because the size of the input domain is too large or infinite to
+    check every input.
+
+    % Video suggestion! dress up as a fortune teller
+
+    \item {\bf Testing involves the Oracle Problem}. As well as executing the
+    software with an input, we need to check that the outputs are correct for
+    each input. Doing this manually is error-prone in itself, constructing a
+    reliable automated oracle is as hard as constructing the program in the
+    first place.
+
+\end{enumerate}
+
+Since we cannot test with {\it all} inputs, we have to decide which ones we're
+going to use... 
+
+{\bf Coverage criteria} help us to decide how to do exactly that. 
+
+\note{Video}{Title Slide}
+
+\section{What is a Coverage Criterion?}
+
+\note{Video}{Advance slide, and click once to fill the circle}
+
+A coverage criterion takes some representation or aspect of a piece of software
+and divides it up into a series of features. The coverage criterion produces a
+series of test requirements based that the test suite should have, based on each
+feature. 
+
+By ensuring that our test suite fulfils each of these test requirements, we're
+ensuring that it has a certain set of properties that we care about. 
+
+\note{Video}{Click once to cover an element}
+
+When a test case in the suite fulfils a given test requirement, that requirement
+(or the software feature that the test requirement is associated with) is said
+to be {\bf covered}. 
+
+\note{Video}{Talking Head}
+
+A simple, well-known coverage criterion that you may already have encountered is
+{\bf Statement Coverage}. Statement Coverage divides a program up statement by
+statement, and generates one test requirement for each statement of a program.
+The requirement is that at least one test case of the test suite executes that
+statement. 
+
+Statement Coverage makes sense as a kind of testing ``baseline'', because it
+makes sense to have exercised each line of code in our software at least once
+before releasing it. 
+
+As well as ensuring our test suites have a certain set of properties deemed to
+be ``good'' for testing, coverage criteria give us rules {\bf as to when stop
+testing}. Once we've attempted to cover each requirement of the criterion, we
+have all the properties imbued by the criterion in our test suite. For this
+reason, coverage criteria are also known as {\it test adequacy criteria}'',
+because the criteria dictate when a test set is deemed to ``adequately'' test a
+program. 
+
+\note{Video}{Click through to get the measurement}
+
+Typically, {\bf coverage is reported as a percentage} --- {\bf the percentage of
+test requirements satisfied by the test suite}. So for Statement Coverage, the
+percentage is the number of lines executed at least once by the test suite.
+
+We will discuss, as part of lectures of this module, whether attaining 100\%
+coverage is always a good idea. However, even if we wanted to get 100\%
+coverage, it may not always actually be possible, due to {\bf infeasible test
+requirements}. For example, with Statement Coverage, this could be due to dead
+code, i.e., code that is unreachable and can never be executed. 
+
+\note{Video}{Talking Head}
+
+{\bf Does attaining 100\% coverage for a coverage criterion ensure our program
+is bug-free? No.} As we said before, the purpose of coverage criteria is to
+generate test requirements and measure how many of those requirements we've
+actually managed to satisfy. But they still cannot provide guarantees that our
+code is bug-free, even after testing. Take for example Statement Coverage. Even
+if we have achieved 100\% coverage and have executed all statements, and thereby
+{\it all faults too}, remember the RIPR model from the last lecture --- the
+effects of those faults may not propagate to the output as observable failures.
+To ensure propagation certain inputs may be needed that we cannot guarantee to
+have chosen just by executing each program statement. And we'd still need to
+design appropriate assertions to catch the failures.
+
+As a result of this, testers have designed different kinds of coverage criteria,
+some more advanced than others, in the hope of making it more likely that more
+bugs will be caught. This can lead to a hierarchies of coverage criteria, {\bf
+where some criterion ``includes'' all the test requirements of another. In this
+instance, one coverage criterion is said to ``subsume'' the other}. 
+
+The problem is that more advanced criteria tend to involve more test
+requirements and hence more tests. So a balance has to be struck between
+thorough testing and the amount of testing that can feasibly be achieved. 
+
+\note{Video}{Back to slides, next slide. Click for each heading}
+
+\section{Coverage: Important Definitions}
+
+Before we move on to consider some of these more advanced criteria, let's define
+some terms we've been using more thoroughly:
+
+{\bf Test Requirement:} A test requirement is an aspect of a software artifact
+that a test case must exercise or ``cover''. 
+
+Note that a test requirement is {\it not} the same as a test case. A test
+requirement is a goal that should be achieved by the final test suite. A test
+case satisfies test requirements with concrete inputs to the software, along
+with the expected outputs for those inputs. A test case may fulfil many test
+requirements, and a test requirement may be fulfilled by more than one test
+case. That is to say, there is not necessarily a one to one mapping between test
+cases and test requirements.
+
+% Example - statement coverage 
+% test requirement: execute statement on line 8
+% test case -- inputs to cover line 8
+% test case also covers other lines
+% other test cases may also cover line 8 to cover other lines.
+
+{\bf Infeasible Test Requirement:} An infeasible test requirement is a test
+requirement that is impossible to satisfy.
+
+% Example 
+
+{\bf Coverage Criterion:} A coverage criterion is rule or collection of rules
+that produce a set of test requirements for a test suite.
+
+{\bf Coverage Level:} The coverage level for a test suite is the percentage of
+test requirements satisfied by that test suite for some coverage criterion.
+
+% could use a real tool like JaCoCo
+
+{\bf Coverage Criteria Subsumption:} A coverage criterion $C_1$ is said to {\it
+subsume} some other coverage criterion $C_2$ if the test requirements of $C_1$
+and $C_2$ are not identical, but in satisfying all the test requirements of
+$C_1$, all the test requirements of $C_2$ will also be satisfied.
+
+This may seem like more of an abstract comment at the moment, but you will see
+why it is important later in the course. 
+
+\note{Video}{Advance slide}
+
+\section{``White-Box'', ``Black-Box'', and ``Grey-Box'' Coverage Criteria}
+
+When talking about coverage criteria, testers often talk about {\bf white-box}
+and {\bf black-box} testing to distinguish whether test requirements are derived
+from the code or make no reference to the way that it has been programmed or its
+structure. 
+
+If we cannot ``see into'' the software's internals, we're treating it as a
+``black box'', hence {\bf Black-Box Coverage Criteria}. Black-Box criteria are
+directly based off requirements, or designs or abstract models of the software,
+such as finite state machines. 
+
+The opposite of treating the software as a black box is to peer inside it and
+look at its internals --- that is, the code. Hence {\bf White-Box Coverage Criteria}
+derive test requirements from the code itself. White-box coverage criteria are
+often more simply known as {\bf Code Coverage Criteria}. Statement Coverage is
+an example of a white-box (code) coverage criterion. 
+
+\note{Video}{Click to reveal grey-box}
+
+Furthermore, {\bf Grey-Box Coverage Criteria} are those that make use of a mix of
+artefacts considered ``white box'' and ``black box''. 
+
+In the remainder of this lecture, I will introduce the most common white-box
+coverage criteria. Next week's lecture will look at testing based on Input
+Domain Analysis, which makes use of both knowledge about the code and its
+requirements, and is hence grey-box.
+
+Later in the course, Rob will introduce some black-box methods, for example those
+based on state machines.
+
+\end{document}

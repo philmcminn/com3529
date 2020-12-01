@@ -1,0 +1,39 @@
+\input{common/latex-teach-common/page-setup}
+\input{common/latex-teach-common/packages}
+\input{common/latex-teach-common/macros}
+
+\renewcommand{\title}[1]{
+    \moduletitle{Com3529}{Software Testing \& Analysis}{#1}
+}
+
+% URLs
+\newcommand{\examplesrepourl}{\url{https://github.com/philmcminn/com3529-examples}\xspace}
+\newcommand{\centredexamplesrepourl}{\begin{center}\examplesrepourl\end{center}}
+
+% Code snippets
+\newcommand{\code}[1]{\mbox{\tt #1}\xspace}
+
+% Packages
+\newcommand{\examplespackage}{\code{uk.ac.shef.com3529.examples}}
+\newcommand{\testspackage}{\code{uk.ac.shef.com3529.tests}}
+
+% Classes
+\newcommand{\calendarclass}{\code{Calendar}}
+\newcommand{\signutilsclass}{\code{SignUtils}}
+\newcommand{\spacedefenderclass}{\code{SpaceDefender}}
+\newcommand{\stringutilsbuggyoneclass}{\code{StringUtilsBuggy1}}
+\newcommand{\triangleclass}{\code{Triangle}}
+\newcommand{\weekonepracticalclass}{\code{Week1Practical}}
+\newcommand{\teststringutilsbuggyoneclass}{\code{TestStringUtilsBuggy1}}
+
+% Methods
+\newcommand{\classifymethod}{\code{classify}}
+\newcommand{\daysbetweentwodatesmethod}{\code{daysBetweenTwoDates}}
+\newcommand{\signmethod}{\code{sign}}
+
+% for logic tables
+\newcommand{\LTTrue}{T}
+\newcommand{\LTFalse}{F}
+
+
+\booltrue{shownotes}

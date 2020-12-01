@@ -1,0 +1,77 @@
+1) Which of the following is a false statement?
+
+A. Software testing can show the presence of bugs, but not their absence
+B. Exhaustive software testing is intractable
+C. Finding all bugs is uncomputable
+* D. Solving the software testing problem is equivalent to finding a way to
+execute a piece of software will all possible inputs 
+
+2) Which of the following is the most "mature" view of Software Testing, according
+to Beizer?
+
+A. The purpose of software testing is to show that software doesn't work
+B. There's no difference between testing and debugging
+* C. Testing is a mental discipline that helps all IT professional develop
+higher quality software
+D. The purpose of software testing is not to show anything in particular, but to
+reduce the risk of using software
+
+3) In the context of Software Testing, RIP stands for:
+
+A. Rest In Peace
+* B. Reachability, Infection, Propagation
+C. Revealability, Infection, Propagation
+D. Runability, Infection, Propagation
+
+4) Which of the following is a true statement?
+
+A. Failures and Test Failures mean the same thing
+B. Testing and Debugging are the same thing
+C. Bugs, faults, and failures are all the same thing
+* D. A test set and a test suite mean the same thing
+
+5) A test case has four ingredients:
+
+1. The inputs necessary to put the software into the appropriate state for
+testing
+2. The actual test case values
+3. The expected results of the test
+4. Reset of the system state
+
+Which of the four ingredients may not be required in every case?
+
+A. 1 only
+* B. 1 and 4
+C. 4 only
+D. 1, 3, and 4
+
+6) In RIPR, the second 'R' could be satisfied by
+
+A. Performing Regression Testing
+* B. An assertion examining the right part of a program's output
+C. A test using an input that reaches a fault in the program 
+D. Relaying the output of a program to a test oracle
+
+7) Consider the following statements:
+
+1. Faults of omission are caused by missing tests
+2. Faults of commission are when the program code goes beyond its requirements 
+3. Since programmers write program code, they are ultimately the ones at fault for software
+bugs
+4. Some types of test are better at detecting faults of omission, some are
+better at detecting faults of commission 
+
+Which of the above statements are true?
+
+* A. 2 and 4 only
+B. 1, 3 and 4
+C. All of them
+D. 2 and 3 only
+
+8) Which of the following types of testing is NOT a formal part of the V-Model?
+
+A. Acceptance Testing
+B. System Testing
+C. Module Testing
+*D. Regression Testing
+

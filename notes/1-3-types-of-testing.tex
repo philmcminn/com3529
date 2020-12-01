@@ -1,0 +1,246 @@
+\input{common/setup}
+
+\begin{document}
+
+\title{1.3 Types of Testing}
+
+\section{Types of Fault}
+
+\note{Video}{Talking Head}
+
+We tend to think of faults as mistakes in particular lines of program code, as
+with our example. But the fault could also be to do with missing code --- i.e.,
+code that is not there but should be. 
+
+For this reason, it is helpful to think about faults in terms of whether they
+are {\it faults of omission} or {\it faults of commission}. 
+
+\note{Video}{First slide}
+
+{\bf Faults of omission} are when the code {\it doesn't} do something it is
+supposed to. That is, the code does not implement some functionality that it
+should. For example, a requirement that was left unspecified, or which the
+developer simply forgot about. 
+
+{\bf Faults of commission} are when the code does something {\it more} that it
+is supposed to do. For example, a C program iterating beyond the end of an
+array, causing a buffer overflow. 
+
+Hence, faults do not necessarily correspond to an existing code location ---
+both faults of omission {\it and} commission may be caused by code that is
+missing from the implementation. 
+
+You'll see later in the course that different types of testing are better for at
+detecting faults of omission, while others are better at detecting faults of
+commission. 
+
+\note{Video}{Next slide hidden in the presentation, not needed for video}
+
+\section{Who's At Fault for The Fault?}
+
+\note{Video}{Talking Head}
+
+Because failures result from faults in the code, and because code is comes from
+programmers, does that mean the programmer is to blame? Not necessarily.
+Consider the following:
+
+\begin{itemize}
+    \item The original requirements did not forsee future changes. Think about
+    the year 2000 problem for example. In the 1960s, programmers did not forsee
+    their code would still be used in 40 or 50 years time, and only used two
+    digits to store years.
+
+    \item A program behaviour may only become classified as a ``failure'' when
+    the user sees it for the first time. In other words, the programmer did not
+    know the behaviour they were programming was actually incorrect.
+
+    \item In a modular program, a failure may occur because of incompatible
+    interfaces of two modules.
+
+    \item In a distributed program, a failure may be the result of some
+    unpredictable interaction of components. 
+
+\end{itemize}
+
+This points to the need for different types of testing that target different
+aspects of the software lifecycle, something formalised by the ``V-Model''.
+
+\note{Video}{Cut to introduction slide}
+
+\section{The V-Model}
+
+\note{Video}{Next slide}
+
+Tests can be derived from requirements and specifications, design artifacts, and
+the source code. A different level of testing accompanies each distinct software
+development activity. 
+
+\note{Video}{Click to reveal each one in the slide}
+
+\begin{itemize}
+
+    \item {\bf Acceptance Testing} --- assess software with respect to requirements
+    
+    \item {\bf System Testing} --- assess software with respect to its
+    architectural design 
+
+    \item {\bf Integration Testing} --- assess software with respect to
+    subsystem design
+
+    \item {\bf Module Testing} --- assess software with respect to detailed design
+    
+    \item {\bf Unit Testing} --- assess software with respect to its implementation
+
+\end{itemize}
+
+\note{Video}{Next slide}
+
+These types of testing can be organised into the ``V-Model'', which illustrates
+a typical scenario for testing levels and how they related to software
+development activities by isolating each step. Information for each test level
+is typically derived from the associated development activity. Indeed, standard
+advice is to design the tests concurrently with each development activity, even
+though the software will not be in an executable form until the implementation
+phase. The reason for this advice is that the mere process of explicitly
+articulating tests can identify defects in design decisions that otherwise
+appear reasonable. Early identification of defects is by far the best means of
+reducing their ultimate cost. 
+
+\note{Video}{Click to reveal the caution!}
+
+Note that the V-Model is {\bf not intended to mirror the waterfall methodology
+or imply a waterfall-type process to engineering software}. The synthesis and
+analysis activities generically apply to any software development process.
+
+\note{Video}{Click to highlight each of these:}
+
+The {\bf requirements analysis} phase of software development captures the
+customer's needs. {\bf Acceptance Testing} is designed to determine whether the
+completed software in fact meets these needs. In other words, acceptance testing
+probes whether the software does what the users want. Acceptance testing must
+involve users or other individuals who have strong domain knowledge.
+
+The {\bf architectural design} phase of software development chooses components
+and connectors that together realise a system whose specification is intended to
+meet the previously identified requirements. {\bf System Testing} is designed to
+determine whether the assembled system meets its specifications. It assumes that
+the pieces work individually, and asks if the system works as a whole. This
+level of testing looks design and specification problems. It is a very expensive
+place to find lower-level faults and is usually not done by the programmers, but
+a separate testing team.
+
+The {\bf subsystem design} phase of software development specifies the structure
+and behaviour of subsystems, each of which is intended to satisfy some function
+in the overall architecture. Often the subsystems are adaptations of previously
+developed software. {\bf Integration Testing} is designed to to assess whether
+the interfaces between modules in a given subsystem have consistent assumptions
+and communicate correctly. Integration testing must assume that modules work
+correctly. 
+
+The {\bf detailed design} phase of software development determines the structure
+and behaviour of individual modules. A program {\it unit}, or procedure, is one
+of more contiguous program statements, with a name that other parts of the
+software use to call it. Units are called {\it methods} in Java.
+A {\it module} is a collection of related units that are assembled in a file,
+package, or class. {\bf Module Testing} is designed to assess individual modules
+in isolation, including how the component units interact with each other and
+their associated data structures. Most software development organisations make
+module testing the responsibility of the programmer. 
+
+{\bf Implementation} is the phase of software development that actually produces
+code. {\bf Unit Testing} is designed to assess the units produced by the
+implementation phase and is the ``lowest'' level of testing. In some cases, such
+as when building general-purpose library modules, unit testing is done without
+knowledge of the encapsulating software application. As with module testing,
+most software development organisations make unit testing the responsibility of
+the programmer. 
+%
+It is straightforward to package unit tests together with the corresponding
+code through the use of tools such as {\it JUnit} for Java classes.
+
+\note{Video}{Click to highlight regression testing:}
+
+Not shown by the V-Model is {\bf Regression Testing}, a standard part of the
+maintenance phase of the software development. Regression Testing is testing
+that is done after changes are made to the software's implementation, and its
+purpose is to help ensure that the updated software still possesses the
+functionality it had before the updates. 
+
+\note{Video}{Advance to next slide to reveal vanilla V-Model}
+
+Mistakes in requirements and high-level designs wind up being implemented as
+faults in the program; and as such testing can reveal them. Unfortunately, the
+software faults that come from requirements and design mistakes are visible only
+through testing months or years after the original mistake. The effects of the
+mistake tend to be dispersed throughout multiple software components (unlike our
+original example!), hence such faults are usually difficult to pin down and
+expensive to correct. 
+
+\section{Closing Examples}
+
+\note{Video}{Advance slide, and show video}
+
+% Original video source
+% https://www.youtube.com/watch?v=kYUrqdUyEpI&ab_channel=TopQuark
+
+\note{Video}{Talking head}
+
+Some faults can only be found at the system level. One dramatic example was the
+launch failure of the first Ariane 5 rocket, which exploded 37 seconds after
+liftoff on June 4, 1996. The low-level cause was an unhandled floating-point
+conversion exception in an inertial guidance system function. It turned out that
+the guidance system could never encounter the unhandled exception when used on
+the Ariane 4 rocket. In other words, the guidance system function was correct
+for Ariane 4. The developers of Ariane 5 quite reasonably wanted to re-use the
+successful inertial guidance system from the Ariane 4, but no one re-analysed
+the software in the light of the substantially different flight trajectory of
+Ariane 5. Furthermore, the system tests that would have found the problem were
+technically difficult to execute, and so were not performed. The result was
+spectacular, and expensive.
+
+\note{Video}{Advance slide, zooming Mars Orbiter}
+
+% More info at:
+% https://www.youtube.com/watch?v=5tJPXYA0Nec&ab_channel=TopQuark
+
+Another public failure was the Mars Climate Orbiter of September 1999, which
+crashed due to a misunderstanding in the units of measure used by two modules
+created by two separate software groups. One module computed thruster data in
+non-SI units of pound-force seconds, and forwarded the data to a module that 
+expected it in the SI units of newton-seconds. This is a typical {\it
+integration fault}. However this one was enormously expensive, both in terms of
+money and prestige.
+
+\note{Video}{Advance slide, zooming Pentium Chip}
+
+Finally, one of the best examples of the difference between unit testing and
+system testing can be illustrated in the context of the infamous Pentium bug. In
+1994, Intel introduced its Pentium microprocessor, and a few months later,
+Thomas Nicely, a mathematician at Lynchburg College in Virginia, found that the
+chip gave incorrect answers to certain floating-point division calculations. 
+
+The chip was slightly inaccurate for a few pairs of numbers; Intel claimed
+(probably correctly) that only one in nine billion division operations would
+exhibit reduced precision. The fault was the omission of five entries in a table
+of 1,066 values (part of the chip's circuitry) used by a division algorithm. The
+five entries should have contained the constant +2, but the entries were not
+initialised and contained zero instead. The MIT mathematician Edelman claimed
+that ``the bug in the Pentium was an east=y mistake to make, and a difficult one
+to catch'', an analysis that misses one of the essential points. This was a
+difficult mistake to find during system testing, and indeed, Intel claimed to
+have run millions of tests using this table. But the table entries were left
+empty because a loop termination condition was incorrect; that is, the loop
+stopped storing numbers before it was finished. This turns out to be a very
+simple fault to find during unit testing; indeed, analysis showed that almost
+any unit level {\it coverage criterion} would have found this multimillion dollar
+mistake. 
+
+\note{Video}{Talking head}
+
+We'll be discussing software test coverage criteria in detail in the next
+lecture.
+%
+But that concludes the third part of our introduction to software testing, so
+be sure to tune in next week!
+
+\end{document}

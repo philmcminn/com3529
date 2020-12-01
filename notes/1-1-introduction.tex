@@ -1,0 +1,489 @@
+\input{common/setup}
+
+\begin{document}
+
+\title{1.1 Introduction}
+
+\note{Video}{Change slide on each example}
+
+\section{Examples of High Profile Software Failures}
+
+{\bf Self-Driving Cars.}
+% Sources: https://en.wikipedia.org/wiki/Death_of_Elaine_Herzberg
+% https://arstechnica.com/tech-policy/2018/05/report-software-bug-led-to-death-in-ubers-self-driving-crash/#:~:text=The%20fatal%20crash%20that%20killed,Amir%20Efrati%20reported%20on%20Monday.&text=Unfortunately%2C%20the%20software%20classified%20her,need%20to%20stop%20for%20her.
+In the late evening of March 18, 2018, Elaine Herzberg was pushing her bicycle
+laden with shopping bags across a highway in Arizona, USA. At approximately
+9:58pm she was struck by a prototype Uber self-driving car. The vehicle had been
+in self driving mode for approximately 20 minutes. The car's safety human backup
+driver, was unable to intervene in time to stop the collision. It was later
+reported that the crash occurred because of a bug in Uber's self-driving car
+technology. According to reports, Uber's sensors {\it did} detect Herzberg as
+she crossed the street with her bicycle. However, the software classified her as
+a {\it false positive} and decided it didn't need to stop for her. Ms Herzberg
+later died in hospital.
+
+{\bf Heartbleed --- Open Source Encryption Libraries.}
+% Source:
+% https://www.computerworld.com/article/3412197/top-software-failures-in-recent-history.html
+In April 2014, a member of Google's security team found a flaw in the encryption
+library Open SSL that secures communications over computer networks. Although it
+was quickly patched by most IT firms, the sheer scale of the services affected
+means it is likely that there are still servers out there that remain vulnerable
+to attack. Named ``Heartbleed'', this bug was so notorious it was the first to
+get its own logo!
+
+{\bf Prison Systems.}
+% Source:
+% https://www.computerworld.com/article/3412197/top-software-failures-in-recent-history.html
+In December 2015, a software glitch caused more than 3,200 US prisoners to be
+released early. The software calculated a prisoner's sentence depending on
+good/bad behaviour and was introduced in 2002. According to reports, the problem
+had persisted for 13 years until a new IT boss was appointed and informed
+the governor's office. It is estimated that on average, prisoners were released
+49 days early.
+
+{\bf Divorce Settlements.}
+% Source:
+% https://www.computerworld.com/article/3412197/top-software-failures-in-recent-history.html
+% https://www.theguardian.com/law/2015/dec/17/revealed-divorce-software-error-to-hit-thousands-of-settlements
+Also in December 2015, the UK government's online calculator for calculating
+spouse's financial worth was found to have a fault in ``Form E'' on its website,
+meaning that those calculations were wrong for couples that used the online form
+to process their divorce. According to reports this error has been inflating
+spouse's finances since April 2014, but was only discovered 20 months
+later. According to the Office of National Statistics there were 100,000
+divorces in England and Wales in 2015. However, the true cost of this bug remains
+unknown.
+
+{\bf Meltdown and Spectre --- CPUs.}
+% Source:
+% https://www.computerworld.com/article/3412197/top-software-failures-in-recent-history.html
+At the start of 2018, Google researchers revealed two CPU hardware
+vulnerabilities, known as Meltdown and Spectre, which had affected almost all
+computers on the market. Meltdown primarily affects Intel processors, while
+Spectre affects Intel, AMD and ARM processors. Daniel Gruss, one of the
+researchers that discovered the flaw at Graz University of Technology described
+Meltdown as ``one of the worst CPU bugs ever found''. 
+%
+Although these are both primarily hardware vulnerabilities, they involve
+communication with the operating system to access locations in its memory space.
+%
+Both bugs break the isolation between user applications and potentially the
+operating system, allowing programs to access the memory of other programs, and
+trick them into revealing potentially sensitive information.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+These are just five, high-profile software failures from the last five years.
+There have been many more that I could have chosen! 
+
+\newpage
+
+\note{Video}{Talking head}
+
+\section{Challenging Your Current View of Software Testing}
+
+Let me ask you some questions:
+
+\begin{itemize}
+    \item {\it Do you think software testing is important?}
+    %
+    Even if you did not think so previously, one would hope that those few
+    examples would have convinced you, that yes, software testing is important.
+    
+    \item {\it Do you think software testing is hard?}
+    %
+    Even if you've never had any serious bugs in the programs you've developed,
+    likely you're now thinking that maybe yes, it is hard, otherwise these
+    faults would have been found before the software was released and not
+    wreaked the havoc that they did.
+\end{itemize}
+
+Do you think that:
+
+\begin{itemize}
+    \item {\it Testing is just a form of debugging?}
+
+    \item {\it The purpose of software testing is to show that software works?}
+
+    \item {\it Or, that the purpose of software testing is to show that software doesn't work?}
+
+    \item {\it Or, that the purpose of software testing is not to show anything
+    in particular, but just to reduce the risk of using software?}
+
+    \item {\it Or, do you believe that testing is a mental discipline that helps
+    all IT professionals develop higher quality software?}
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\note{Video}{Title Slide}
+
+\section{Levels of Mature Thinking to Software Testing}
+
+\note{Video}{Advance to Beizer's Maturity Model Slide}
+
+Those last five questions were used by a prominent American Software Engineer
+called Boris Beizer to characterise the maturity of an organisation's approach
+to testing.
+
+But they can also help us too think about what testing is, and our own view of
+testing and our approach to it.
+
+\note{Video}{These appear on the slide bullet-by-bullet – click to proceed to each level}
+
+\begin{itemize}
+    \item[0.] There's no difference between testing and debugging.
+
+    \item[1.] The purpose of software testing is to show that software works.
+
+    \item[2.] The purpose of software testing is to show that the software
+    doesn't work.
+
+    \item[3.] The purpose of software testing is not show anything in
+    particular, but to reduce the risk of using software.
+
+    \item[4.] Testing is a mental discipline that helps all IT professionals
+    develop higher quality software.
+\end{itemize}
+
+The basic, {\it least} mature view of testing is that of {\bf Level~0} --- {\it
+testing is the same as debugging}. At Level~0 thinking, programmers get their
+programs to compile, then debug the programs with a few arbitrary inputs. This
+view does not distinguish between a program's incorrect behaviour and a mistake
+within the program. It also does very little to help develop software that is
+reliable or safe.
+
+In the more advanced {\bf Level~1} view of testing, {\it the purpose of software
+testing is to show that software works}. While a significant step up from the
+naive Level~0, this has the unfortunate problem that in any but the most trivial
+of programs, correctness is virtually impossible to either achieve or
+demonstrate. We'll come back to this point in more detail. 
+
+But just for now, suppose we run a collection of tests and find no failures.
+What do we know? Should we assume that we have good software or just bad tests?
+Since the goal of correctness is impossible, test engineers usually have no
+strict goal, real stopping rule, or formal test technique. If a development
+manager asks how much testing remains to be done, the test manager has no way to
+answer the question. In fact, test managers are in a powerless position because
+they have no way to quantitatively express or evaluate their work.
+
+In a {\bf Level~2} view of testing, {\it the purpose is to show failures}.
+Although looking for failures is certainly a valid goal, it is also a negative
+goal. Testers may enjoy finding the problem, but the developers never want to
+find problems --- they want the software to work. 
+%
+\note{Video}{Next slide}
+%
+The US academic Bill McKeeman characterised this situation quite well when he
+said {\it ``excellent testing can make you unpopular with almost everyone''}!
+
+\note{Video}{Next slide to go back to the list, click to proceed to level 3 and 4}
+
+Level~2 testing puts testers and developers into an adversarial relationship,
+which can be bad for team morale. Beyond that, when our primary goal is to look
+for failures, we are still left wondering what to do if no failures are found.
+Is our work done? Is our software very good, or is the testing weak? Having
+confidence in when testing is complete is an important goal for all testers.
+
+{\bf Level~3} thinking lets us accept the fact that whenever we use software, we
+incur some risk. The risk may be small, and the consequences unimportant, or the
+risk may be great and the consequences catastrophic, but risk is always there.
+
+This allows us to realise that the entire development team wants the same thing
+--- to reduce the risk of using the software. In Level~3 testing, both testers
+and developers work together to reduce risk.
+
+Once the testers and developers are on the same ``team'', an organisation can
+progress to {\bf Level~4} testing. Level~4 testing defines {\it testing as a
+mental discipline that increases quality}. Various ways exist to increase
+quality, of which creating tests that cause the software to fail is only one.
+
+Adopting this mindset, test engineers can become the technical leaders of the
+project (as is common in many other engineering disciples). They have the
+primary responsibility of measuring and improving software quality, and their
+expertise should help the developers.
+
+Beizer used the analogy of a spell checker. We often think that the purpose of a
+spell checker is to find misspelled words. But in fact, the best purpose of a
+spell checker is to improve our ability to spell.
+
+Every time the spell checker finds an incorrectly spelled word, we have the
+opportunity to lear how to spell the word correctly.  The spell checker is the
+``expert'' on spelling quality. In the same way, Level~4 testing means that the
+purpose of testing is to improve the ability of the developers to produce high
+quality software.
+
+Better software testing makes for better software development.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\note{Video}{Advance Why Software Testing is Hard}
+
+\section{Why Software Testing is Hard}
+
+\note{Video}{Talking Head}
+
+The relentless march of computing power is a fundamental force in modern
+society.
+%
+Every year, computer hardware gets better and faster. Every year, the software
+algorithms running on this hardware get better and faster. So it's natural to
+wonder whether there are any limits to this progress, is there anything
+computers can't do?
+
+More specifically, is there anything that computers will {\it never} be able to
+do, no matter how fast the hardware or how smart the algorithms?
+
+Of course, you should know from {\it COM2109, Automata, Computation and
+Complexity}, the answer to this question is {\it yes} --- there {\it are}
+certain tasks that computers will never be able to perform. More than that,
+Computer Scientists have an elegant way of classifying computational problems
+according to whether they can be solved effectively, ineffectively, or not at
+all. 
+
+\note{Video}{Advance to table slide}
+
+This table summarises these three categories of computational problems using the
+terminology {\it tractable} for problems that can be solved efficiently, {\it
+intractable} for problems whose only methods of solution are hopelessly
+time-consuming, and {\it uncomputable} for problems that cannot be solved by any
+computer program. 
+
+\begin{center}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+ & {\bf Tractable}      & {\bf Intractable}    & {\bf Uncomputable} \\
+ & {\bf Problems} ($N$) & {\bf Problems} ($P$) & {\bf Problems} \\
+\midrule
+
+{\bf Description} & 
+Can be solved &
+Method for solving exists, &
+Cannot be solved by \\
+&
+efficiently &
+but is hopelessly time &
+any computer program \\
+&
+& 
+consuming \\
+
+{\bf Computable in theory?} & \cmark & \cmark & \xmark \\
+
+{\bf Computable in practice?} & \cmark & ? & \xmark \\
+
+{\bf Example} & 
+Find the shortest &
+Decryption &
+{\bf Finding all bugs}
+\\
+&
+route on a map &
+&
+{\bf computer programs} \\
+
+\bottomrule   
+\end{tabular}
+\end{center}
+
+{\bf Tractable problems} take polynomial time to solve and belong to the
+complexity class $P$. Several instances of tractable problems exist, and
+the table lists one that you will have come across in {\it COM1009, Introduction
+to Algorithms and Data Structures}, namely {\it the shortest path problem}.
+Given the details of a road network, find the shortest route between any two
+points. Computers can quickly find the optimal solution to this problem even if
+the input consists of every road on earth.
+
+{\bf Intractable problems}, on the other hand, are problems where there is a
+program that can compute the answer, but the program is too slow to be useful
+--- more precisely, it takes too long to solve the problem with ``large''
+inputs. These tend to be problems that take super polynomial or exponential time
+and belong to the complexity class $\mathit{NP}$. Hence, these problems can be
+solved in theory, but currently not in practice (except for small inputs) ---
+and potentially not ever, unless the classic Computer Science conundrum of
+whether $P = NP$ is solved. 
+
+Intractable problems include Decryption, as you will come across in {\it COM3501
+Computer Security and Forensics}, if you are signed up to that module. Given a
+document encrypted with a modern encryption scheme, and without knowledge of the
+decryption key, decrypt the document. Here, the difficulty of decryption depends
+on the size of the decryption key, which is generally thousands of bits long in
+modern implementations. Of course, an encryption scheme would be useless if the
+decryption problem were tractable, so it should be no surprise that decryption
+is believed to be intractable for typical key sizes. For the schemes in common
+use today, it would require at least billions of years, even using the best
+known algorithms on the fastest existing supercomputer, to crack an encryption
+performed with a 4000-bit key. 
+
+Finally, the last column of the table is devoted to problems that are
+uncomputable. These are problems that cannot be solved by any computer program.
+They cannot be solved in practice, and they cannot be solved in theory either.
+
+Finding all bugs in a program, or ``complete software testing'', if you will ---
+and therefore, program correctness --- is in general, uncomputable. 
+
+Think about it --- finding all bugs in a program means that we must have tests
+that execute each input to the program at least once. (In reality, this may {\it
+still} not be sufficient for some types of programs, because there may be other
+things that influence their behaviour\dots but for now let's leave that issue
+for another time!)
+
+Ok, so we try to execute a program with all inputs. If the program seems not
+respond, how do we know if it's entered an infinite loop or not? Or, to put it
+another way, whether it will halt? We cannot be sure that we're going to get an
+``answer'' to our test. Essentially, we've hit on an instance of the halting
+problem, a problem that is known to be {\it undecidable}.
+
+Suppose by some analysis involving the internals of the program, we were able to
+conclude that the program did always terminate. The next problem we encounter is
+that exhaustive testing is likely to be {\it intractable} for a program of any
+reasonable complexity. 
+
+\note{Video}{Cut to demo at this point}
+
+Take the Java method \daysbetweentwodatesmethod Java method that can be found in
+the \calendarclass class of the \examplespackage package of the examples
+repository for this module (available at \examplesrepourl). It takes two dates,
+and computes the number of days between them. The dates are represented by three
+integers each. An {\tt int} ranges from -2,147,483,648 to 2,147,483,647 in Java,
+i.e. has $2^{32}$ possible values. With six {\tt int} inputs that's
+${(2^{32})}^6$, or $2^{192}$, which is approximately $6 \times {10}^{57}$. Even
+for a relatively simple method, that's a large number of inputs to execute.
+Suppose each possible input takes on average one nanosecond to execute. It would
+take ${10}^{41}$ years to try them all!
+
+I don't suggest we do try it, because at some point in that time the sun will
+have exploded and the universe will have ended. Assuming that we survived both
+of those events, this will have been the longest lecture in history, and not one
+that would have been fun for anybody.
+
+Ok, but most of those values are not valid, you may argue. Well, let's hold the
+fact that we need to check for both valid and invalid inputs for a second, and
+concentrate on all valid dates in a reasonable time range, say 1/1/1600 to
+31/12/2099 --- a timespan of 500 years, or 182,622 days (i.e., possible inputs
+for each of the two dates). The dates can appear in any order (earliest or
+largest first), so that's an input domain of ${182,622}^2$ in size, or
+$33,350,794,884$ ($3 \times {10}^{10}$).
+
+\note{Video}{Cut to meme, and let it hang for a second}
+
+\note{Video}{Cut to Dijkstra slide when mentioned}
+
+Ok, you continue to argue, but even still, we don't need every one of those
+inputs to ensure the program is working? Well, this is the essence of the
+software testing problem --- choosing a set of inputs that will reveal as much
+information about the quality of the software as possible. But we don't {\it
+know} that we've selected {\it all} the inputs that will reveal {\it all} of the
+bugs. As the famous Computer Scientist Edsger Dijkstra's commented {\it
+``Software testing can only show the presence, not the absence of failures''}.
+To have a hope of showing all failures, we'd really need to try all inputs. So
+we've come full circle. 
+
+And this is with the {\tt daysBetweenDates} method, a situation where we {\it
+can}, in theory, enumerate all of the inputs. Yet the number of potential inputs
+for most programs is so large that they are effectively infinite. Consider a
+Java compiler --- the number of potential inputs to the compiler is not just all
+Java programs or even all almost correct Java programs, but all strings. The
+only limitation is the size of the file that can be read by the parse.
+Therefore, the number of inputs is effectively infinite, and cannot be
+explicitly enumerated.
+
+\note{Video}{Advance to Oracle slide, click to cross out company logo when mentioned}
+
+Suppose we {\it could} execute the program with all these inputs. We then hit
+upon another problem, which would be how to check that they're all correct! This
+would represent significant manual activity. Ideally, we'd have an automated
+checking process --- an ``{\bf oracle}'', as it's known in testing. (And in case
+you were wondering, the name is nothing to do with the technology company behind
+the Java language.) Constructing a 100\% reliable oracle is almost as difficult
+as writing the program in the first place. This is known as the {\bf oracle
+problem} in software testing.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\note{Video}{Click to advance slide}
+
+\section{The Beginnings of Software Testing as a Subject in Computer
+\mbox{Science}}
+
+{\bf The First Bug.}
+%
+We do not know when the first defect in a program was introduced. We know
+though, when the first actual bug was found. 
+%
+On September 9, 1947, researchers at Harvard University in Cambridge,
+Massachusetts, found that their computer, the Mark II, was delivering consistent
+errors. When they opened the computer's hardware, they found ... a moth.
+%
+Maybe it was in search of plant food, or a warm place to lay its eggs, or both.
+It wandered around in a warm, humming machine that constantly clicked and
+rattled. But suddenly, it got stuck between the metal contacts of a relay ---
+actually, one of 13,000 high performance relays commissioned for this particular
+machine. The current killed it instantly, and its remains caused the machine to
+fail.
+
+The technician taped the moth into the logbook with the comment ``1545 Relay
+\#70 Panel F (moth) in relay. First actual case of bug being found''. The moth
+thus became the living proof that computer problems could indeed be caused by
+actual bugs.
+
+\slide{1-1-first-bug}
+
+\note{Video}{Click to advance slide}
+
+{\bf The First Research Paper on Software Testing.}
+%
+The problem of software testing is as old as the computer itself. The first
+research paper to make mention of software testing may have been by Alan Turing
+in 1949 published in the ``{\it Report of a Conference on High Speed Automatic
+Calculating Machines}'', an inaugural conference in Cambridge.
+
+In the paper, Turing opens with the question ``How can one check a routine in
+the sense of making sure it is right?''. In it, he proposes that a programmer
+should make a number of assertions (not unlike those you'd find in JUnit tests)
+``in order that the man who checks may not have too difficult a task''.
+
+\slide{1-1-turing}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\note{Video}{Click to advance slide}
+
+\section{What You Will Get From This Module}
+
+Hopefully you'll now have an appreciation as to why Software Testing is a hard
+and important problem, and why it requires study.
+
+% It'd be great to be able to say more about Rob's half of the course here
+
+In the first half of this module, you'll gain:
+
+\begin{enumerate}
+
+    \item A deeper understanding of how failures happen, and the difference
+    between faults and failures (Week~1).
+
+    \item An understanding of systematic approaches to Software Testing,
+    underpinned by coverage criteria (Weeks~2 and~3).
+
+    \item Insights into some of the latest automated techniques for test case
+    generation and bug finding, with hands-on practical experience (Weeks~4 and~5).
+
+\end{enumerate}
+
+Each week will be accompanied by a lab sheet that will involve pencil and paper
+problems, as well as practical experience using Software Testing tools.
+
+There will also be a weekly video quiz, called ``Who Wants To Be a Software
+Tester?''. This isn't marked, it's just for fun! Watch it and answer the
+questions to check your understanding of the weekly material.
+
+\note{Video}{Click to advance slide}
+
+Full code examples that appear in the lectures and practicals are available in a
+GitHub repository at:
+
+\centredexamplesrepourl
+
+\end{document}

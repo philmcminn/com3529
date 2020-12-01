@@ -1,0 +1,474 @@
+\input{common/setup}
+
+\begin{document}
+
+\title{2.2 White-Box Coverage Criteria based On\\ Control Flow Analysis}
+
+\note{Video}{Title slide}
+
+\section{Introduction}
+%
+So far, we've met probably the simplest and most well-known coverage criterion
+of all, {\bf Statement Coverage}. Statement Coverage is where each test
+requirement entails that each program statement is executed (covered) by a test
+suite. 
+
+Statement Coverage is a good baseline coverage criterion often used in industry
+because it requires that each line of the code has at been exercised at least
+once in the course of testing before its release.
+
+Statement Coverage belongs to a family of coverage criteria based on the
+control-flow of a program. Coverage criteria in this family are defined in terms
+of the program's {\bf Control Flow Graph (CFG)}, and require that test suites
+execute elements of that graph or particular paths through it. 
+
+These types of coverage criteria are therefore {\bf white-box}, since CFGs are
+derived from program code). Because they ultimately involve executing certain
+types of structures in a piece of code, they are often more commonly referred to
+as {\bf structural coverage criteria} or {\bf code coverage criteria}.
+
+\note{Video}{First slide}
+
+\section{Control Flow Graphs (CFGs)}
+
+\note{Video}{Click to start animation}
+
+Computers execute programs statement by statement, moving to statements
+appearing out of series in different parts of the program, depending on the
+evaluation of different decisions depending on what inputs it was supplied with.
+
+The sequence of statements executed by a program given a particular input is
+referred to as the ``path'' taken through the program. The movement of program
+execution from one particular statement to another is called the ``flow of
+control'' (or simply control flow).
+
+\note{Video}{Next slide}
+
+A Control Flow Graph (CFG) represents all the possibilities for the flow of
+control, i.e., the ways in which a program can move from the execution of each
+statement in the program to another, in the form of an easy-to-visualise graph. 
+
+\note{Video}{Next slide}
+
+In a CFG, nodes represent program statements, and edges represent transfers of
+control from one statement to another. 
+
+\note{Video}{Click to make map appear on slide}
+
+CFGs are a bit like a geographical map, but of a program: the places are program
+statements, and the roads between them are possible ways in which control can
+flow from one statement to another. The possible ``routes'' with the map are
+potential execution paths through the program.
+
+\note{Video}{Next slide}
+
+\subsection{Linear Sequences of Statements}
+
+For linear sequences of statements, CFGs are quite straightforward. Each node
+has a single edge that goes to the next node representing the next statement in
+the program. 
+
+\note{Video}{Next slide}
+
+Linear sequences of statements are so uninteresting they often get merged into
+single nodes that are sometimes referred to as ``basic blocks'', or just
+``blocks''. Things get more complicated when we consider ``if'' and looping
+statements.
+
+\note{Video}{Next slide}
+
+\subsection{``If'' Constructs}
+
+The CFG node for an {\tt if} statement (call this ``$A$'') has two possible
+successor nodes, the node corresponding to the statement when $A$ evaluates to
+true when the program is executed (let's call this ``$B$'') and the node
+corresponding to the statement when $A$ evaluates to false (let's call this
+``C''). Therefore $A$ would have an outgoing edge to $B$ and an outgoing edge to
+$C$ in the graph:
+
+\slide{2-2-if-construct}
+
+The edges are labelled with ``T'' and ``F'' to explicitly show the edges from
+the {\tt if} statement corresponding to the true and false outcomes
+respectively.
+
+We call edges labelled as ``T'' and ``F'' {\bf branches}. We call the edge
+labelled with a ``T'' the {\it true branch} and the edge labelled with an ``F''
+the {\it false branch}. The predicate controlling which branch is taken (the
+condition between the parenthesis in the the {\tt if} statement) is known as the
+{\bf branch predicate}.
+
+\note{Video}{Next slide}
+
+Here's that again, this time with some actual code. 
+
+\slide{2-2-if-construct-code}
+
+This time we've labelled the nodes according to the line numbers that each
+statement appears on. The branches are the edges leading out of node 2, with the
+true branch going from to node 3, while the false branch goes to node 5. The
+branch predicate is the call to the method {\tt isMorning()}, which returns {\tt
+true} or {\tt false}, depending on the time of day.
+
+Note that line 4 doesn't correspond to a node in the graph, because it's not
+really a program statement, it's a delimiter.
+
+However, we {\it did} label line 5 as a node, even though there's only a
+delimiter on that line too --- the end of the method! A complete CFG has special
+entry (``start'') and exit (``end'') nodes to represent the start and end of
+execution of the program, respectively. 
+
+\note{Video}{Next slide}
+
+These nodes are labelled ``s'' and ``e''. If we treat the method as the program,
+we can label it with specific start and end nodes. We can say that the end node
+corresponds to line 5. If there was a specific ``{\tt return}'' statement, that
+instead would represent the end node. Likewise, we can say that the start node
+corresponds to line 1 (the method header).
+
+\note{Video}{Next slide}
+
+Here's a more complicated {\tt if} statement involving {\tt else} clauses, and
+six branches altogether:
+
+\slide{2-2-if-else}
+
+Note that the node that is the end of the {\tt if} construct, which is actually
+the end node for the whole of the method, e, is the successor node for several
+prior nodes, including the following nodes executed when the {\tt if} or a
+particular {\tt else if} is {\tt true} and also {\tt false} for the final {\tt
+else if}.
+
+
+
+\note{Video}{Next slide}
+
+\subsection{``While'' Constructs}
+
+The CFG node for a {\tt while} statement (call this $A$) has two successor nodes
+--- one where the {\tt while} condition is true (let's call this $B$), and one
+where the {\tt while} condition is false (call this $C$). $B$ represents the
+first statement of the loop body, while $C$ is the first statement following the
+loop. 
+
+The edge to $B$ is the true branch from $A$, while the edge to $C$ is the false
+branch. This time, the branching predicate is the {\tt while} condition.
+
+\slide{2-2-while-construct}
+
+There is an edge leading from the last statement of the loop body back to $A$.
+Depending on whether the condition at $A$ is evaluated as true or false or not
+depends on whether control is transferred back to $B$ for a second iteration of
+the loop, or whether the loop has terminated, and control should pass to $C$.
+Note that we do not add edges for each iteration of the loop. (For one, we may
+not know how many iterations the loop has.) Control simply transfers to the
+first node of the loop body, in the same way that control passes from statement
+to statement in the program.
+
+\note{Video}{Next slide}
+
+\subsection{``For'' Constructs}
+
+The subgraphs of the CFG corresponding to {\tt for} constructs is much more
+complicated, not least because the statement involving the {\tt for} keyword is
+consists of three parts and is actually three statements in one. The first part
+(call this $A$) is the loop initialisation statement, where variables
+responsible for iteration are initialised. 
+
+\slide{2-2-for-construct}
+
+The second part is the loop iteration statement ($B$), which controls whether
+the loop body is entered. Finally $C$ is the loop update. So the flow of control
+is from $A$ to $B$. If $B$ is true, the loop body $D$ is entered. Following $D$,
+the loop update statement $C$ is executed, then control passes back to $B$ to
+determine if the loop should iterate a further time. If $B$ is false, the loop
+terminates, and control passes to the first statement after the loop, $E$. 
+
+Since $B$ controls loop iteration, it is also the branch predicate as far as
+{\tt for} loops are concerned. The true branch to $D$ initiates execution of the
+loop body, while the false branch to $E$ terminates the loop.
+
+\note{Video}{Next slide}
+
+\subsection{CFGs for Programs with Multiple Constructs}
+
+Of course, programs in general do not consist of a single {\tt if}, {\tt for},
+or {\tt while}. So far, we've just shown the building blocks. The CFG for the
+{\tt countZeros} method shows an example of this. The {\tt countZeros} program
+takes an array of {\tt int}s and returns a count of the number of elements that
+are equal to zero.
+
+\slide{2-2-count-zeros}
+
+The program has a {\tt for} loop with an {\tt if} statement forming its loop
+body. As such the main form of the CFG for the method is similar to the template
+of a {\tt for} loop, except the body is expanded to account for the {\tt if}
+statement. Notice how we've combined the initial block of statements, from the
+entry node, $s$, to the loop initialisation statement as one node. Note that we
+{\it cannot} include 3b as part of this block, because we need it to directly
+proceed the loop update statement, 3c. 3c does not go back to the start of the
+method, re-executing 2a and 3a {\it before} the loop condition statement 3b.
+
+We'll use the CFG of {\tt countZeros} as the basis of examples of the code
+coverage criteria based on CFGs, i.e. Structural Coverage Criteria.
+
+\note{Video}{Next slide}
+
+\section{Structural Coverage Criteria}
+
+Structural code coverage criteria involve executing different elements or paths
+through the control flow graph.
+
+\subsection{Statement Coverage} 
+
+If our test suite traverses each node of the CFG (i.e., at some point during the
+execution of the tests, each statement in the program being tested has been
+reached), it will have achieved Statement Coverage. 
+
+\note{Video}{Next slide}
+
+For {\tt countZeros}, a test case with the input {\tt x = [0]} would execute all
+nodes. This input takes the path s $\rightarrow$ 2 $\rightarrow$ 3a
+$\rightarrow$ 3b $\rightarrow$ 4 $\rightarrow$ 5 $\rightarrow$ 3c $\rightarrow$
+3b $\rightarrow$ e. In practice, for larger programs, it may not be as easy as
+this! Obtaining full statement coverage may require several test cases. 
+    
+\note{Video}{Next slide}
+
+Like many other subjects in Computer Science, Software Testing is an evolving
+topic with a heavy practical application in the software industry. As such, many
+of the same or roughly equivalent concepts in Software Testing have different
+names. Software Testing feeds from Maths and other areas of Computer Science,
+for example Graph Theory and Program Analysis --- to name just two --- each of
+which have their own sets of terms.
+
+Although it's not critically important to know all of these different terms,
+this background knowledge is sometimes useful to know when somebody is referring
+to something that is the more or less or exactly the same thing as something,
+and not be thrown off by the difference in name. 
+
+We've encountered a few of these already --- for example, ``Structural
+Coverage'' and ``Code Coverage'' basically refer to the same thing. Likewise,
+Statement Coverage exists in many guises:
+
+\note{Video}{These appear one by one in the slide:}
+
+\begin{itemize}
+    \item {\bf Line Coverage.} Obtaining 100\% Statement Coverage ultimately
+    involves executing every line of code (except blank lines and comments,
+    which are not usually intended to affect the behaviour of compiled code).
+    {\it Line Coverage} is commonly a term used in industry to mean Statement
+    Coverage.
+
+    \item {\bf Node Coverage}. Statement Coverage is sometimes loosely referred
+    to as ``Node Coverage'', but usually only in academic circles, and
+    importantly only in the context of the CFG, whose nodes the criterion is
+    interested in. There are many other types of graphs in Software Engineering,
+    so it's important to know the nodes of which type of graph we're talking
+    about!
+    
+    \item {\bf Basic Block Coverage.} Because it involves executing each node of
+    the CFG, and because the nodes of a CFG represent blocks of statements that
+    follow each other sequentially, covering each node of the CFG is also
+    referred to as ``Basic Block Coverage'' or just ``Block Coverage'' for
+    short. In theory, covering an individual statement is not the same as
+    covering the block of sequential statements to which it belongs. In
+    practice, however, individual statements cannot be executed without
+    executing the entire block as well. The term ``basic block'' is mostly due
+    to the compilers community. 
+\end{itemize}
+
+\note{Video}{Next slide}
+
+Note that our test case for obtaining full statement coverage seemed to cover
+every part of the CFG, that is, except the false edge from node 4. 
+
+\note{Video}{Next slide}
+
+Statement Coverage requires we execute every statement, but not necessarily
+every branch in the program (i.e., every true/false decision the program makes).
+This is taken care of by a stronger coverage criterion, Branch Coverage.
+
+\note{Video}{Next slide}
+
+\subsection{Branch Coverage} 
+
+Branch Coverage requires every branch (i.e., every true and false edge in the
+CFG) is executed at least once by the test suite. In executing every true/false
+edge is executed, we will also execute actually all unlabelled edges in the CFG
+too.
+
+The test case {\tt x = [0]} ensures the branch predicate at node 4 is true, and
+so the true branch will be taken. Since the test case involves an array with an
+element in it, the loop is both entered and exited, so that the true and false
+branches from the {\tt for} loop statement (node 3b) are also taken. To execute
+the false branch from node 4, we need a test case that has an element that is
+non-zero, so that the branch predicate at node 4 evaluates to false. We can
+arrange this by updating our existing test case to {\tt x = [0, 1]} or by having
+an additional test case, {\tt x = [1]}.
+
+\note{Video}{Next slide}
+
+Other names for Branch Coverage (or its equivalent) include:
+
+\note{Video}{These appear one by one in the slide:}
+
+\begin{itemize}
+
+    \item {\bf Decision Coverage.} Branches represent the outcome of each {\it
+    decision} made by a program. Hence, Branch Coverage is sometimes also called
+    ``Decision Coverage''.
+
+    \item {\bf Predicate Coverage.} Because taking each branch involves the
+    evaluation of the branch predicates of the program's as true and false in
+    the course of the test suite's execution, Branch Coverage is also referred
+    to as ``Predicate Coverage''.
+
+    \item {\bf Edge Coverage.} Branch Coverage is also known as ``Edge
+    Coverage'' in the context of the CFG. In terms of the CFG, the two are not
+    strictly equivalent, as Branch Coverage is really just concerned with the
+    edges we've labelled ``T'' and ``F'' in our examples. Yet, if these edges
+    are covered, all linear sequences of edges will also be covered. So in
+    practice, Full Edge Coverage and Full Branch Coverage are equivalent to one
+    another.
+
+\end{itemize}
+
+\note{Video}{Next slide}
+
+\subsection{Path Coverage} 
+
+Covering each path through the CFG is the same as executing each path in the
+program, and is known as Path Coverage. In CFG terms, a path is a sequence of
+nodes through the CFG from the start node $s$, to the end node $e$. 
+
+\note{Video}{Next slide}
+
+However, in the presence of loops, there may be an infinite number of paths, so
+obtaining full path coverage for all programs in general is not possible. For
+{\tt countZeros}, the number of possible paths depends on the number of possible
+elements in array --- and array can have up to $2^{32}$ elements!
+
+Instead, a tester may opt to test the so-called ``simple paths'' only --- paths
+that do not execute a particular node in the CFG more than once. Even this may
+result in a large number of paths, however. As such, Path Coverage or Simple
+Path Coverage are rarely applied beyond the individual method or function level.
+
+\note{Video}{Next slide}
+
+\subsection{Infeasible Test Requirements Derived From Control Flow Analysis} 
+
+There is a problem lurking in this example for Branch Coverage. Can you see what
+it is?
+
+\note{Video}{Click to get CFG}
+
+\note{Say}{Maybe it's easier to spot if I show you the CFG:}
+
+\slide{2-2-infeasible-branch}
+
+The false branch from line 11 of the example can never be executed. The variable
+{\tt y} is {\it always} greater than zero by the time it gets to line 11. It
+starts off at zero on line 3. But no matter whatever the value of {\tt x} in the
+decision on line 5, the value of {\tt y} is increased --- on either line 6 or 8.
+If there is no way we can execute it, there will be no test case that can cover
+it.
+
+We say that such branches are {\it infeasible}. 
+
+\note{Video}{Next slide}
+
+\note{Video}{Click to reveal statement info}
+
+This can happen with Statement Coverage too. Because infeasible statements can
+never be executed, they tend to point to dead code. Such statements could/should
+be removed. It may be because they are only executed because of an infeasible
+decision in the code, i.e., an infeasible branch.
+
+\note{Video}{Click to reveal branches info}
+
+Infeasible branches point to redundant decisions in the code. Removing these
+should also be considered. However, sometimes there is a good reason for their
+existence, and a good reason as to why they are infeasible: they could be due to
+some environmental condition that cannot be satisfied during the course of
+testing. For example, the branch condition may test for an out of memory
+condition --- a scenario that is difficult to reproduce during testing, or the
+decision may be only be true when a date-time constraint is satisfied. For
+example, the {\tt isMorning()} branch predicate considered earlier will only
+return true in the morning! To get around these problems, testers sometimes
+write and use {\it mock objects} in unit tests that can stand in for real
+objects. Mock objects simulate the behaviour of an original object while faking
+the environmental conditions that are difficult to reproduce in testing. 
+
+\note{Video}{Click to reveal paths info}
+
+Infeasible paths are not necessarily the result of redundancy. Not all the paths
+through the CFG are actually possible to take in actual program code.  It may
+not be possible to take certain paths in the code, for example, because of
+earlier decisions made in the path that rules out different possibilities later
+down the line. This is another significant problem for Path Coverage. Detecting
+infeasible paths is as hard as finding all bugs --- in general it is equivalent
+to the Halting Problem. At best, it is an intractable problem.
+
+All in all, infeasible paths are a more common occurrence than infeasible
+branches, which turn are more common than infeasible statements --- or in other
+words, the more complex the coverage criterion. 
+
+\note{Video}{Next slide}
+
+\subsection{Subsumption of Coverage Criteria Derived from the Control Flow Graph} 
+
+\note{Video}{Click to reveal hierarchy}
+
+Note that achieving full Branch Coverage means we've covered all the statements
+in the program too --- i.e., we get Full Statement Coverage as well. Likewise,
+if we achieve full Path Coverage, we get full Branch Coverage, which in turn
+assures us of full Statement Coverage. In other words, these criteria form a
+subsumption hierarchy. Path Coverage subsumes Branch Coverage, which in turn
+subsumes Statement Coverage.
+
+\note{Video}{Next slide}
+
+\subsection{When to Use Structural Coverage Criteria} 
+
+So, to conclude this part, when should we use Structural Coverage Criteria in
+testing?
+
+\note{Video}{Click to reveal}
+
+The truth is that structural coverage tends to be used more as a metric to
+indicate test suite quality than a method for {\it manually} developing test
+cases and test suites. (We will come back to this point when we consider {\it
+automated} test case generators in Week 4.)
+
+That is, the level of structural coverage obtained by a test suite is useful for
+helping us understand how {\it much} of our code has been executed by an
+existing test suite, rather than writing tests, per se.
+
+\note{Video}{Click to reveal}
+
+The rationale for this is fairly simple: you wouldn't necessarily want to
+release parts of your software if it hadn't been exercised by at least one test.
+However, slavishly adding more and more tests with the aim of specifically
+achieving 100\% Structural Coverage is seldom a worthwhile endeavour either. It
+is better to go back to the design of your tests and consider why these cases
+were missed in the first place, and whether the cost of writing them and adding
+them to your test suite justifies the effort to do so.
+
+\note{Video}{Click to reveal}
+
+As such, the simplest form of structural coverage, Statement (or Line) Coverage
+is frequently used metric in industry, and there are many tools available that
+support its measurement. 
+
+\note{Video}{Click to reveal}
+
+Yet, Branch Coverage is a stronger criterion, and is obtainable without much
+more additional effort. 
+
+\note{Video}{Click to reveal}
+
+Path Coverage, as the strongest criterion, however, is not seldom used and is
+often intractable.
+
+\end{document}

@@ -1,0 +1,15 @@
+\dots\\
+\verb$boolean yearSame = year2 == year1;$\\
+\verb$boolean yearAndMonthSame = yearSame && month2 == month1;$\\
+\verb$$\\
+\verb$boolean secondDateBeforeFirstByYear = year2 < year1;$\\
+\verb$boolean secondDateBeforeFirstByMonth = yearSame && month2 < month1;$\\
+\verb$boolean secondDateBeforeFirstByDay = yearAndMonthSame && day2 < day1;$\\
+\verb$$\\
+\verb$boolean secondDateBefore = secondDateBeforeFirstByYear ||$\\ 
+\verb$            secondDateBeforeFirstByMonth || secondDateBeforeFirstByDay;$\\
+\verb$$\\
+\verb$if (secondDateBeforeFirst) { $\\
+\verb$    $ \dots\\
+\verb$}$\\
+\dots\\

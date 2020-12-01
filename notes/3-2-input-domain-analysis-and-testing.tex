@@ -1,0 +1,687 @@
+\input{common/setup}
+
+\begin{document}
+
+\title{3.2 Grey-Box Coverage Criteria based On \\ Input Domain Analysis}
+
+\section{Test Equivalence}
+%
+\note{Video}{Show bag of Haribo.}
+
+Suppose I want to try all the sweets in a bag of Haribo, but I don't want to eat
+the whole pack --- because that would be greedy, and I'd put on weight.
+
+\note{Video}{Show an empty packet, but me really fat with a cushion up my top}
+
+If I was to take an organised and systematic approach to this problem, I could
+empty the sweet packet out into a big bowl, and sort them into smaller bowls,
+by type -- one bowl for the cola bottles, one for the fried eggs, and so on.
+Once they were sorted into bowels, I could try one sweet from each bowel, on the
+assumption that one of each type of sweet will taste the same as all the others
+of that type. 
+
+\note{Video}{Show me taking a sweet from each bowel. Mmmm!}
+
+\note{Lecture}{This could be interactive. You could ask the audience how to
+solve the ``Haribo problem''. While they may say to try one of each type, ask
+how would I know I've got all the types... Could ask a student to test a couple
+of sweets in the whole bowel.}
+
+In a very fundamental way, all testing is about choosing elements from the input
+space of the software being tested. 
+
+We can view all coverage criteria as defining ways to divide the input space
+according to its test requirements. 
+
+Given a set of inputs that can satisfy a particular test requirement, the
+assumption is that any input is ``just as good'' as every other input in the set
+for revealing faults. 
+
+The assumption is that {\it any} value or collection of values that satisfies a
+test requirement will be ``just as good'' as any other in the set. 
+
+It's also a view that {\it input domain analysis} takes, in a very direct way.
+
+
+\section{An Overview of Testing Using Input Domain Analysis}
+
+The {\it input domain} of a program is the set of possible values that its input
+parameters can have. At a system level, inputs can be user entered data, or
+points and clicks of a mouse. At a unit level, input parameters may correspond
+directly to method parameters, or global variables, or objects representing the
+current system state. 
+
+Input domain analysis involves partitioning an input domain into so-called {\it
+equivalence classes} that are assumed to contain equally useful values from a
+testing perspective. The tester is then free to select any value belonging to
+each equivalence class for actual testing. 
+
+Suppose we have a Java method with the signature {\tt public static boolean
+isPositive(int n)}. The input domain is the set of values belonging to the type
+{\tt int}, comprising all integers from -2,147,483,648 to 2,147,483,647. It
+would make sense to test this method with at least two test cases --- one
+involving a positive value, and one involving a negative value. 
+%
+The set of positive values and the set of negative values are examples of
+equivalence classes --- we're basically saying that the program should behave
+the same with any input chosen from each of those respective sets.
+
+This way of testing has several advantages. The tester does not need to
+understand the implementation --- although that can help (and hence why we class
+it as a {\it grey-box} technique). But yet, it is fairly easy to get started,
+because it can be applied with no automation, and very little training.
+Everything we need to know for testing is based on a description of the inputs.
+This method also has the advantage that it is easy to ``tune'' to generate more
+or fewer tests, with the classic testing trade-off of cost (reduced by creating
+fewer tests) vs fault-finding effectiveness (which is generally increased by
+creating more tests).
+
+An input domain {\bf partition} must satisfy two properties:
+
+\begin{enumerate}
+    \item The partition must cover the entire domain (i.e., it is {\bf complete}) 
+    \item The equivalence classes must not overlap (i.e., they are {\bf disjoint})
+\end{enumerate}
+
+While our our partitioning of the input domain for {\tt isPositive} is indeed
+disjoint, note that it is {\it not} complete: We did not consider zero, which is
+neither positive nor negative, and not a value that {\tt isPositive} should
+return {\tt true} for. This is an example of how analysing and partitioning the
+input domain can clarify our thinking and throw up interesting cases that we may
+not have considered otherwise. 
+%
+On the one hand, we could put zero in the same equivalence class as the negative
+numbers, because it is not positive, and therefore {\tt isPositive} should
+return {\tt false}, as for all the other numbers in that equivalence class. On
+the other hand, zero could be viewed as a special case, so we might want to put
+it in an equivalence class by itself. This would give us three equivalence
+classes overall, $e_1$, $e_2$, $e_3$:
+
+\slide{3-2-input-domain-for-ispositive}
+
+We can now {\it cover} the partition by selecting a value from each equivalence class,
+based on the aforementioned principle that any value from an equivalence class
+is as good as any other for testing. This would give us three test cases, e.g.
+-100, 0, and 100, for which {\tt isPositive} should return {\tt false}, {\tt
+false}, and {\tt true}, respectively:
+
+\begin{center}
+\begin{tabular}{r|crr}
+    {\bf Test Case} & {\bf Equivalence Class} & {\bf Example Input} & {\bf Expected Outcome} \\
+    \midrule
+    1 & Less than zero    & -100 & {\tt false} \\
+    2 & Zero              &    0 & {\tt false} \\
+    3 & Greater than zero &  100 & {\tt true}  \\
+\end{tabular}
+\end{center}
+
+We said that we can tune this method to give us more or fewer tests. We could
+have put zero in with the negative numbers class, for example, to give us two
+tests rather than three. We can increase the number of tests by subdividing our
+so-called equivalence classes further, to ensure more fine-grained testing.
+%
+For example, we know that programmers are prone to making mistakes around
+boundaries. This is one reason why we might want to keep the zero case.
+Programmers easily make off-by-one errors when writing conditions, e.g. by
+writing ``{\tt if (n > 1) return true}'' instead of ``{\tt if (n >= 1) return
+true}''. We may decide that not all the values in a particular equivalence class
+should be considered equivalent after all. We can then subdivide our partition
+even further to ensure special consideration to so-called {\it boundary values},
+i.e., 1 in this example. Putting the value 1 in its own equivalence class gives
+us a further equivalence class, and an additional test.
+%
+The consideration of using test values around boundaries is called {\bf boundary
+value analysis}.
+
+Later in this lecture, we'll see how we can consider several partitions together
+as part of an advanced testing strategy --- one which if not done carefully, can
+lead to a combinatorial explosion of test cases! 
+
+
+\subsection{Using the Concept of ``Characteristics'' to Perform Partitioning}
+
+Rarely are we faced with testing an example as simple as {\tt isPositive}, with
+only one input parameter with a domain (that of the {\tt int} type in Java) that
+is finite and is easy to work with in terms of precisely defining where the
+boundaries of the partition fall.
+
+Take for example a program that takes a collection of elements {\tt elements} to sort,
+where there is no limit on the length of the collection. How might we partition
+this example, with a multi-dimensional, unbounded domain?
+
+In general, input domain partitions are based on a {\it characteristic} of the
+program's inputs. Possible characteristics for {\tt elements} might be:
+
+\begin{itemize}
+    \item Whether {\tt elements} is {\tt null} (true, false)
+    \item The {\it size} of {\tt elements} (0, 1, greater than 1)
+    \item The {\it initial order} of {\tt elements} (ascending, descending, arbitrary)   
+\end{itemize}
+
+Each characteristic allows the tester to define a partition, each of which must
+be complete and disjoint (as previously defined). 
+
+Consider the characteristic ``initial order of {\tt elements}''.
+This could be used to create the following (but defective) partitioning: 
+
+\begin{itemize}
+    \item Initial order of {\tt elements}:
+    \begin{itemize}
+        \item $e_1 =$ {\tt elements} sorted in ascending order
+        \item $e_2 =$ {\tt elements} sorted in descending order
+        \item $e_3 =$ {\tt elements} is in an arbitrary order
+    \end{itemize}
+\end{itemize}
+
+However, this is {\bf not} a valid partitioning. Specifically, if the {\tt
+elements} collection is of length 0 or 1, then it will belong in all three
+equivalence classes. That is, the equivalence classes are {\it not} disjoint.
+The easiest strategy to address this problem is to make sure that each
+characteristic addresses only one property. The problem above is that the
+notions of being sorted into ascending order and being sorted into descending
+order are part of the same characteristic. Splitting into two characteristics,
+namely {\it sorted ascending} and {\it sorted descending}, solves the problem.
+The result is the following (valid) partitioning of two characteristics:
+
+\begin{itemize}
+    \item {\tt elements} sorted in ascending order:
+    \begin{itemize}
+        \item $e_1 =$ true
+        \item $e_2 =$ false
+    \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+    \item {\tt elements} sorted in descending order:
+    \begin{itemize}
+        \item $e_1 =$ true
+        \item $e_2 =$ false
+    \end{itemize}
+\end{itemize}
+
+With these equivalence classes, collections of size 0 or 1 are in the {\it true}
+class for both characteristics.
+
+The completeness and disjointness properties are formalised for pragmatic
+reasons, not to make the method deliberately more complicated!
+%
+Partitions that are not complete or disjoint probably reflect a lack of clarity
+in the rationale for the partition. 
+%
+In particular, if a partition actually encodes two or three rationales, the
+partition is likely to be quite messy, and is also likely to violate either the
+completeness or the disjointness property (or both!). Identifying and correcting
+completeness or disjointness errors typically results in aesthetically more
+pleasing partitions. 
+%
+% Further, formally objectionable ``partitions'' cause
+% unnecessary problems when generating tests, as discussed below. 
+%
+% The rest of this lecture assumes complete and disjoint partitions. 
+
+\section{Applying Input Domain Analysis}
+
+Ok, having given an overview of how input domain analysis works, we're now
+going to discuss how to apply it in practice. 
+
+\subsection*{Step 1: Identify the Functions to Test}
+
+The first step of applying input domain analysis is identifying the different
+{\it functions} of the software that we want to apply it to, and what the input
+domain is for those functions. 
+
+The word ``function'' conjures up procedures, methods, or units of a programming
+language. While a function in input domain analysis may map directly to a
+particular method of a program, it is actually a more general concept. A
+function is a particular {\it operation} of the system does, or a particular
+aspect of its {\it behaviour} that we want to focus our tests on. 
+
+For example, if we're testing a mobile app, it might be a particular screen that
+we're testing. For a web app, it might be a form, and how the application
+responds to different field entries. If it's a computer game, it might be the
+behaviour of an individual game character, for example, testing how they react
+given certain stimuli or what they can do in certain situations. If it's a
+console app, we might want to consider the entire app if it relatively simple
+and has one specific purpose (e.g., a system function like {\tt mkdir}). But if
+it's a complex application with different modes and functionalities, like a
+compiler, we would need to break its behaviour into smaller distinct operations.
+
+In summary, how we carve up a complete system into functions is not a formal
+process and relies on the ingenuity of the tester and their knowledge of the
+system.  
+
+\subsection*{Step 2: Identify the Input Domain}
+
+Once we have a set of functions, we need to identify the input domain for each.
+This depends on the function, of course. In some cases, this may seem obvious
+(the input to {\tt isPositive}, for example). In others, it's less so, and may
+include aspects of the operating environment or the system state. 
+
+\subsection*{Step 3: Identify Characteristics}
+
+Once we have identified the input domain, there are two schools of thought as to
+how to model it in terms of determining its characteristics. In practice, we
+probably would want to use aspects of both.  
+
+\subsubsection*{Interface-Based Input Domain Modelling}
+
+{\it Interface-based input domain modelling} involves simply identifying the
+parameters to the interface of the function more or less as with the examples we
+just described --- i.e., method parameters, form fields etc. It's an easy,
+almost mechanical way to go about things and makes the characteristics and
+partitions in the next steps easy to apply. 
+
+A downside of this approach is that parts of the functionality may depend
+on combinations of specific values of several interface parameters, that is,
+certain domain knowledge about what the function does is not taken into account.
+
+Consider the \triangleclass~class from last week's lab sheet. The
+\classifymethod~method, which classifies the type of a triangle based on three
+integer inputs representing the lengths of each of its sides. In an interface
+input domain analysis, {\tt side1} will have a number of characteristics, as
+will side {\tt side2} and {\tt side3}. Since the three variables are all
+integers, the interface-based characteristics for each will likely be identical
+and which will probably all focus on legal and illegal inputs (e.g., zero and
+negative numbers).
+
+\subsubsection*{Functionality-Based Input Domain Modelling}
+
+The idea of {\it functionality-based input domain modelling} is to describe the
+input domain in terms of the intended functionality of the system, allowing the
+tester to incorporate some {\it semantics} and {\it domain knowledge} into the
+analysis. 
+
+Let's return to the \classifymethod~method of \triangleclass again. While the
+interface-based approach would identify the input as three integers, the
+functionality-based approach would instead say the input is a triangle, and
+would partition the input into different types of triangle (isosceles,
+equilateral, etc.). 
+
+We'll return to the \triangleclass~class as a basis for a practical case study
+later in the lecture. 
+
+Developing a functionality-based input domain model is more challenging than the
+interface-based approach, but the resulting tests are potentially more effective.
+
+{\it Pre-conditions} are good sources of information for functionality-based
+characteristics. Preconditions are predicates that should hold upon entry into a
+function, and are stated informally in several forms, for example in documentation.
+Preconditions separate ``normal'' behaviour from abnormal, exceptional
+behaviour. For example, if a method {\tt choose()} is supposed to select a
+value, it has a precondition that a value must be available to select. A
+characteristic might be whether the value is available or not.
+
+{\it Post-conditions} are also good sources for characteristics. Postconditions
+are predicates that should hold upon exit from a function. In the case of the
+Triangle Classification program, the different kinds of triangles are based on
+the postconditions of the method --- i.e., if the lengths of the sides are valid
+and all equal, the triangle is equilateral. 
+
+We also need to look for other relationships between variables. These may be
+explicit or implicit. For example, a curious test engineer given a method {\tt
+m()} with two object parameters {\tt x} and {\tt y} might wonder what happens if
+{\tt x} and {\tt y} reference the same object, or to two logically equal
+objects.
+~\\
+
+Generally, it is preferable to use specifications or documentation instead of
+program code to develop characteristics. The idea is that the tester should
+apply input domain partitioning based on domain knowledge about the problem, not
+the implementation. Overall, teh more semantic information that can be
+incorporated into characteristics, the better the resulting test set is likely
+to be.
+
+Finally, it is usually better to have many characteristics with few blocks than
+the reverse. It is also true that characteristics with small number of blocks
+are more likely to satisfy the completeness and disjointness properties. 
+
+\subsection*{Step 4: Identify Equivalence Classes}
+
+After choosing characteristics, we must partition them into sets of values, or
+equivalence classes. This is another creative step that allows the tester to
+tune the test process: More classes will result in more tests, which will
+require more resources but which increases the likelihood of finding faults.
+Fewer classes will result into fewer tests, saving resources but potentially at
+the expense of finding fewer faults. 
+
+General strategies for identifying equivalent sets of values for equivalence
+classes include:
+
+\begin{itemize}
+
+    \item {\bf Valid sets of values} --- what sets of values represent legal
+    inputs that we need to test the function with?
+    
+    \item {\bf Invalid sets of values} --- what sets of values represent illegal
+    inputs that the function needs to handle (i.e., by rejecting with a message
+    to the user, requesting re-entry of the value(s), or throwing an exception)?
+
+    \item {\bf Normal sets of values} --- what sets of inputs would be
+    considered ``usual'' or typical for the function? For example, the number of
+    days in a month includes the numbers 1--28 for all months.
+
+    \item {\bf Abnormal sets of values} --- what sets of inputs would be
+    considered ``unusual'' or atypical? For example, all months except February
+    also have days 29 and 30, and some months have 31. At the extreme end of
+    atypical is February in a leap year, where it goes from having 28 days to 29
+    days. 
+
+    \item {\bf Boundary values} --- as we've already noted in this lecture,
+    software engineers (i.e., humans!) typically make mistakes around
+    boundaries. Programmers are prone to using {\tt >} and {\tt <} instead of
+    {\tt >=} and {\tt <=} respectively in an {\tt if} statement or looping
+    condition, as well as making off-by-one errors in calculations. Choosing
+    values close to boundaries are sometimes good at revealing faults.
+
+    \item {\bf Special values} --- for example, {\tt null} is typically a
+    special case for references or pointers in languages such as Java that need
+    to be treated differently from non-{\tt null} values.
+
+\end{itemize}    
+
+And, of course, we must check for the following to ensure the partitioning is
+valid:
+
+\begin{itemize}
+
+    \item {\bf Missing sets of values} --- check that the union of all classes
+    of a characteristic completely covers the input domain of that
+    characteristic, to ensure the partition is {\it complete}.
+    
+    \item {\bf Overlapping sets of values} --- check that no value belongs to
+    more than one equivalence class, to ensure the partitioning is {\it
+    disjoint}.
+    
+\end{itemize}
+
+\section{Case Study: The Triangle Classification Program}
+
+Armed with all the information we need to apply Input Domain Analysis, let's now
+make a more complete attempt at using it with the \classifymethod~method of the
+\triangleclass~class. 
+
+One common partitioning for an integer variable considers the relation of the
+variable's value to some special value in the testable function's domain, such
+as zero.
+
+This table shows three partitions for three different characteristics using an
+interface-based input domain model:
+
+\begin{center}
+\begin{tabular}{rllll}
+    \toprule
+    & & \multicolumn{3}{c}{\bf Equivalence Classes} \\
+    \cline{3-5}
+    & {\bf Characteristic} & $e_1$ & $e_2$ & $e_3$ \\
+    \midrule
+    1 & Relation of {\tt side1} to 0 & greater than 0 & equal to 0 & less than 0 \\
+    2 & Relation of {\tt side2} to 0 & greater than 0 & equal to 0 & less than 0 \\
+    3 & Relation of {\tt side3} to 0 & greater than 0 & equal to 0 & less than 0 \\
+    \bottomrule    
+\end{tabular}
+\end{center}
+
+Consider Partition~1 for {\tt side1}. If one value is chosen from each
+equivalence class, the result is three tests. For example, we might choose {\tt
+side1} to have the value 7 in test 1, 0 in test 2, and -3 in test 3. Of course,
+we also need values for {\tt side2} and {\tt side3} of the triangle to complete
+the test case values. Notice that some of the equivalence classes represent
+valid triangles and some represent invalid triangles. For example, no valid
+triangle can have a side of negative length. 
+
+It is easy to refine this categorisation to get more fine-grained testing if the
+budget allows. For example, more equivalence classes can be created by
+separating inputs value 1. This decision would lead to partitions with four
+blocks:
+
+\begin{center}
+\begin{tabular}{rlllll}
+    \toprule
+    & & \multicolumn{4}{c}{\bf Equivalence Classes} \\
+    \cline{3-6}
+    & {\bf Characteristic} & $e_1$ & $e_2$ & $e_3$ & $e_4$ \\
+    \midrule
+    1 & Length of {\tt side1} & greater than 1 & equal to 1 & equal to 0 & less than 0 \\
+    2 & Length of {\tt side2} & greater than 1 & equal to 1 & equal to 0 & less than 0 \\
+    3 & Length of {\tt side3} & greater than 1 & equal to 1 & equal to 0 & less than 0 \\
+    \bottomrule    
+\end{tabular}
+\end{center}
+
+Notice that if the type of the inputs for each fo the sides were floating point
+(e.g., {\tt float} or {\tt double} in Java), this partitioning would {\it not}
+yield valid partitions. None of the equivalence classes would include values
+between 0 and 1, so they would {\it not} be complete and cover the entire input
+domain. However, since the domain of each variable is integers, the partitions
+are valid.
+
+Our partitions, so far, are inteface-based and only use white-box information
+about the \classifymethod~method (it has three integer input parameters). A
+functionality-based approach can use the semantic information of the traditional
+geometric classification of triangles, for example:
+
+\begin{center}
+\begin{tabular}{rlllll}
+    \toprule
+    & & \multicolumn{4}{c}{\bf Equivalence Classes} \\
+    \cline{3-6}
+    {\bf Partition} & {\bf Characteristic} & $e_1$ & $e_2$ & $e_3$ & $e_4$ \\
+    \midrule
+    1 & Geometric Classification & scalene & isosceles & equilateral & invalid \\
+    \bottomrule    
+\end{tabular}
+\end{center}
+
+See the practical from last week to refresh yourself on what constitutes an
+equilateral, isosceles, and a scalene triangle.
+
+Note that this does not form valid partitioning. An equilateral triangle is also
+isosceles, so the partition is not disjoint ($e_3$ overlaps with $e_2$). 
+
+As such we must correct the partitions:
+
+\begin{center}
+\begin{tabular}{rlllll}
+    \toprule
+    & & \multicolumn{4}{c}{\bf Equivalence Classes} \\
+    \cline{3-6}
+    & {\bf Characteristic} & $e_1$ & $e_2$ & $e_3$ & $e_4$ \\
+    \midrule
+    1 & Geometric Classification & scalene & isosceles, & equilateral & invalid \\
+    & & & not equilateral & & \\
+    \bottomrule    
+\end{tabular}
+\end{center}
+
+While partitioning, it often useful for the tester to identify candidate values
+for each block to be used in testing. The reason to identify values now is that
+choosing specific values can help the test engineer think more concretely about
+the predicates that describe each block. While these values may not prove
+sufficient when refining test requirements to test cases, they do form a good
+starting point:
+
+\begin{center}
+    \begin{tabular}{lllll}
+        \toprule
+        {\bf Param} & $e_1$ & $e_2$ & $e_3$ & $e_4$ \\
+        \midrule
+        Triangle & (4, 5, 6) & (3, 3, 4) & (3, 3, 3) & (3, 4, 8) \\
+        \bottomrule    
+    \end{tabular}
+    \end{center}
+
+A different approach to the ``isosceles but not equilateral'' problem is to
+break the characteristic ``Geometric Classification'' into four separate
+characteristics, one for each type:
+
+\begin{center}
+\begin{tabular}{rlll}
+    \toprule
+    & & \multicolumn{2}{c}{\bf Equivalence} \\
+    & & \multicolumn{2}{c}{\bf Classes} \\
+    \cline{3-4}
+    & {\bf Characteristic} & $e_1$ & $e_2$ \\
+    \midrule
+    1 & Triangle is Scalene & true & false \\
+    2 & Triangle is Isosceles & true & false \\
+    3 & Triangle is Equilateral & true & false \\
+    4 & Triangle is Invalid & true & false \\
+    \bottomrule    
+\end{tabular}
+\end{center}
+
+This kind of approach is highly recommended and it invariably satisfies the
+disjointness and completeness properties. 
+
+We can combine the equivalence classes together to produce a test case where the
+triangle is equilateral but not isosceles, as we'll discuss next. The impossible
+combinations, for example where the triangle is equilateral {\it and} invalid
+are handled by introducing constraints that control the combinations. 
+
+\section{Combination Coverage Criteria}
+
+So far, we have ignored an important question -- ``How should we consider
+multiple partitions at the same time?'' This is the same as asking ``What
+combinations of equivalence classes should we choose values from?'' For example,
+we might wish to require a test case that satisfies equivalence class 1 from
+characteristic $c_1$ with equivalence class 3 from characteristic $c_2$. 
+
+The most obvious choice is to choose all combinations:
+
+{\bf All Combinations Coverage} --- all combinations of equivalence classes from
+all characteristics must be used. 
+
+As we've seen before, simply combining everything with everything else quickly
+results in an explosion of test cases that need to considered. Things can get
+out of hand pretty quickly!
+
+At the opposite extreme is the following criterion:
+
+{\bf Each Choice Coverage} --- one value from each equivalence class for each
+characteristic should be used in at least one test case. 
+
+This criterion leaves a lot of flexibility in terms of how to combine
+equivalence classes, but doesn't {\it require} that any classes be combined at
+all. 
+
+For this reason, criteria exist to try to limit the effect of combinatorial
+explosion, while still allowing for a varying amount of coupling of equivalence
+classes. The first one we will look at is {\it Pair-Wise Coverage}:
+
+{\bf Pair-Wise Coverage} --- a value from each equivalence class for each
+characteristic must be combined with a value from every equivalence class from
+every equivalence class for each other characteristic.
+
+A natural extension to this is to require $t$ values, instead of just pairs:
+
+{\bf T-Wise Coverage} --- a value from each equivalence class for each group of
+$t$ characteristics must be combined.
+
+T-wise coverage is a generalisation of the last two criteria: If the value for
+$t$ is equal to the number of partitions, then it is equivalent to all
+combinations. If $t=2$, then t-wise coverage is equivalent to pair-wise
+coverage.
+
+Despite attempting to limiting combinatorial explosion by only requiring $t$
+characteristics to be considered together, T-wise coverage can still result in
+very many test cases, and experience suggests that going beyond pair-wise (i.e.,
+$t=2$) does not help much.
+
+While pair-wise and t-wise combine equivalence classes ``blindly'', without
+regard for which classes are being combined, the next criterion considers
+combining classes by incorporating a small but crucial piece of domain knowledge
+into the equation --- namely, by deciding which is the most ``important'' class
+for each characteristic. This class is called the {\it base choice}.
+
+{\bf Base Choice Coverage} --- A base choice equivalence class is chosen for
+each characteristic, and a base test is formed by using the base choice for each
+characteristic. Subsequent tests are chosen by holding all but one base choice
+constant and suing each non-base choice in each other characteristic.
+
+Sometimes it's difficult to choose a single base choice, and we may decide that
+multiple base choice are needed. The following criterion allows for multiple
+base choices to be made for each characteristic:
+
+{\bf Multiple Base Choice Coverage} --- at least one, and possibly more base
+choice blocks are chosen for each characteristic, and base tests are formed by
+using each base choice for each characteristic at least once. Subsequent tests
+are chosen by holding all but one base choice constraint for each base test and
+using each non-base choice in each other characteristic.
+
+% Subsumption criterion -- slide
+
+\subsection{Constraints Among Partitions}
+
+One thing to note about applying the combination coverage criteria above is that
+some combinations of equivalence classes will be infeasible. 
+
+{\bf Constraints} are relations between equivalence classes from different
+characteristics. There are two kinds of constraints:
+
+\begin{enumerate}
+
+    \item {\bf Cannot Be Combined.} Two equivalence classes cannot be combined
+    together. 
+   
+    \item {\bf Must Be Combined.} Two equivalence classes must be combined
+    together.
+
+\end{enumerate}
+
+We came across an example of this in our final partitioning of the
+\classifymethod~method of the \triangleclass: ``Triangle is Equilateral'' as
+``true'' {\it cannot be combined} with ``Triangle is Invalid'' as also ``true''.
+Instead ``Triangle is Equilateral'' as ``true'' {\it must be combined} with
+``Triangle is Invalid'' as ``false''.
+
+How constraints are handled depends on the coverage criterion chosen. For all
+combinations, pair-wise and t-wise coverage, the only reasonable option is to
+drop the infeasible pairs from consideration. 
+
+However, the situation is different for base-choice coverage. If a particular
+class conflicts with teh base case, then the obvious thing to do is to change
+the offending choice for the base case so that the variation is feasible. 
+
+\section{Final Thoughts}
+
+\subsection{Using More than One Input Domain Model}
+
+% TODO: what is an input domain model -- define. Is it one of the tables above??
+
+For a complex program it might be better to have several small input domain
+models than one large one. This approach allows for a divide-and-conquer
+strategy when modelling characteristics and equivalence classes. Another
+advantage with multiple input domain models for the same software is that it
+allows for varying levels of coverage.
+
+For instance, one input domain model may contain only valid values and another
+input domain model may contain invalid values to focus on error handling. The
+valid value input domain model may be covered using a higher level of coverage.
+The invalid value input domain model may use a lower level of coverage. 
+
+Multiple input domain models may be overlapping as long as the test cases
+generated make sense. However, overlapping input domain models are likely to
+have more constraints.
+
+\subsection{Checking the Input Domain Model}
+
+It is important to check the input domain model. In terms of characteristics,
+the test engineer should ask whether there is any information about how the
+function behaves that is not incorporated in some characteristics. This is
+necessarily an informal process.
+
+The tester should also explicitly check each characteristic for the completeness
+and disjointness properties. The purpose of this check is to make sure that, for
+each characteristic, not only do the equivalence classes cover the complete
+input space, but selecting a particular equivalence class implies excluding all
+the other equivalence classes in that characteristic. 
+
+If multiple input domain models are used, completeness should be relative to the
+portion of the input domain that is modelled in each input domain model. When
+the tester is satisfied with the characteristics and their equivalence classes,
+it is time to choose with combinations of values to test with, and identify
+constraints among the equivalence classes.
+
+
+
+\end{document}

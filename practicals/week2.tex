@@ -1,0 +1,63 @@
+\input{common/setup}
+
+\begin{document}
+
+\title{Week 2 Practical --- Coverage Part 1}
+
+\begin{enumerate}
+
+    \item Do the ``Who Wants To Be A Software Tester?'' Quiz for this week.
+    If you're unclear about any of the answers then ask!
+
+    \item Navigate to the \examplespackage~package, and open the
+    \triangleclass class. The class has a method, \classifymethod, that
+    categorises the type of the triangle based on the lengths of its three sides,
+    which correspond to the parameters to the method --- {\tt side1}, {\tt
+    side2}, and {\tt side3}. The {\it equilateral} triangle is one in which all sides
+    are the same length, an isosceles triangle is one in which at least two
+    sides are the same length, a scalene triangle is any other (valid) triangle. 
+
+        \begin{enumerate}
+
+            \item Draw the CFG for the \classifymethod~method.
+            
+            \item Write a JUnit test suite for \triangleclass that gives 
+            full Branch Coverage. 
+            
+            \item Enumerate all the paths through the CFG for the method. (There
+            are no loops in the method, so this is possible.) Which paths are
+            infeasible?
+            
+        \end{enumerate}
+
+    \item The code segment that returns when a triangle is isosceles could be re-written as:
+
+        \verb$if ((side1 + side2 > side3) &&$\\ 
+        \verb$      (side1 == side2 || side2 == side3) &&$\\
+        \verb$      (side1 != side2 || slide2 != side3)) {$\\
+        \verb$    return Type.ISOCELES;$\\
+        \verb$}$
+
+        For the above branch predicate:
+
+        \begin{enumerate}
+
+            \item Enumerate each of the {\it conditions}.
+            
+            \item Determine the test requirements for coverage with Restricted
+            MCDC. Format this as a table, which shows the truth values of the
+            conditions and the branch predicate in columns of the table (as done
+            in the lecture). Which test requirements are infeasible, if any?
+
+            \item The same question as before, but this time with Correlated MCDC. 
+            
+            \item Take either (a) your Restricted MCDC test requirements or (b) your
+            Correlated MCDC test requirements. Use these to construct a JUnit test
+            suite but run against the original \triangleclass class. Note anything
+            unusual about the results of your test suite, if anything.
+            
+        \end{enumerate}
+        
+\end{enumerate}
+
+\end{document}

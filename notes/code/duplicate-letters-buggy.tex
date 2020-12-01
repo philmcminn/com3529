@@ -1,0 +1,24 @@
+1 & \verb|public static Set<Character> duplicateLetters(String s) {|\\
+2 & \verb|    // lower case the string and remove all characters that are not letters|\\
+3 & \verb|    s = s.toLowerCase().replaceAll("[^a-z.]", "");|\\
+4 & \verb||\\
+5 & \verb|    // initialise the result set|\\
+6 & \verb|    Set<Character> duplicates = new TreeSet<>();|\\
+7 & \verb||\\
+8 & \verb|    // iterate through the string|\\
+9 & \verb|    for (int i = 0; i < s.length(); i++) {|\\
+10 & \verb|        char si = s.charAt(i);|\\
+11 & \verb||\\
+12 & \verb|        // iterate through the rest of the string, checking for the same letter|\\
+13 & \verb|        for (int j = i; j < s.length(); j++) {|\\
+14 & \verb|            char sj = s.charAt(j);|\\
+15 & \verb||\\
+16 & \verb|            if (si == sj) {|\\
+17 & \verb|                // a match has been found, add it to the result set|\\
+18 & \verb|                duplicates.add(si);|\\
+19 & \verb|            }|\\
+20 & \verb|        }|\\
+21 & \verb|    }|\\
+22 & \verb||\\
+23 & \verb|    return duplicates;|\\
+24 & \verb|}|\\

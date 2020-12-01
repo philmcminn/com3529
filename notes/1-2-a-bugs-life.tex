@@ -1,0 +1,371 @@
+\input{common/setup}
+
+\begin{document}
+
+\title{1.2 A Bug's Life}
+
+\section{A Buggy Example}
+
+\note{Video}{Talking Head}
+
+As increasing users of software, the general population has, to an extent,
+learned to live with software bugs. As computer scientists and software
+engineers though, we know that bugs do not come from nowhere. There are many
+phases to the software engineering lifecycle, and many opportunities for
+mistakes to be made, be they in the initial requirements for the software, to
+its implementation.
+
+Let's look at the following Java method, by means of an example.
+
+\note{Video}{Screen capture. Hover the mouse over the appropriate points.}
+
+It's a method that finds all the duplicate letters in a string. I give it a
+string input, and it returns a set of all the duplicate letters that it finds.
+
+You can find and try out this example by cloning the Git code repository for
+this module, which you can find at \examplesrepourl. The example method is in
+the class~\stringutilsbuggyoneclass in the \examplespackage~package. 
+
+\begin{center} 
+    \scalebox{0.8}{
+    \begin{tabular}{rl} 
+        \toprule
+        Line \\
+        \midrule
+        \input{code/duplicate-letters-buggy}
+        \bottomrule
+    \end{tabular}}
+\end{center}    
+~\\
+
+Sometimes it works: If I give it the string {\tt "software testing"} and check
+for duplicates of the letter {\tt "t"} the following JUnit test passes:
+
+\begin{center} 
+    \scalebox{0.8}{
+    \begin{tabular}{l} 
+        \midrule
+        \input{code/duplicate-letters-testcase1}
+        \midrule
+    \end{tabular}}
+\end{center} 
+
+\newpage
+And sometimes it doesn't: If I give it the string {\tt "software debugging"} and
+check that there are not duplicates of the letter {\tt "t"}, the following JUnit
+test fails:
+
+\begin{center} 
+    \scalebox{0.8}{
+    \begin{tabular}{l} 
+        \midrule
+        \input{code/duplicate-letters-testcase2}
+        \midrule
+    \end{tabular}}
+\end{center} 
+
+The tests referred to are in the \teststringutilsbuggyoneclass~class of the
+\examplespackage~package.
+
+From the {\bf failure} of the method, as ascertained by the failing test, we can
+deduce that the program has a bug, or more precisely, a {\bf fault}.
+
+\note{Video}{Freeze on the code at this point}
+
+Where is the fault in the example?
+
+How did it cause the failure?
+
+\note{Video}{Don't say ``line 13'' as it does not match up with the real code line number}
+
+The fault is on the line containing the second, nested {\tt for} statement
+(line~13). The method iterates through the characters of the string, but starts
+the search for repeats of a particular letter at the {\it } index ({\tt i}),
+rather than the {\it next} one ({\tt i + 1}). This means that {\it every} letter
+in the string will appear in the returned set, regardless of whether they are
+repeated or not, causing the method to fail. 
+
+In this way, our ``positive'' test passes --- checking the letter {\tt t} {\it
+is} repeated in {\tt "software testing"}, but ``negative'' test fails ---
+checking the letter {\tt t} {\it is not} repeated in {\tt "software debugging"}
+fails.
+
+To correct the fault so that the failure no longer occurs, we need to change the
+initialisation expression of the second {\tt for} loop from ``{\tt int j = i}''
+to ``{\tt int j = i + 1}''. If we do this, both of our tests now pass.
+
+\note{Video}{Title Slide}
+
+\note{Video}{Advance slide}
+
+\section{From Faults to Failures}
+
+In general, a failure, such as that in our example program, comes about when the
+following three conditions are met, one after the other:
+
+\note{Video}{Advance slide}
+
+\subsection*{1. The Program Location Containing the Fault is {\it Reached}
+During Execution}
+
+For the failure to occur the section of the code involving the fault also needs
+to be reached by the execution path through the program. 
+
+\note{Video}{Flick back to code}
+
+If this buggy version of {\tt duplicateLetters} is executed with an empty string,
+the nested {\tt for} loop would never be reached, and no failure would occur
+(the method returns an empty set). 
+
+The inner {\tt for} loop, containing the fault, must be executed for the failure
+to occur. That is, there must be letters in the inputted string, as with our
+failing test case involving the string ``{\tt software debugging}''.
+
+\note{Video}{Advance slide}
+
+\subsection*{2. The Fault {\it Infects} the State of the Program}
+
+\note{Video}{Flick back to code}
+
+When the fault is reached, in the initialisation step of the inner {\tt for}
+loop, it causes an {\it infection}. An infected is when a fault affects the
+program state such that it differs from that which was intended. In other words,
+the program moves from an otherwise ``correct'' state into an ``incorrect''
+state. In practice, this means that the program variables take on the wrong
+values, and/or the wrong lines of subsequent program code are executed.
+
+In this buggy version of {\tt duplicateLetters}, an infection always occurs as
+soon as the fault is executed. The method thinks that it has found a duplicate
+letter (when actually it's the {\it same} letter), and immediately places it
+into the result set {\tt duplicates} that is returned by the method.
+
+This is what happens with our failing test case involving the string {\tt
+"software debugging"}. The letter {\tt t} is placed into the {\tt duplicates}
+set as soon as it is encountered in the inputted string. This later causes the
+assertion in our test to fail, because the returned set of characters contains
+the letter {\tt t} when it shouldn't.
+
+However, it's important to note that merely reaching a fault does not {\it
+always} result in an infection. 
+%
+Suppose, for example, the fault was in the outer loop instead. Suppose it
+started iterating from the character in the string at position 1 rather than 0
+(i.e., it the loop initialisation step was ``{\tt int i = 1}'' instead of ``{\tt
+int i = 0}''). For empty strings, the faulty initialisation step in the outer
+loop would always be executed, but there would not be an infection --- the loop
+condition would be false and the loop body would not be executed. Only strings
+with letters in them would potentially infect the state.
+
+\note{Video}{Advance slide}
+
+\subsection*{3. The Infection {\it Propagates} to the Output, Causing a Failure}
+
+\note{Video}{Flick back to code}
+
+As the program executes, the infection may spread into later program states,
+eventually spreading to the output of the program. The infected state is said to
+{\it propagate} to the output, causing a failure. A failure is an externally
+observable error in the program behaviour.
+
+This is what happens with our failing test case involving the string {\tt
+"software debugging"}. The set of duplicate characters is returned by the
+method, containing characters that are not duplicates, including the letter {\tt
+t}, as specifically checked for by our test's assertion.
+
+However, an infection may not {\it always} propagate to the output. It may be
+overwritten, masked, or corrected by some later program action.
+
+For example, suppose we supply the string {\tt "ss"} to our original version of
+the method with the fault in the inner {\tt for} loop. The letter {\tt s} is
+entered in the {\tt duplicates} set as soon as it is encountered in the first
+position in the string. The state is infected. However, the infection ``stops''
+as soon as the second {\tt s} is encountered. Since {\tt s} is already in the
+set, it is not added a second time. In effect, the infected state has been
+``corrected'' in this particular circumstance --- the method returns the right
+result, but only by the coincidence of an actual duplicate character later in
+the string.
+
+\note{Video}{Advance slide}
+
+\section{Inducing Failures --- The RIP model}
+
+The three conditions necessary for inducing failures are therefore {\bf
+reachability (R)}, {\bf infection (I)}, and {\bf propagation (P)}:
+
+\begin{enumerate}
+    \item The fault must be {\bf reached (R)} in the code.
+    
+    \item The fault must then {\bf infect (I)} the state. 
+    
+    \item The infection must then {\bf propagate (P)} to the output, causing a
+    failure.
+\end{enumerate}
+
+\note{Video}{Advance slide. Note Mnemonic is pronounced ``nemonic'' (silent ``m'' at start)}
+
+You can remember these conditions through the mnemonic ``RIP''. 
+
+The three conditions for revealing failures are referred to as the {\bf ``RIP
+model''}.
+
+\note{Video}{Advance slide}
+
+\section{Being Precise about our Testing Terminology}
+
+So note then that the word ``bug'' is rather an imprecise word, that could refer
+to faults, failures, {\it or} infections. In the realm of software testing, it's
+important then to be specific what we're talking about!
+
+A {\bf fault} is a defect in a piece of code. 
+
+An {\bf infection} is what happens when the defect is executed, and the program
+state is affected. When a program's state is infected it starts to work
+incorrectly. But at this point, it has not affected the output of the program
+(and the fault, so far, has had no observable effect).
+
+A {\bf failure} is when the infection propagates to the output of the program,
+that is, the program observably behaves incorrectly.
+
+\note{Video}{Advance slide}
+
+The definitions of fault and failure allow us to distinguish testing from
+debugging. 
+
+{\bf Testing} is evaluating software by observing its execution.
+
+A {\bf test failure} is an execution that results in a failure during testing.
+
+{\bf Debugging} is the process of finding a fault, given some failure.
+
+\section{Observing Failures and Inducing Test Failures --- The RIPR Model}
+
+Note that there is a subtle difference between a ``test failure'' and a
+``failure''. A failure is when a program returns an incorrect result or produces
+observably incorrect behaviour. A test failure is when a particular execution
+{\it reveals} a failure in the program while testing it. 
+
+\note{Video}{Advance slide --- first RIPR slide}
+
+In order to induce failures, a test needs to fulfil each of the three RIP
+conditions --- {\it reachability}, {\it infection} and {\it propagation} ---
+introduced earlier. To {\it reveal} the failure, however, a test needs to
+ascertain that the output or behaviour of the software was incorrect. That is,
+it needs to fulfil a further, fourth condition, {\it revealability}, to cause
+the {\it test} to fail, thereby inducing a test failure. In practice,
+revealability is fulfilled by the judicious use of assertions in a testing
+framework like JUnit. 
+
+\note{Video}{Back to the code}
+
+To demonstrate revealability we return to the example at the beginning of this
+lecture, when we executed {\tt duplicateLetters} with two JUnit tests --- one
+that checked for {\tt t} in the set returned by the method in the case of
+firstly the string {\tt "software testing"} and secondly the string {\tt
+"software debugging"}.
+
+Note that, in actual fact, {\it both} tests induce failures, thereby satisfying
+the required conditions of reachability, infection and propagation. But, only
+the latter test satisfies the {\it reachability} condition and actually {\it
+observes} the failure, triggering an assertion violation that results in a test
+failure. 
+
+Why is that the case, and how does that happen? Well, when the method is
+executed with the string {\tt "software testing"}, the set of letters returned
+by the faulty method is: 
+
+\begin{center}
+    \{ {\tt a}, {\tt e}, {\tt f}, {\tt g}, {\tt i}, {\tt n}, {\tt o}, {\tt r},
+    {\tt s}, {\tt t}, {\tt w} \}
+\end{center}
+
+This of course, is the set of {\it all} letters in the string, not just the
+duplicates. The set of duplicates (i.e., the set of letters returned by the
+corrected method) is just:
+
+\begin{center}
+    \{ {\tt e}, {\tt s}, {\tt t} \}
+\end{center}
+
+So while this particular execution {\it did} reach the fault, the fault {\it
+did} infect the state, and the infection {\it did} propagate to the method's
+output, the test's assertion {\it didn't} specifically capture and check the
+right part of the output that {\it revealed} the failure to the test. It checked
+for the letter {\tt t}, which is present both when the method fails and also
+when it doesn't. If the assertion had checked for any other non-duplicated
+letter, or checked the length of the set, it would have revealed the failure and
+the test would have failed. (But the purpose of the test case was to check that
+a duplicated characters did appear in the returned result. So in that sense, the
+test achieved what it set out to do.)
+
+The assertion checking the output of the method with the string {\tt "software
+debugging"} on the other hand {\it does} reveal the fault of course, because in
+this particular case, {\tt t} does not appear as part of both the correct and
+incorrect output for this particular fault. 
+
+\note{Video}{Back to slide, then advance to RIPR highlighted acronym slide at the appropriate point}
+
+To conclude this part of the lecture then, for a successful test (i.e., one that
+reveals software failures), we do not just need to have the conditions to induce
+a failure (reachability, infection, and propagation --- RIP), the test needs to
+{\it reveal} the failure too, meaning a further fourth condition is necessary
+--- revealability. The four conditions together are known as {\bf RIPR} for
+short, or the {\bf RIPR} model.
+
+\section{Test Cases and Test Suites}
+
+A {\bf test case}, then, is an execution of a program with the intention of
+revealing failures caused by any faults that it may or may not have. 
+
+A test case consists of four main ingredients:
+
+\begin{enumerate}
+
+    \item {\bf The inputs necessary to put the software into the appropriate
+    state for testing.} 
+    %
+    In the context of unit testing, this may involve constructing the required
+    objects and invocating certain methods on them to move them into some state
+    required so that we can do some specific test. In system testing, this may
+    involve launching a GUI and proceeding through some part of it with example
+    inputs to get to the part of the system we want to test. 
+    %
+    The {\tt duplicateLetters} method is a simple static, stateless, method, so
+    no special inputs were needed to put it into a state so that we could
+    properly test it.
+
+    \item {\bf The actual test case values.} 
+    In the {\tt duplicateLetters} example, these were the actual strings we
+    tested the method with, i.e., {\tt "software testing"}, {\tt "software
+    debugging"}, etc.
+
+    \item {\bf The expected results of the tests.}
+    It's not enough just to execute the test, we need to know if the outputs are
+    the correct ones. This is established by assertion statements in many
+    testing frameworks. For example, we expect {\tt t} to be a duplicated
+    character in {\tt "software testing"} but not in {\tt "software debugging"}.
+
+    \item {\bf Finally, a reset of the system state.} 
+    As a last step, the test case may need to do some housekeeping like
+    resetting any system state it has interfered with, or by releasing any
+    resources it has acquired (e.g. network connections, etc). This to clear
+    things down in preparation for the ``next'' test, so that the starting state
+    for that test is always reliably the same. Not doing so may interfere with
+    the results of the next test that is executed, and whether any test failures
+    are triggered as a result. 
+
+\end{enumerate}    
+
+So note that ingredients~1 and~4 may not always be needed in practice. Omission
+of ingredient~4 where it is required, or inadequately performing it, may cause
+subsequent tests to behave non-deterministically --- that is, they may pass and
+fail without any changes to the code under test, because of differing or
+unreliable starting states. Such tests are known as {\it flaky tests}.
+
+Test values for ingredients 1 and 2 may be determined automatically. This is the
+subject of a later lecture!
+
+\note{Video}{Advance to the last slide and let it ``play''}
+
+Finally, a {\bf test set}, or a {\bf test suite} is simply a set of test cases.
+
+\end{document}

@@ -1,0 +1,18 @@
+...
+public static int daysBetweenTwoDates(int year1, int month1, int day1,
+                                      int year2, int month2, int day2) {
+...
+if ((year2 < year1) ||
+        (year2 == year1 && month2 < month1) ||
+        (year2 == year1 && month2 == month1 && day2 < day1)) {
+    int t = month2;
+    month2 = month1;
+    month1 = t;
+    t = day2;
+    day2 = day1;
+    day1 = t;
+    t = year2;
+    year2 = year1;
+    year1 = t;
+}
+...

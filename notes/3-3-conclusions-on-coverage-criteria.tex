@@ -1,0 +1,110 @@
+\input{common/setup}
+
+\begin{document}
+
+\title{3.3 Coverage Criteria --- Interim Conclusions}
+
+\section{Introduction}
+
+We're at the end of this block of the course on coverage, and we've encountered
+a number of criteria already! How do we know which to use, and when? What level
+of coverage should we aim to attain anyway? 
+
+We're now going take a look at the pros and cons of coverage criteria, and how
+to best apply them in practice.
+
+\section{Industry and Coverage Criteria}
+
+It's fair to say that there's a lot of scepticism about testing from some
+quarters of industry. Some of this is down to the belief that coverage means
+code coverage only. Even in the software industry though, most people agree that
+code coverage is a useful metric.
+
+The view changes somewhat for high integrity or safety critical systems where
+coverage criteria are very important, so much so that they form the basis of
+many software standards, as we saw with MCDC.
+
+\section{Pros and Cons of Coverage}
+
+Some common criticisms of coverage criteria can be summarised as follows:
+
+\begin{enumerate}
+    \item They can generate too many test requirements.
+    \item Not all the test requirements are useful.
+    \item Higher coverage does not necessarily guarantee that more bugs will be
+    found.
+\end{enumerate}
+
+And these are all true. But there are several pros as well, let's go back to
+some of the original motivations for coverage criteria and re-evaluate them in
+the light of what we've learnt:
+
+\begin{enumerate}
+
+    \item {\bf Coverage Criteria ensure our test suite have certain sets of 
+    properties.}
+       
+    Professional testers are often following testing strategies similar to those
+    provided by coverage criteria when designing tests, although they may not
+    realise it. In particular, good testers excel at thinking about rare
+    situations, putting together combinations of events, or attempting
+    ``what-if'' scenarios that are not too dissimilar to the steps performed as
+    part of Input Domain Analysis.
+    
+    Coverage Criteria help formalise the process for creating tests, on the
+    basis of test requirements. Although we've discussed them at a mostly
+    informal level, we could write them out as algorithms, if we wanted.
+    This systematic derivation is useful, because as well as telling us about
+    what's covered --- i.e., what we {\it did} --- we also know what's {\it not}
+    covered, i.e., what we {\it didn't do}. Perhaps more usefully, compared to a
+    human-driven process, they can tell us what we {\it forgot}. It's hard to
+    always remember things without a system for reminding you!
+
+    \item {\bf Coverage Criteria tell us how much testing has been done, 
+    and provide an indication as to when to stop testing.}
+    
+    Coverage Levels provide a useful metric as to how much testing we've done.
+    Although it says nothing about the number of bugs we've not found, most
+    coverage criteria provide confidence that the more testing you've done, the
+    less {\it likely} it is that unfound serious bugs remain. Coverage Levels
+    give developers, testers, and software managers concrete metrics to talk
+    about. We can decide that ``enough'' of the software has been tested once we
+    reach a certain coverage level (more on that later).
+
+\end{enumerate}
+
+\section{Software Testing Research and Coverage Criteria}
+
+Coverage Criteria continue to be important to Software Testing research and
+researchers (of which Rob and I are just two!).
+
+As we've seen Software Testing involves many difficult problems, and Coverage
+Criteria play into some of the insights behind some of those issues. One day,
+the metrics that coverage criteria provide may be able to inform practical
+testing about useful things like:
+
+\begin{itemize}
+
+    \item The relationship between actual faults, failures and types of coverage
+    and coverage levels.
+
+    \item Where to concentrate testing in order to find failures.
+
+    \item When time is limited, which tests to run first, and in what order.
+
+    \item What the ideal test suite size is.
+    
+    \item How to check that a fault has actually been repaired, and has not
+    introduced further faults. 
+    
+    \item Whether a fault can be automatically repaired.
+
+    \item ... 
+
+\end{itemize}    
+
+The list goes on! We are not there with providing solid answers to these
+interesting research topics yet. If they interest you, maybe you'd considered
+doing a PhD in this area!
+
+\end{document}

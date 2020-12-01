@@ -1,0 +1,15 @@
+...
+boolean yearSame = year2 == year1;
+boolean yearAndMonthSame = yearSame && month2 == month1;
+
+boolean secondDateBeforeFirstByYear = year2 < year1;
+boolean secondDateBeforeFirstByMonth = yearSame && month2 < month1;
+boolean secondDateBeforeFirstByDay = yearAndMonthSame && day2 < day1;
+
+boolean secondDateBefore = secondDateBeforeFirstByYear || 
+            secondDateBeforeFirstByMonth || secondDateBeforeFirstByDay;
+
+if (secondDateBeforeFirst) { 
+    ...
+}
+...

@@ -1,0 +1,32 @@
+ 1 & \verb$package uk.ac.shef.com3529.lectures.examples;$\\
+ 2 & \verb$$\\
+ 3 & \verb$public class VendingMachine {$\\
+ 4 & \verb$$\\
+ 5 & \verb$    private int totalCoins, currentCoins;$\\
+ 6 & \verb$    private boolean allowVend;$\\
+ 7 & \verb$$\\
+ 8 & \verb$    public VendingMachine() {$\\
+ 9 & \verb$        totalCoins = 0;$ & $\{${\tt totalCoins}$\}$\\
+10 & \verb$        currentCoins = 0;$ & $\{${\tt currentCoins}$\}$\\
+11 & \verb$        allowVend = false;$& $\{${\tt allowVend}$\}$\\
+12 & \verb$    }$\\
+13 & \verb$$\\
+14 & \verb$    public void returnCoins() {$\\
+15 & \verb$        currentCoins = 0;$ & $\{${\tt currentCoins}$\}$\\
+16 & \verb$    }$\\
+17 & \verb$$\\
+18 & \verb$    public void addCoin() {$\\
+19 & \verb$        currentCoins ++;$ & $\{${\tt currentCoins}$\}$ & $\{${\tt currentCoins}$\}$\\
+20 & \verb$        if (currentCoins > 1) {$ & & $\{${\tt currentCoins}$\}$\\
+21 & \verb$            allowVend = true;$ & $\{${\tt allowVend}$\}$\\
+22 & \verb$        }$\\
+23 & \verb$    }$\\
+24 & \verb$$\\
+25 & \verb$    public void vend() {$\\
+26 & \verb$        if (allowVend) {$ & & $\{${\tt allowVend}$\}$\\
+27 & \verb$            totalCoins += currentCoins;$ & $\{${\tt totalCoins}$\}$ & $\{${\tt currentCoins}$\}$\\
+28 & \verb$            currentCoins = 0;$ & $\{${\tt currentCoins}$\}$\\
+29 & \verb$            allowVend = false;$ & $\{${\tt allowVend}$\}$\\
+30 & \verb$        }$\\
+31 & \verb$    }$\\
+32 & \verb$}$\\

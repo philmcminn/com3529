@@ -1,0 +1,488 @@
+\input{common/setup}
+
+\begin{document}
+
+\title{2.3 White-Box Coverage Criteria based on\\ Logic Analysis}
+
+\section{The Motivation Behind Logic Coverage Criteria}
+
+\note{Video}{Talking head}
+
+Branch Coverage ensures that the predicates in each decision in a program are
+exercised as true and false as part of a test suite. 
+
+White-box {\bf logic coverage criteria} aim to test the logic in branch
+predicates more finely.
+
+\note{Video}{Title slide}
+
+\note{Video}{Slide change}
+
+Let's return to the \daysbetweentwodatesmethod~method from the first lecture
+last week. The method takes six parameters representing two dates ({\tt year1},
+{\tt month1}, {\tt day1} and {\tt year2}, {\tt month2}, {\tt day2},
+respectively).
+
+One of the initial tasks of the method is to ensure that the first date ({\tt
+year1}, {\tt month1}, {\tt day1}) is before the second ({\tt year2}, {\tt
+month2}, {\tt day2}) so that the later calculation of the days between the two
+dates will function correctly. This takes place on lines 23--36 of the method:
+
+\begin{center} 
+    \scalebox{0.8}{
+    \begin{tabular}{rl} 
+        \toprule
+        Line \\
+        \midrule
+        \input{code/days-between-two-dates}
+        \bottomrule
+    \end{tabular}}
+\end{center}    
+
+In particular, let's focus in on the branch predicate, which is complex and
+spans no fewer than three lines! Each line corresponds to a disjunct of the
+overall predicate.
+%
+(Recall that a disjunct is a boolean expression that forms the operand of an
+``or'' operator in a predicate, where the disjunct  cannot be further broken
+down into simpler disjuncts. For example, $D_1 and D_2$ in $D_1 \vee D_2$.)
+
+\note{Video}{Slide change}
+
+In this particular branch predicate of \daysbetweentwodatesmethod,
+each disjunct encodes a possible way in which the second supplied date could be
+before the first: 
+
+\begin{center}
+\begin{tabular}{ll}
+    \toprule
+    \multicolumn{2}{l}{\bf Disjunct} \\
+    \midrule
+    1 & {\tt year2 < year1}                                         \\
+    2 & {\tt year2 == year1 \&\& month2 < month1}                   \\
+    3 & {\tt year2 == year1 \&\& month2 == month1 \&\& day2 < day1} \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+That is:
+
+\begin{itemize}
+    \item {\bf Disjunct 1.} On the first line of the predicate (line 24 of the
+    code), if the year of the second date is before the first.
+
+    \item {\bf Disjunct 2.} On the second line of the predicate (line 25 of the
+    code), if the years are the same, but the month of the second date is before
+    the first.
+
+    \item {\bf Disjunct 3.} And finally, on the third line of the predicate
+    (line 26 of the code), if the years and months of the two dates are the
+    same, but the day of the second date is before the day of the first.
+\end{itemize}
+
+\note{Video}{Slide change}
+
+Branch Coverage requires that the overall predicate is exercised as
+true and false by the test suite, but we can do that by exercising 
+Disjunct 1 ({\tt year2 < year 1}) as true and false only:
+
+\begin{center}
+\begin{tabular}{r|lll|lll|ccc|c}
+    \toprule
+    {\bf Test} & \multicolumn{6}{c|}{{\bf Example Input}} & \multicolumn{3}{c|}{{\bf Disjunct}} & {\bf Branch} \\
+    {\bf Case} & {\tt year1} & {\tt month1} & {\tt day1} & {\tt year2} & {\tt month2} & {\tt day2} & {\bf 1} & {\bf 2} & {\bf 3} & {\bf Predicate} \\
+    \midrule
+    1 & 2019 & 12 & 13 & 2018 & 4  & 25 & \LTTrue & \LTFalse & \LTFalse & \LTTrue \\
+    2 & 2018 & 4  & 25 & 2019 & 12 & 13 & \LTFalse & \LTFalse & \LTFalse & \LTFalse \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+It does not ensure that the other disjuncts are independently correct, by
+testing them individually as true and false as well. (Suppose we slipped up in
+the final clause, for example, and wrote {\tt day2 > day1}, or made an
+equivalent mistake, {\tt day1 < day2}.)
+
+\section{Analysing the Logic of a Predicate}
+
+\note{Video}{Slide change}
+
+{\bf Logic coverage criteria} aim to address this type of potential deficiency.
+Logic criteria break a predicate down into {\bf conditions} according to their
+{\bf logical operators}.
+
+Typical {\bf logical operators} in programming languages are:
+
+\begin{center}
+\begin{tabular}{lll}
+    \toprule
+    {\bf Operator } & {\bf Mathematical} & {\bf Typical Programming} \\
+    {\bf Name     } & {\bf Symbol      } & {\bf Language Symbol    }\\
+    \midrule
+    not & $\neg$   & {\tt !} \\
+    and & $\wedge$ & {\tt \&\&} \\
+    or  & $\vee$   & {\tt ||} \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+A {\bf condition} is a boolean expression that is a component of a more complex
+predicate in that does not contain any logical operators.
+
+\note{Video}{Advance slide}
+
+How many conditions are there in the {\tt if statement} of
+\daysbetweentwodatesmethod? 
+
+\note{Video}{Advance slide}
+
+There are six conditions --- one in the first disjunct, two in the second, and
+three in the third. However, there are only five {\it unique} conditions, since
+the condition {\tt year2 == year1} appears as part of the second {\it and} the
+third disjunct:
+
+\begin{center}
+\begin{tabular}{llr}
+    \toprule
+    \multicolumn{2}{l}{\bf Condition}  & {\bf Disjunct} \\
+    \midrule
+    1  & {\tt year2 < year1}   & 1 \\
+    2= & {\tt year2 == year1}  & 2 \\
+    3  & {\tt month2 < month1} & 2 \\
+    2= & {\tt year2 == year1}  & 3 \\
+    4  & {\tt month2 == month1} & 3 \\
+    5  & {\tt day2 < day1}      & 3 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\note{Video}{Advance slide}
+
+\section{Logic Coverage Criteria}
+
+Now that we've learnt how to decompose predicates into conditions, we can apply
+various logic coverage criteria. As usual, these start simple and become
+relatively more complex!
+
+\subsection{Condition Coverage}
+
+One possible coverage criterion would involve ensuring that each condition of
+each predicate of a program is exercised as true and false. This is called {\bf
+Condition Coverage}.
+
+You would think that Condition Coverage subsumes Branch Coverage, because we're
+testing each condition more thoroughly. But this isn't actually the case.
+Consider \daysbetweentwodatesmethod and this test suite, and its
+effect on each of the conditions and the branch:
+
+\begin{center}
+\begin{tabular}{r|ccccc|c||llllll}
+    \toprule
+    {\bf Test} & \multicolumn{5}{c|}{{\bf Condition}} & {\bf Branch} & \multicolumn{6}{c}{{\bf Example Input}} \\    
+    {\bf Case} & {\bf 1} & {\bf 2} & {\bf 3} & {\bf 4} & {\bf 5} & {\bf Predicate} & {\tt year1} & {\tt month1} & {\tt day1} & {\tt year2} & {\tt month2} & {\tt day2} \\
+    \midrule
+    1 & \LTTrue  & \LTFalse & \LTFalse & \LTTrue  & \LTTrue  & \LTTrue & 2019 & 1 & 2 & 2018 & 1 & 1 \\
+    2 & \LTFalse & \LTTrue  & \LTTrue  & \LTFalse & \LTFalse & \LTTrue & 2019 & 2 & 1 & 2019 & 1 & 1 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\note{Video}{Advance slide to highlight the T's}
+
+Each condition is independently exercised as true and false by the the test
+suite, but the branch is only ever exercised as true.
+
+\note{Video}{Advance slide}
+
+\subsection{Multiple Condition Coverage}
+
+{\bf Multiple Condition Coverage} requires that each possible {\it combination}
+of truth values for each condition are tested. As such does subsume Branch
+Coverage, but at the cost of an exponential number of test requirements. 
+%
+Given $n$ conditions in a predicate, Multiple Condition Coverage generates $2^n$
+test requirements. requirements where $n$ is the number of conditions in the
+predicate.
+
+\note{Video}{Advance slide --- reveal table}
+
+How many test requirements would this mean for the branch of
+\daysbetweentwodatesmethod that we've been studying?
+
+\note{Video}{Advance slide --- reveal answer}
+
+With five unique conditions, there would be $2^5 = 32$ combinations --- just for
+one branch! 
+%
+We won't enumerate them all here!
+
+However, note that some of the combinations would be infeasible. So the true
+number of feasible test requirements is less than 32. For example, condition 1
+({\tt year2 < year1}) cannot be true at the same time as condition 2 ({\tt year2
+== year1}), likewise condition 3 ({\tt month2 < month1}) cannot be true while
+condition 4 is true ({\tt month2 == month1}). 
+
+\note{Video}{Advance slide}
+
+\subsection{Condition Decision Coverage}
+
+To counter the problem that Condition Coverage does not subsume Branch Coverage,
+and that Multiple Condition Coverage results in an unwieldy number of test
+requirements, {\bf Condition Decision Coverage}, combines Condition Coverage and
+Branch Coverage together into one criterion. The word ``Decision'' in the name
+comes from the fact that Branch Coverage is sometimes called Decision Coverage.
+
+As you would expect from such a combination, Condition Decision Coverage
+requires exercising each condition as true and false, as well as the overall
+branch predicate (but without requiring testing each explicit combination of
+truth values and the exponential number of resulting test cases).
+
+Critics of Condition Decision Coverage, however, argue that this is not
+sufficient or nearly thorough enough. It would be better, from a testing
+perspective, to exercise the {\it effect} of each condition on the outcome of
+the overall decision (i.e., the branch predicate). And that's what the next
+coverage criterion, {\it Modified Condition Decision Coverage}, aims to achieve.
+
+\note{Video}{Advance slide}
+
+\subsection{Modified Condition Decision Coverage (MCDC)}
+
+\note{Video}{Advance slide during this paragraph to reveal minor/major condition descriptive part of the slide}
+
+{\bf Modified Condition Decision Coverage}, or MCDC for short, works by taking
+each individual condition of the branch predicate and treating it as the {\it
+major} condition. The other conditions (referred to as the {\it minor}
+conditions at this point) are arranged such that if we were to flip the truth
+value of the major condition, the overall predicate would also flip in truth
+value so that the alternative branch would be taken in the program. In other
+words, so that the major condition is responsible for {\it determining} the
+predicate. 
+
+There are two main ways to achieve this --- we will call these {\bf Restricted
+MCDC} and {\bf Correlated MCDC}. 
+
+Restricted MCDC requires the truth values of the minor conditions to be fixed as
+the major condition and the predicate flip in truth value, while Correlated MCDC
+relaxes this requirement. So long as the major condition and predicate both flip
+together, we will have satisfied Correlated MCDC.
+
+\note{Video}{Advance slide}
+
+\subsubsection*{Restricted MCDC}
+
+We'll start with Restricted MCDC first. Given a major condition, we then need to
+choose truth values for the minor conditions so that flipping the outcome of the
+major subcondition also flips (i.e., determines) the overall predicate.
+
+So we begin by choosing condition 1 of the
+\daysbetweentwodatesmethod example as the major condition. If we
+set the other (minor) subconditions to false, then condition 1 now determines
+the predicate. When we flip the truth value of condition 1, the branch predicate
+also flips, as highlighted here:
+
+\note{Video}{Advance slide to reveal highlight}
+
+\begin{center}
+\begin{tabular}{r|ccccc|c||llllll}
+    \toprule
+    {\bf Test} & \multicolumn{5}{c|}{{\bf Condition}} & {\bf Branch} & \multicolumn{6}{c}{{\bf Example Input}} \\    
+    {\bf Case} & {\bf 1} & {\bf 2} & {\bf 3} & {\bf 4} & {\bf 5} & {\bf Predicate} & {\tt year1} & {\tt month1} & {\tt day1} & {\tt year2} & {\tt month2} & {\tt day2} \\
+    \midrule
+    1 & {\it \LTTrue}  & \LTFalse & \LTFalse & \LTFalse & \LTFalse & {\it \LTTrue}  & 2019 & 1 & 1 & 2018 & 2 & 1 \\
+    2 & {\it \LTFalse} & \LTFalse & \LTFalse & \LTFalse & \LTFalse & {\it \LTFalse} & 2018 & 1 & 1 & 2019 & 2 & 1 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+As we can see this generates two test requirements, which are fulfilled in the
+table by two test cases. We now move onto condition 2 and apply a similar
+process:
+
+\note{Video}{Advance slide to reveal highlight}
+
+\begin{center}
+\begin{tabular}{r|ccccc|c||llllll}
+    \toprule
+    {\bf Test} & \multicolumn{5}{c|}{{\bf Condition}} & {\bf Branch} & \multicolumn{6}{c}{{\bf Example Input}} \\    
+    {\bf Case} & {\bf 1} & {\bf 2} & {\bf 3} & {\bf 4} & {\bf 5} & {\bf Predicate} & {\tt year1} & {\tt month1} & {\tt day1} & {\tt year2} & {\tt month2} & {\tt day2} \\
+    \midrule
+    3 & \LTFalse & {\it \LTTrue}  & \LTTrue & \LTFalse & \LTFalse & {\it \LTTrue}  & 2019 & 2 & 1 & 2019 & 1 & 1 \\
+    4 & \LTFalse & {\it \LTFalse} & \LTTrue & \LTFalse & \LTFalse & {\it \LTFalse} & 2018 & 2 & 1 & 2019 & 1 & 1 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+This time we cannot set all of the other conditions to false --- we need
+condition 3 to be true in order for condition 2 to determine the predicate.
+%
+This generates a further two test requirements. And we continue in this fashion.
+
+One problem with Restricted MCDC is that we tend to encounter infeasibility
+issues with it when there are variables that are shared across conditions that
+mean that one condition cannot be varied independently of another. 
+
+For this reason, Correlated MCDC, which we discuss in more detail next, is
+sometimes preferred. 
+
+\note{Video}{Advance slide}
+
+\subsubsection*{Correlated MCDC}
+
+Correlated MCDC does not care whether the minor conditions are fixed while the
+major condition flips, just as long as there is a test case where the major
+condition flips and the branch predicate also flips. 
+
+As with Restricted MCDC, each condition therefore generates two test
+requirements. However in practice, the set of truth values for each condition
+may satisfy multiple test requirements, leading to fewer test cases overall.
+
+In practice, we can arrange this by splitting our test suite into two. The first
+subset of test cases is where the branch predicate evaluates to true, and the
+second subset of test cases is where the branch predicate evaluates to false.
+Now, we just need to ensure that each condition takes on one true/false outcome
+in the first subset, and the opposite outcome in the second:
+
+\begin{center}
+\begin{tabular}{r|ccccc|c||llllll}
+    \toprule
+    {\bf Test} & \multicolumn{5}{c|}{{\bf Condition}} & {\bf Branch} & \multicolumn{6}{c}{{\bf Example Input}} \\    
+    {\bf Case} & {\bf 1} & {\bf 2} & {\bf 3} & {\bf 4} & {\bf 5} & {\bf Predicate} & {\tt year1} & {\tt month1} & {\tt day1} & {\tt year2} & {\tt month2} & {\tt day2} \\
+    \midrule
+    1 & \LTTrue  & \LTFalse & \LTFalse & \LTTrue  & \LTTrue  & \LTTrue  & 2019 & 1 & 2 & 2018 & 1 & 1 \\
+    2 & \LTFalse & \LTTrue  & \LTTrue  & \LTFalse & \LTFalse & \LTTrue  & 2019 & 2 & 1 & 2019 & 1 & 1 \\
+    \hdashline
+    3 & \LTFalse & \LTFalse & \LTFalse & \LTFalse & \LTFalse & \LTFalse & 2018 & 1 & 1 & 2019 & 2 & 1 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+Note that for test case 3, all conditions are false, and the branch
+predicate is also false. For test cases 1 and 2 the branch predicate is
+true, and each condition is true in at least one test requirement. 
+
+\note{Video}{Advance slide, advance again on ``condition 2 for ...''}
+
+That is, condition 1 can be regarded as the major condition in test cases
+1 and 2; condition 2 for test cases 2 and 3; condition 3 for test
+cases 2 and 3; and so on.
+
+There is less scope to re-use truth values across test requirements and test
+cases with Restricted MCDC because the truth values are more tightly controlled.
+And so Correlated MCDC tends to involve fewer test cases, i.e. smaller test
+suites. However, Restricted MCDC is better at test thoroughness: notice how the
+the test suite for Correlated MCDC does not independently test Disjuncts 1 and
+3. In fact, due to short circuit evaluation in Java, Disjunct 3 is never even
+evaluated by Test Case 1, since the outcome of the entire branch predicate is
+known after Disjunct 1.
+
+\note{Video}{Advance slide}
+
+\subsection{Subsumption Hierarchy}
+
+This leads to the following subsumption hierarchy of Logic Coverage Criteria
+(including Branch Coverage for comparison purposes).
+
+\slide{2-3-subsumption-hierarchy}
+
+The diagram reflects how Branch Coverage is not subsumed by Condition Coverage,
+yet both are subsumed by Condition Decision Coverage, which combines the two.
+Condition Decision is then subsumed by MCDC up to Multiple Condition Coverage.
+
+As with Structural Criteria, Logic Criteria go by different names. In this
+lecture I've tried to use the most common names --- the diagram lists others
+alongside the common one. 
+
+The only place where I've broken with the common name is with the two variants
+of MCDC, since there is no common established term that incorporates the acronym
+``MCDC'', and yet the term MCDC is incorporated into many software standards, as
+we will discuss next.
+%
+There has historically been a lot of confusion around MCDC. Sometimes MCDC is
+referred to mean one of the restricted or correlated variants, but either one of
+them, specifically. This is probably because many testers are not even aware
+there is a subtle difference. 
+%
+Therefore, Restricted and Correlated MCDC can just go by the name MCDC if the
+person using the term is not familiar with the different strategies for handling
+minor conditions. 
+
+Some alternative names only differ because the individuals who named them chose
+to use the word ``clause'' instead of the word ``condition''. The word
+``condition' is potentially confusing often used to mean the same thing as a
+complete predicate, and not specifically a component of a predicate. However,
+I've tried to stick with the most commonly used names for coverage criteria
+throughout this course.
+
+\note{Video}{Advance slide}
+
+\subsection{When to Use Logic Coverage Criteria}
+
+So which logic coverage criterion, should we use, and when? 
+
+\note{Video}{Click through the slide on each point to reveal it as a bullet}
+
+In terms of all of the logic coverage criteria, the MCDC variants offer the best
+trade-off in terms of number of test requirements and test thoroughness, with
+Correlated MCDC resulting in small test suites in general. Multiple Condition
+Coverage results in too many test requirements, and therefore test cases, while
+plain Condition Coverage does not subsume Branch Coverage.
+
+When should we use it? MCDC is good at testing complicated predicates in
+your program code. However, many good programmers will have refactored code
+like that which we have encountered in \daysbetweentwodatesmethod,
+so that it is easier to understand when reading a program, for example:
+
+\note{Video}{Advance slide}
+
+\begin{center} 
+    \scalebox{0.8}{
+    \begin{tabular}{l} 
+        \toprule
+        \input{code/days-between-two-dates-refactored}
+        \bottomrule
+    \end{tabular}}
+\end{center}  
+
+Such refactorings make it less immediately obvious as to how to apply MCDC. In
+these cases, we would need to do the reverse of the refactoring to reconstruct
+the predicate that leads to establishing the {\tt secondDateBeforeFirst} boolean
+value.
+
+You may therefore think that complex predicates are not that frequent in
+practice. One area where they tend to crop up a lot is in {\it control systems}
+or {\it cyber-physical systems} --- i.e., software that controls a physical
+device, for example a motor or an engine.
+
+It's for this reason that different flavours of logic coverage criteria (usually
+MCDC) are mandated by many standards in order for safety-critical software
+systems to be certified --- including road, rail and avionic software. Some of
+these standards include, for example:
+
+\note{Video}{Advance slide}
+
+% source:
+% https://www.froglogic.com/coco/modified-condition-decision-coverage-mcdc/
+
+\begin{itemize}
+
+    \item ISO 26262, ``Road vehicles --- Functional safety''.\\
+    See: \url{https://en.wikipedia.org/wiki/ISO_26262}
+
+    \item EN 50128, a functional safety standard used in the rail industry.\\
+    See: \url{https://www.adacore.com/industries/rail/en50128}
+
+    \item DO-178B and DO-178C, ``Software Considerations in Airborne Systems and Equipment
+    Certification''. (DO-178C succeeded DO-178B in 2012.)\\
+    See: \url{https://en.wikipedia.org/wiki/DO-178B}, \url{https://en.wikipedia.org/wiki/DO-178C}
+
+    \item IEC 61508, a basic functional safety standard applicable to all
+    industries.\\
+    See: \url{https://en.wikipedia.org/wiki/IEC_61508}
+    
+\end{itemize}
+
+These standard involve the attainment of different ``levels'' referred to as
+``SILs'' (Safety Integrity Levels) or ``ASILs'' (Automotive Safety Integrity
+Levels).
+
+\end{document}

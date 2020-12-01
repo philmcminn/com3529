@@ -1,0 +1,264 @@
+\input{common/setup}
+
+\begin{document}
+
+\title{3.1 White-Box Coverage Criteria based On \\ Data Flow Analysis}
+
+\section{Introduction}
+
+The set of coverage criteria we're going to look at in this lecture consider
+that in order to adequately test a program we should focus on the ``flow'' of
+data values. Specifically, we should try to ensure that data values in the
+program are created and used correctly. Identifying where data values are
+created, used, and the paths that run between points in the program where they
+are created and used is called {\it data flow analysis}. 
+
+\section{An Introduction to Data Flow Analysis}
+
+\subsection{Definitions and Uses}
+
+A {\bf definition} is a location in a program where a value for a variable is
+stored into memory. Examples include assignment statements (the variable being
+``defined'' is the variable being assigned to) or the beginning of a method called
+with parameters (the variables being defined are the parameter variables):
+
+\begin{center} 
+    \scalebox{0.8}{
+    \begin{tabular}{l} 
+        \input{code/definitions}
+    \end{tabular}}
+\end{center}   
+
+A {\bf use} is a program location where a variable's value is accessed, for
+example, as part of a predicate, when a method on it is invocated (if it is an
+object), it is output (e.g., via a \code{System.out.println} statement), or
+returned from a method via a {\tt return} statement:
+
+\begin{center} 
+    \scalebox{0.8}{
+    \begin{tabular}{l} 
+        \input{code/uses}
+    \end{tabular}}
+\end{center}  
+
+Some statements are definitions {\it and} uses, as in the ``{\tt int x = y}''
+example above --- {\tt x} is defined, while {\tt y} is used. 
+
+The {\it same} variable may be defined and used in the same statement, e.g. {\tt
+x} in ``{x = x + 1}'' or the equivalent statements ``{\tt x += 1}'' and ``{\tt x ++}''.
+
+Data flow testing criteria are specifically target values carried from
+definitions to uses, known as {\bf definition-use} pairs. The criteria exercise
+definition-use pairs in various ways.
+
+The first step of data flow analysis required for data flow testing criteria
+involves annotating the CFG with the variables defined and used at each node of
+the CFG. Formally, we refer to the set of variables defined at a node $n$ as
+$\mathit{defs}(n)$ and the variables used at a node $n$ as $\mathit{uses}(n)$.
+
+Here's an example, using the \signmethod of the \signutilsclass:
+
+% slide
+
+\subsection{Definition-Use Paths}
+
+% Define a path as a sequence of nodes?? Should this be in the definition 
+% of path coverage / CFGs from earlier
+
+An important thing to note when performing data flow analysis is that despite a
+variable $v$ being defined at a node $n_i$, the value assigned to $v$ at $n_i$
+may not be the value of $v$ accessed at a use appearing later in the program at
+$n_j$.
+
+The first, perhaps obvious reason for this is that there may be no path running
+between $n_i$ and $n_j$ in the CFG. For example, suppose in the \signmethod,
+that there was a statement {\tt return r} immediately following the definition
+of {\tt r} at node 5. There would be no path from the definition of {\tt r} at
+node 5 to the use of {\tt r} at node e (12), since the method would have already
+exited.
+
+The second, perhaps less obvious reason, is that $v$'s value may be changed by
+{\it another} definition that is executed {\it after} $n_i$ but {\it before}
+$n_j$. Such a ``re-definition'' of the variable is referred to as a {\bf killing
+definition}. For example, the definition of {\tt r} at node 2 is ``killed'', or
+re-defined at node 5 or node 9. 
+
+We are interested in paths between the definition and use of a variable $v$
+where the path contains no killing definitions of $v$, otherwise known as a {\bf
+definition-clear} path. The path from node 2 to node 12 is only definition-clear
+with respect to {\tt r} if it avoids the re-definition of {\tt r} at nodes 5 and
+9. (For this to happen, {\tt r} needs to be 0.)
+
+Formally, a path from $n_i$ to $n_j$ is definition-clear with respect to a
+variable $v$ if for each node $n_k$ on the path between $n_i$ and $n_j$, (i.e.,
+$n_k \neq n_i \wedge n_k \neq n_j$), $v \notin \mathit{defs}(n_k)$. That is,
+none of the nodes between $n_i$ and $n_j$ is a killing definition. 
+%
+If a definition-clear path exists from a definition of $v$ at $n_i$ to a
+use of {\tt v} at $n_j$, the definition of $v$ is said to {\bf reach} the use
+at $n_j$.
+
+We define a {\bf definition-use path} with respect to some variable $v$ as a
+path between $n_i$ and $n_j$, where $v \in \mathit{defs}(n_i)$ and $v \in
+\mathit{uses}(n_j)$, and that is definition-clear with respect to $v$.
+
+We will refer to the complete set of definition-use paths present in a
+program/CFG as the set $\mathit{DU}$. 
+
+With \signmethod, the $DU$ (the last column of this table) is relatively small:
+
+\begin{center}
+\begin{tabular}{rrrrl}
+    \toprule
+    No. & Variable & Definition & Use & Definition-Use Path \\
+    \midrule
+    1 & {\tt r}  &          2 &   e & 2 $\rightarrow$ 4 $\rightarrow$ 8 $\rightarrow$ e \\
+    2 & {\tt r}  &          5 &   e & 5 $\rightarrow$ 8 $\rightarrow$ e \\
+    3 & {\tt r}  &          9 &   e & 9 $\rightarrow$ e \\
+    4 & {\tt n}  &          s &   4 & s $\rightarrow$ 2 $\rightarrow$ 4 \\
+    5 & {\tt n}  &          s &   8 & s $\rightarrow$ 2 $\rightarrow$ 4 $\rightarrow$ 8 \\
+    6 & {\tt n}  &          s &   8 & s $\rightarrow$ 2 $\rightarrow$ 4 $\rightarrow$ 5 $\rightarrow$ 8 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\section{Data Flow Coverage Criteria}
+
+The test requirements for data flow coverage criteria are to execute different
+subsets of the complete set of definition-use paths present in a program, i.e.,
+$\mathit{DU}$.
+
+\subsection{All Defs Coverage}
+
+{\bf All Defs Coverage} requires the test suite to execute at least one
+definition-use path from each definition in the program. Or, to put it another
+way, that {\it each definition reaches at least one use} in at least one test
+case of the test suite.
+
+More formally, All Defs Coverage involves constructing a series of subsets of
+$\mathit{DU}$, one for each pair $(n, v)$, where $v \in \mathit{defs}(n)$. It
+then requires one path from each subset to have been executed by the test suite.
+
+Referencing the table then, All Defs Coverage for the \signmethod would include
+test requirements 1, 2, 3 (each of the different definitions of {\tt r}) and one
+of 4, 5 or 6 (different definition-use paths from the definition of {\tt n} at
+the start node, s).
+
+\subsection{All Uses Coverage}
+
+The {\bf All Uses} coverage criterion requires the test suite to execute at
+least one definition-use path from each definition in the program to each use.
+Or, to put it another way, it ensures that {\it each definition reaches each
+possible use} in at least one test case of the final test suite. 
+
+More formally, All Uses constructs a series of subsets of $DU$ for each unique
+triple $(v, n_i, n_j)$ in the program/CFG, % is it program or CFG?
+for a variable $v$, $v \in \mathit{defs}(n_i)$ and $v \in \mathit{uses}(n_j)$. It then
+requires one path from each subset to have been executed by the test suite.
+
+Referencing the table, All Uses Coverage for the \signmethod would include
+test requirements 1, 2, 3 (each of the different definitions of {\tt r}), then 
+test requirement 4, and one of test requirements 5 or 6. Test requirements 5 and
+6 involve different paths from the same definition of {\tt n} at node s to its
+use at node 8 (and therefore either may be included), whereas test requirement 4
+involves the only definition-use path of {\tt n} from s to 4.
+
+As such, All Uses subsumes All Defs.
+
+\subsection{All Def-Use Paths Coverage}
+
+Finally, the {\bf All Def-Use Paths} coverage criterion requires every path in
+$DU$ to be executed. This means including all the test requirements in the table.
+
+As such, All Def-Use Paths subsumes All Uses and All Defs.
+
+One disadvantage of Data Flow Coverage Criteria is that not all of the
+definition-clear paths are necessarily feasible. Sometimes, a choice of path can
+mitigate this problem, otherwise, the test requirement cannot be satisfied and
+must be dropped.
+
+\section{When Should You Use Data Flow Testing?}
+
+Data Flow Testing is particularly useful at catching bugs where program
+variables are used to encapsulate the current {\it state}. Program state is
+typically captured using boolean variables which act as flags denoting the
+program is or is not in some particular state, or variables of an enumerated
+type to capture the fact that a program is in one of several potential states.
+
+Data Flow Coverage Criteria, can be used to detect if the state has been set
+incorrectly in the program by tracking where a state variable is defined and
+where it is later used. 
+
+Variables representing state are particularly important in objects. Because
+methods can be called in any sequence, an object cannot rely on the order of
+program statements to enscapulate the current state of the program on its own.
+Instead, the state must be stored and saved in an instance variable for methods
+called later to then look up and reference.
+
+Take for example this class representing a vending machine. Whether a product
+can be vended via the {\tt vend()} method depends on whether the {\tt allowVend}
+boolean instance variable is set to {\tt true}. This happens after two coins
+have been entered, via the {\tt addCoin()} method:
+
+% \slide
+
+The instance variable {\tt currentCoins} represents the number of coins that
+have currently been inserted into the machine, via the {\tt addCoin()} method
+has been invocated on the method. The {\tt returnCoins} method will return these
+coins to the user (reseting {\tt currentCoins} to zero).
+
+When the machine successfully vends a product, the total number of coins held by
+the machine (represented by the {\tt totalCoins} instance variable) is increased
+by the number of current coins ({\tt currentCoins}), {\tt currentCoins} is reset
+to zero. Finally, {\tt allowVend} is set to false, since the machine should not
+vend more products until further coins have been inserted into the machine via
+{\tt addCoins}.
+
+Since methods can be called at any time on an object, in any particular
+sequence, we need a special form of CFG to represent this fact, if we are to
+perform Data Flow Analysis. We will use a variant of the CFG for an object of a
+class, referred to as the Class Control Flow Graph for the object, or CCFG for
+short. 
+
+% \slide
+
+A CCFG begins with the CFG for the object's constructor, and then the
+possibility to call each method in a potentially continuous loop stemming from a
+special node, c.
+
+Consider one of the definition-pairs for {\tt currentCoins}, which is defined at
+node 13 in the {\tt returnCoins} method and used at node 25 in the {\tt vend}
+method.
+
+Does a definition-clear path exist between nodes 13 and 25?
+
+Yes, a path exists through the CCFG. It requires {\tt vend()} to be executed
+after {\tt returnCoins()}. 
+
+Is this definition-clear path feasible? Well, actually it is, as we'll see in a
+moment. 
+
+Should it be feasible? No!
+
+In theory, the definition-use path from nodes 13 to 25 should not be feasible
+--- the use of {\tt currentCoins} is in a section of code dedicated to vending a
+product, but all of the coins have just been returned to the user in the
+definition of {\tt currentCoins} in {\tt returnCoins}.
+
+Yet, the path {\it is} feasible. Consider the method invocation sequence {\tt
+VendingMachine()} $\rightarrow$ {\tt addCoin()} $\rightarrow$ {\tt addCoin()}.
+Two coins are added, and {\tt allowVend} is set to true. We can now invocate
+{\tt returnCoins()} (executing node 13) followed by {\tt vend()} (which
+successfully executes node 25). 
+
+There is a bug in the class! Where is the bug?
+
+The {\tt returnCoins} method should also set {\tt allowVend} to false, but it
+neglects to do so. This means that if two coins were previously entered, even if
+they are returned to the use, the product can be vended. If {\tt allowVend} was
+set to false after node 13, the path to node 25 would never be feasible.
+
+The example therefore shows how state bugs in code can be uncovered using Data
+Flow Analysis and testing. 
+
+\end{document}

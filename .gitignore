@@ -1,0 +1,49 @@
+#########
+# BUILD #
+#########
+
+# ...
+
+#########
+# LATEX #
+#########
+*.aux
+*.fdb_latex
+*.fdb_latexmk
+*.log
+*.synctex.gz
+*.synctex(busy)
+*.fls
+*.out
+
+##########
+# BIBTEX #
+##########
+*.bbl
+*.bcf
+*.blg
+*-blx.aux
+*-blx.bib
+*.run.xml
+
+######
+# OS #
+######
+.DS_Store
+
+#############
+# LIBRARIES #
+#############
+
+##########
+# EDITOR #
+##########
+.vscode/
+
+#########
+# EXCEL #
+#########
+*~$*.xlsx
+
+
+

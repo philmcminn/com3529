@@ -1,0 +1,18 @@
+   & \dots \\
+ 5 & \verb$public static int daysBetweenTwoDates(int year1, int month1, int day1,$\\
+ 6 & \verb$                                      int year2, int month2, int day2) {$\\
+   & \dots \\
+24 & \verb$if ((year2 < year1) ||$ \\
+25 & \verb$        (year2 == year1 && month2 < month1) ||$ \\
+26 & \verb$        (year2 == year1 && month2 == month1 && day2 < day1)) {$ \\
+27 & \verb$    int t = month2;$ \\
+28 & \verb$    month2 = month1;$ \\
+29 & \verb$    month1 = t;$ \\
+30 & \verb$    t = day2;$ \\
+31 & \verb$    day2 = day1;$ \\
+32 & \verb$    day1 = t;$ \\
+33 & \verb$    t = year2;$ \\
+34 & \verb$    year2 = year1;$ \\
+35 & \verb$    year1 = t;$ \\
+36 & \verb$}$ \\
+   & \dots \\
