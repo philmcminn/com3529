@@ -6,31 +6,39 @@
 
 \begin{enumerate}
 
-    \item Do the ``Who Wants To Be A Software Tester?'' Quiz for this week.
-    If you're unclear about any of the answers then ask!
+    \item Do the ``Who Wants To Be A Software Tester?'' Quiz for this week. If
+    you're unclear about any of the answers then ask!
 
-    \item Clone the examples repository (\examplesrepourl) for the module, and
-    set things up on your own machine (or on Codio) following the instructions
-    in the {\tt README.md} file.
+    \item Clone the examples repository (\coderepourl) for the module. Read
+    through the {\tt README.md} and ensure that you can get things running on
+    Codio or your own machine.
 
-    \item Navigate to the \examplespackage~package, and open the \weekonepracticalclass
-    class. The class contains four methods. For each method:
+    \item Navigate to the \practicalspackage~package (in the
+    \practicalsdirectory~directory of the repository) and open the \weekoneclass
+    class. The class contains four methods. Each method has a fault, and you
+    will need to write JUnit tests to establish the presence of the fault (by
+    producing a failure) and that, following fixing the fault, the method now
+    works. Add your tests into the provided skeleton \testweekoneclass JUnit
+    test suite class and run them using Maven as described in the code
+    repository's \readmefile file.
+    
+    For each method:
 
         \begin{enumerate}
 
             \item Identify the fault.
             
-            \item If possible, write a JUnit test case that does {\it not} execute the fault.
+            \item If possible, write a JUnit test case that does {\it not}
+            execute the fault.
             
-            \item If possible, write a JUnit test case that executes the fault, but
-            does not infect the program state.
+            \item If possible, write a JUnit test case that executes the fault,
+            but does not infect the program state.
 
             \item If possible, write a JUnit test case that causes an infection,
             but {\it not} a failure.
 
-            \item For the given test case, identify the first infected
-            (i.e., erroneous) program state. Be sure to describe the complete
-            state.
+            \item For the given test case, identify the first infected (i.e.,
+            erroneous) program state. Be sure to describe the complete state.
             
             \item Fix the fault and verify that the given test now produces the
             expected output.
