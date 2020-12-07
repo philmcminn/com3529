@@ -1,0 +1,139 @@
+\input{common/setup}
+
+\begin{document}
+
+\title{4.2 Search-Based Test Case Generation}
+
+\section{Introduction}
+
+One disadvantage of Random Testing, or Fuzzing, is that if certain sets of
+inputs needed for a test case, or to violate some property, occupy a very small
+fraction of the overall input domain, they won't be found very quickly. And if
+the overall input domain is very large, or even infinite, they may not be found
+at all.
+
+What if we could somehow {\it guide} the process to the right areas of the input
+domain? Well, this is what Search-Based Testing aims to do. Search-Based Testing
+treats the input domain of a program as a {\it search space}. Viewed through
+this lens, some testing problems are effectively ``needle in a haystack'' search
+problems. Without some hints as to where the needle is, we will never find it.
+
+\section{Fitness Functions}
+In order to provide guidance to the required test case, Search-Based Testing
+needs a {\it fitness function}. The fitness function takes an input to the
+program and returns a {fitness value} indicating ``how good'' the input is to
+the one that is actually needed. If the fitness function is being {\it
+minimised}, the close the value to zero, the better the input is. On the other
+hand, if the fitness function is being maximised, the higher the value
+(potentially with some ceiling), the better the input is.
+%
+Note that the fitness function doesn't need to know {\it what} the required
+input is (that would be tantamount to having solved the problem already!), just
+how exactly some candidate input measures up to the one that we want.
+
+It's easier to explain with an example. Let's return to the classify triangle
+problem again. Recall that Random Testing could not easily find inputs where the
+three sides are equal, i.e. {\tt side1 == side2} and {\tt side2 == side3}.
+
+Essentially with this particular test case generation problem, Random Testing
+does not ``know'' if it's getting close to the input needed to trigger the
+problematic branch or not. For example, it may get equal numbers for two of the
+sides, but narrowly miss out on the third. This input would be judged in exactly
+the same way as one where the three sides were very far apart in value.
+Search-Based Testing, on the other hand, seeks to retain ``close'' inputs and
+develop them further to try to seek to execute the goal of the test case. 
+The fitness function it would seek to minimise in this case would be:
+
+\begin{center}
+$\mathit{fitness} = |$ {\tt side1} $-$ {\tt side2} $| + |$ {\tt side2} $-$ {\tt side3} $|$
+\end{center}
+
+That is, absolute difference of {\tt side1} compared with {\tt side2} added to
+the same calculation with {\tt side2} and {\tt side3}.
+
+Notice how the result of this equation is closer to zero the closer the values
+of the three sides are to being the same as one another, as shown by the
+examples in the following table:
+
+\begin{center}
+    \begin{tabular}{rrrr}
+        \toprule 
+        {\tt side1} & {\tt side2} & {\tt side3} & $\mathit{fintess}$ \\
+        \midrule
+        10 & 20 & 30 & 20 \\
+        10 & 15 & 20 & 10 \\
+        10 & 12 & 14 & 4  \\
+        10 & 11 & 12 & 2  \\
+        10 & 10 & 10 & 0  \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+We can see this visually for making {\tt side1} and {\tt side2} equal (i.e., the
+first addend of the equation) by plotting the fitness values:
+
+We call the surface of fitness values like this the fitness ``landscape''. 
+
+Compare this to what Random Testing ``sees'':
+
+Random Testing is not guided by any information, so every input is treated the
+same, unless it executes the branch in question. The plot clearly portrays the 
+``needle in a haystack'' nature of this individual test case generation problem.
+
+\section{Search Techniques}
+
+It's all very well and good having guidance, but we need a method of exploiting
+it. That's where the ``search'' part of Search-Based Testing comes in.
+Search-Based Testing uses the fitness function in combination with an
+optimisation algorithm. 
+
+One of the simplest optimisation algorithms is a search technique called {\it
+Gradient Descent}. Gradient Descent aims to travel down the gradient of the
+fitness landscape to the nearest minimum. It works as follows:
+
+\begin{enumerate}
+
+\item Pick a point $p$ at random in the search space (the input domain), and evaluate
+its fitness, $\mathit{fitness}(p)$.
+\item Evaluate all the neighbouring points in the fitness landscape, $p_1 \dots p_n$.
+\item If $\mathit{fitness}(p_i), 1 < i < n$ is less than than
+$\mathit{fitness}(p)$, set $p$ to $p_i$.
+\item Jump to step 2 and repeat until none of $p_1 \dots p_n$ offer an improved
+fitness over $p$.
+
+\end{enumerate}
+
+Gradient Descent (often called {\it Hill Climbing} if the fitness function is to
+be maximised) is often described as a ``local'' search algorithm, because as
+each point, it evaluates all of its neighbours for a position of improved
+fitness in the landscape, until it cannot improve fitness any more. That is, it
+has reached a local minima in the fitness landscape. If this local minima
+represents a fitness value of zero, the test requirement will have been
+satisfied (i.e., the problematic branch is executed with the input in our
+triangle example). If not, the search cannot make any more progress from this
+position, so it is {\it restarted} from a different random position in the
+search space, in the hope of ending up in local minimum that does satisfy the
+test requirement. This process continues until the test requirement is satisfied
+or some resource limit (e.g., number of iterations or test data evaluations) is
+exhausted. The search will always fail, for example, if the test requirement is
+infeasible. 
+
+\subsection{The Alternating Variable Method (AVM)}
+
+
+\subsection{Evolutionary Algorithms}
+
+
+
+\section{More on Fitness Functions}
+
+
+
+\section{Other Applications of Search-Based Testing and Optimisation Algorithms in Testing}
+
+% real time, functional safety
+
+% test suite prioritisation and minimisation
+
+
+\end{document}

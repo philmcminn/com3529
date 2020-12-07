@@ -1,0 +1,181 @@
+\input{common/setup}
+
+\begin{document}
+
+\title{4.1 An Introduction to Automatic Test Case Generation}
+
+\section{Introduction}
+
+So far we've learnt a lot about how to design and write test cases, manually, using
+various coverage criteria as a basis for doing. We also know about various tools
+that will allow us to automatically run those tests and check the results of
+those tests for us (like JUnit). 
+% I'm wondering about a week 2 lecture on tools like JUnit, Cucumber etc??
+
+But wouldn't it be great if we could automate the design and writing of those
+test cases as well? Well, thanks to the efforts of researchers over the last
+10--20 years it turns out that there are a lot of techniques and tools that will
+allow us to actually do this. We're going to consider three main methods of
+automated test case generation --- Random, Search-Based, and Symbolic Execution.
+We'll start with arguably the simplest of these -- Random Test Case Generation.
+
+
+\section{Random Testing}
+
+Random Test Case Generation (or just {\it Random Testing} for short), is a very
+simple and easy to automate technique that involves using random number
+generators to generate inputs to programs. Those programs don't need to accept
+numbers as inputs only --- given some rules, random numbers can be used to
+generate strings and more complex inputs like XML files too.
+
+You may think that this is too simple an idea to actually work, but actually
+it's surprisingly effective. 
+
+% Randomly Testing the Triangle Class
+
+Let's return to the \classifymethod~method of the \triangleclass~class in the
+\lecturespackage~package. We can hook this up to a method that randomly
+generates the three integer inputs and track which branches are covered. 
+
+I've done this in the \randomlytesttriangleclass~class in the
+\lecturesexecutionpackage. The class contains a method
+\instrumentedclassifymethod (which is the last method of the class). It's the
+same as the original \classifymethod~method in terms of how it classifies
+triangles based on their sides, but it also contains some additional code that
+logs when different branches are taken in the code. This is so we can calculate
+how much branch coverage we have obtained by executing the method. Each branch
+has its own integer ID. When that branch is taken in the code, the ID is added
+to a set, {\tt coveredBranches}. We can then investigate the content of the set
+after executing the instrumented method a few times to see what Branch Coverage
+we got. In practice, an automated test case generation tool would automate this
+step for us.
+
+The \randomlytestclassifymethod~method calls the instrumented method with three
+randomly generated integers a certain number of times.
+
+If we run the class to execute the \classifymethod~method 100 times (this is a
+controllable parameter set bu changing the {\tt ITERATIONS} constant) and look
+at the output, we can see that 10 of the 14 branches are covered (i.e.,
+approximately 70\% of the branches) are covered. These branches are usually
+covered in the first 10 executions. 
+
+Even though the inputs are generated randomly, this pattern tends to hold most
+of the time. The branches that are not covered are branches 9, 11, and 13. If we
+inspect the code more closely, we can see that these branches are when two or
+more of the side lengths are equal. Now, we're using the entire range of the
+{\tt int} type in Java, so the chance of generating two numbers that are the
+same are 1 in $2^{32}$, which is not a likely occurrence in 50 repeat
+executions. We'd have to perform Random Testing for a long time to hit those
+branches. The alternative is to narrow the domains of each of the three integers
+representing each side. We can do this using the {\tt MIN\_INT} and {\tt
+MAX\_INT} constants. If we set them to be -10 and 10, respectively, there is a
+much greater chance of generating two numbers that are the same (1 in 21, to be
+precise). When we run it now, more of the branches are covered, but some are
+still stubborn --- branch 10 in particular. Branch 10 requires all three numbers
+to be equal (with a 1 in 441 chance), so we either need to run it for more
+iterations or reduce the input domains of the three integer inputs further. If
+we increase the number of iterations to 10,000, branch 10 is covered and we have
+obtained full branch coverage. 
+
+
+\section{Automatic Test Case Generation and the Oracle Problem}
+
+Note that although we can automatically generated test cases according to a
+coverage criterion, so long that criterion is a well-defined one, like Branch
+Coverage --- because applying Input Domain Analysis requires some modelling that is
+difficult to automate! --- we still have the Oracle Problem to contend with.
+Remember the Oracle Problem from week 1? Essentially, we still need to be able
+to determine that the outputs are the right ones for the inputs. Essentially, we
+need to select one of the automatically generated test cases for each branch,
+and check whether the triangle type returned by the method is the right one
+given the inputs. If our automated test case generation tool spits out a JUnit
+test suite instead of just raw output, this means checking the JUnit test cases
+generated are correct. As you can imagine, if the automated test case generator
+generates a lot of test cases this could get quite tedious quite quickly.
+
+\section{Randoop}
+
+Some tools, therefore, generate test cases to violate specific properties of the
+software. Randoop, for example, is a tool that has two modes ...
+
+\section{Property-Based Testing}
+
+Property-based testing leverages automatic input generation to test specific
+properties of the software specified by the tester. Property-based testing is
+not too dissimilar from writing test cases in JUnit, except instead of providing
+inputs and assertions over outputs, the tester provides generic {\it properties}
+instead, that should always hold for the software under test. For example, when
+testing a method that adds a sequence of numbers, a possible property could be
+that when each of the numbers is positive, the result is positive. Or, when
+adding a positive number to a sequence of numbers, the sum should be greater
+than the sum of the original sequence. And so on.
+
+Property-based testing first appeared in a tool called {\it QuickCheck} for the
+Haskell programming language. Since then, QuickCheck has been re-implemented for
+many different languages. Java has a version --- one of the latest incarnations
+is {\it jqwik} (\url{https://jqwik.net/}). For Python, a very effective version of
+QuickCheck is available called {\it Hypothesis} (\url{hypothesis.readthedocs.io}). 
+
+Property-based testing tools attempt to generate inputs randomly until they
+break the specified properties, or they run out of iterations. When they break a
+property, they often simplify the input for presentation to the tester, so that
+the tester can easily understand the failure or the problem with their original
+property (which itself may have been incorrectly specified).
+
+\section{Fuzzing}
+
+Random Testing goes by another name you may be familiar with, particularly in
+the security community --- that is, {\it Fuzzing}. Fuzzing is like
+Property-Based Random Testing but with more generic kinds of software properties
+in mind --- such as crashing behaviour (thereby demonstrating instability
+problems) or generic security issues such as buffer overflows.
+
+According to security lore, Fuzzing was born in a ``dark and stormy night in the
+Fall of 1988''. Sitting in his apartment in Wisconsin, Madison, professor Barton
+Miller was connected to his university computer via a 1200 baud telephone line.
+The thunderstorm caused noise on the line, and this noise in turn caused the
+UNIX commands on either end to get bad inputs --- and crash. The frequent crashes
+surprised him --- surely, programs should be more robust than that? As a
+scientist, he wanted to investigate the extent of the problem and its causes. So
+he crafted a programming exercise for his students at the University of
+Wisconsin-Madison --- an exercise that would have his students create the first
+fuzzers.
+
+The assignment read as follows:
+
+\begin{quote}
+    {\it The goal of this project is to evaluate the robustness of various UNIX
+    utility programs, given an unpredictable input stream. \dots First, you will
+    build a fuzz generator. This is a program that will output a random character
+    stream. Second, you will take the fuzz generator and use it to attack as many
+    UNIX utilities as possible, with the goal of trying to break them.}
+\end{quote}
+
+This assignment captures the essence of Fuzzing. Generate random inputs, and see
+if they break things by running it for a long enough period of time.
+
+When Miller and his students ran their first fuzzers in 1989, they found an
+alarming result: About a third of the UNIX utilities they fuzzed had issues ---
+they crashed, hung, or otherwise failed when confronted with fuzzing input.
+
+Considering that many of these UNIX utilities were used in scripts that would
+also process network input, this was an alarming result. Programmers quickly
+built and ran their own fuzzers, rushed to fix the reported errors, and learned
+not to trust external inputs anymore.
+
+What kind of problems did Miller's fuzzing experiment find?
+
+% summarise Zeller
+
+% cover Heartbleed?
+
+
+\section{Complex Input Domains}
+
+ %mutation fuzzing
+
+
+
+
+
+\end{document}
