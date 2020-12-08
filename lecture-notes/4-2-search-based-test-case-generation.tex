@@ -41,11 +41,12 @@ problematic branch or not. For example, it may get equal numbers for two of the
 sides, but narrowly miss out on the third. This input would be judged in exactly
 the same way as one where the three sides were very far apart in value.
 Search-Based Testing, on the other hand, seeks to retain ``close'' inputs and
-develop them further to try to seek to execute the goal of the test case. 
-The fitness function it would seek to minimise in this case would be:
+develop them further to try to seek to execute the goal of the test case. The
+fitness function it would seek to minimise in this case would be:
 
 \begin{center}
-$\mathit{fitness} = |$ {\tt side1} $-$ {\tt side2} $| + |$ {\tt side2} $-$ {\tt side3} $|$
+$\mathit{fitness} = |$ {\tt side1} $-$ {\tt side2} $| + |$ {\tt side2} $-$ {\tt
+side3} $|$
 \end{center}
 
 That is, absolute difference of {\tt side1} compared with {\tt side2} added to
@@ -77,7 +78,7 @@ We call the surface of fitness values like this the fitness ``landscape''.
 Compare this to what Random Testing ``sees'':
 
 Random Testing is not guided by any information, so every input is treated the
-same, unless it executes the branch in question. The plot clearly portrays the 
+same, unless it executes the branch in question. The plot clearly portrays the
 ``needle in a haystack'' nature of this individual test case generation problem.
 
 \section{Search Techniques}
@@ -92,15 +93,17 @@ Gradient Descent}. Gradient Descent aims to travel down the gradient of the
 fitness landscape to the nearest minimum. It works as follows:
 
 \begin{enumerate}
+    \item Pick a point $p$ at random in the search space (the input domain), and
+    evaluate its fitness, $\mathit{fitness}(p)$.
 
-\item Pick a point $p$ at random in the search space (the input domain), and evaluate
-its fitness, $\mathit{fitness}(p)$.
-\item Evaluate all the neighbouring points in the fitness landscape, $p_1 \dots p_n$.
-\item If $\mathit{fitness}(p_i), 1 < i < n$ is less than than
-$\mathit{fitness}(p)$, set $p$ to $p_i$.
-\item Jump to step 2 and repeat until none of $p_1 \dots p_n$ offer an improved
-fitness over $p$.
+    \item Evaluate all the neighbouring points in the fitness landscape, $p_1
+    \dots p_n$.
 
+    \item If $\mathit{fitness}(p_i), 1 < i < n$ is less than than
+    $\mathit{fitness}(p)$, set $p$ to $p_i$.
+
+    \item Jump to step 2 and repeat until none of $p_1 \dots p_n$ offer an
+    improved fitness over $p$.
 \end{enumerate}
 
 Gradient Descent (often called {\it Hill Climbing} if the fitness function is to
@@ -120,20 +123,165 @@ infeasible.
 
 \subsection{The Alternating Variable Method (AVM)}
 
+The Alternating Variable Method (AVM) is an advanced Gradient Descent algorithm
+designed for generating numerical inputs for test cases quickly. The AVM is
+faster than normal Gradient Descent, because, when given the opportunity, it
+accelerates down a gradient rather than inching down it, step-by-step. 
+
+The AVM alternates between small ``exploratory'' moves in the search space to
+establish the direction of the gradient, and then makes ``pattern'' moves of
+increasing step size in the direction of fitness improvement. 
+
+It does this by starting with a random set of inputs, as with Gradient Descent.
+It then considers each input variable in turn, increasing it by a small amount
+and decreasing it (exploratory moves) --- e.g., +1 and -1 for an input of
+integer type. If one of the two moves leads to an improvement in fitness, a
+larger increase/decrease (a pattern move) is made (e.g., +2 or -2). If the
+fitness continues to improve, the step size is continually doubled until fitness
+gets worse. At this point, further exploratory moves are made to re-establish a
+new ``direction'' of improved fitness. This exploratory/pattern move cycle
+continues until both exploratory moves result in a non-improvement in fitness.
+The AVM then moves onto the next variable and repeats the same steps. This
+continues until the AVM has made a complete sweep of the input variables and
+there are no exploratory improvements --- or, inputs have been found that
+satisfy the test requirement.
 
 \subsection{Evolutionary Algorithms}
 
+Local search only samples one point in the search space (input space) at a time.
+Evolutionary Algorithms are so-called ``population''-based approaches that
+sample multiple points in the search space at once. In Evolutionary
+Algorithm-speak, each point in the search space (i.e., an input to the program,
+in this problem domain) is an ``individual''. The idea is that the good parts of
+one individual can be combined with another to reach a solution to the problem. 
 
+For example, suppose we have a branch in our program that is executed when a
+inputted string contains digits only. However, strings generated purely at
+random may contain any character. Strings with one or two digits initially
+receive a good fitness value compared to others in the population. Evolutionary
+Algorithms emphasis a search operator called ``recombination'', which involves
+combining the parts of one individual with another to make an ``offspring''
+individual. So a string with digits early in the string may be recombined with a
+string with digits later in the string, to produce a new string with digits at
+the start and the end, with an even better fitness value. 
+
+% diagram
+
+Evolutionary Algorithms also employ another search operator called ``mutation''
+that makes random changes to individuals. So for a test case, this may mean
+changing one the inputs to a completely new value, or changing it by some delta
+value. 
+
+
+% A complete EA
 
 \section{More on Fitness Functions}
 
+For testing relational predicates beyond equality, researchers have developed
+the following series of fitness functions. The term $K$ represents a small,
+positive value.
+
+% table
+
+One problem with using fitness function based on the predicates in branches
+only is that the branch needs to be actually {\it reached} in the code for the fitness
+to be calculated. Otherwise, inputs will get the same, poor fitness value. If
+the branch is hard to reach (e.g., because some other branch in the program
+needs to be taken that is only executed by only a few inputs), the search does
+not get any guidance and behaves more like Random Testing.
+
+To get around this problem, the fitness function needs to care about all of the
+branch predicates that need to be executed leading up to the ``target'' branch,
+not just the target itself. To figure out which branches are important, we need
+to go back to control flow graphs (CFGs). A branching node is a node of CFG with
+two branches (one true and one false). An edge or node of a CFG is said to be
+control-dependent on a branching node in the CFG if that branching node needs to
+be executed in a certain way (i.e., either true or false) for the edge/node to
+be reached in the program. Take, for instance, the following example:
+
+In well-structured programs, control dependencies are obvious from its nesting
+structure. However, when programs deploy language constructs like {\tt break},
+{\tt goto} or multiple {\tt return} statements, control dependencies are not as
+easy to figure out, and more complex algorithms are needed. This will be
+covered in a later lecture, on the subject of {\it Program Slicing}. For now,
+however, we just need to understand the general concept. 
+
+Using the concept of control dependency, we can now assign a fitness score to
+inputs based on how close they were to reaching the target branch. This fitness
+score is called the {\it approach level}. For example:
+
+% example
+
+At each approach level, we can add the fitness for the predicate. We refer to
+this part as the {\it branch distance}. The branch distance is normalised
+(i.e., set to a value between 0 and 1) so that it never exceeds the approach
+level component of the fitness function for that particular branching statement.
 
 
-\section{Other Applications of Search-Based Testing and Optimisation Algorithms in Testing}
+% fitness function and program 
 
-% real time, functional safety
 
-% test suite prioritisation and minimisation
+\section{Other Applications of Search-Based Testing and Optimisation Algorithms
+in Testing}
 
+As well as being applied to automatically obtain structural coverage,
+Search-Based Testing has been applied to other types of test requirement.
+
+\subsection{Real-Time Systems}
+
+One such application area is that of real-time systems, such as controller
+software in embedded systems, such as those installed into cars. Often the
+actions performed by these controllers are time-sensitive --- they have to
+complete by a certain time period, else there are disastrous consequences. Take
+for example an airbag controller. If the software fails to recognise the
+conditions in which an airbag should be released, and do this in time, the
+driver is placed at risk of a serious injury. 
+
+When testing time limits, engineers are often concerned with finding its
+worst-case execution time (WCET). That is, what conditions lead to the software
+taking the {\it longest} period of time to execute. If the WCET exceeds an
+acceptable threshold, then its back to the drawing board...
+
+Yet, finding the WCET of a piece of software is not a straightforward task, when
+you consider that it's not just about the steps programmed into the software
+itself, but also the hardware it is run on, including the caching and pipelining
+behaviour of the processor. 
+
+Search-Based Testing is an ideal technique for this problem, however. Instead of
+the fitness function rewarding inputs on the basis of how close they come to
+executing branches, it instead rewards inputs on the basis of the time they make
+the software run for. In doing this, the search can navigate a potentially large
+input space to find inputs that produce some long execution times in scenarios
+that engineers may not have thought of or conceived could happen.
+
+\subsection{Functional Safety}
+
+Search-Based Testing has also been applied to testing functional properties
+about software (similar to property-based testing, but on a system level). It
+has been used to simulate automated parking controllers. 
+
+Some of these plots show simulated car positions and parking spaces, produced
+from a simulated parking controller test at the car company Daimler. The fitness
+function simply measured and rewarded test cases with the smallest distance to a
+collision during as simulated ``park''. The first generation of the Evolutionary
+Algorithm, the randomly generated parking scenarios were easy for the controller
+to handle. However, as the Evolutionary Algorithm progressed, it was able to
+develop trickier scenarios that eventually produced a collision, i.e., a test
+failure.
+
+% include pictures used in previous slides
+
+\subsection{Beyond Test Case Generation}
+
+Optimisation algorithms such as Gradient Descent and Evolutionary Algorithms
+have been applied to more in software testing than just test case generation.
+They have also been applied to two problems known as ``Test Suite Minimisation''
+and ``Test Suite Prioritisation''. Both problems stem from very large test
+suites, with too many test cases to run, because doing so would take an
+inordinate amount of time. The question is, which test cases to actually
+execute. Optimisation algorithms can be used to produce smaller test suites from
+the original whole, or be used to produce a running order of test cases whereby
+the most important are run first. These topics are the subject of a later
+lecture in this module!
 
 \end{document}
