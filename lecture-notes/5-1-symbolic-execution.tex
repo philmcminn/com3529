@@ -1,0 +1,116 @@
+\input{common/setup}
+
+\begin{document}
+
+\title{Automatic Test Case Generation}{5.1 Symbolic Execution}
+
+\section{Introduction --- Static and Dynamic Analysis}
+
+Software Testing usually takes the form of what's known as {\it dynamic
+Analysis} activity. {\it Dynamic} simply means that we {\it execute} the program
+under test to test it. You may think this distinction is crazy --- how could we
+test a program without running it? 
+
+Well, there exist a number of techniques that are capable of performing {\it
+Static Analysis} of a program. This means they take the program code (or some
+model of it), and scrutinise properties of it using theorem provers or
+constraint solvers. This can help us find interesting issues with our software,
+such as deadlocks, or infeasible paths. While Dynamic Analysis involves
+executing software one input at a time (and the overheads that brings for any
+program of a reasonable size --- as we saw in the introductory material to this
+module), techniques based on Static Analysis are capable of reasoning about
+multiple sets of inputs at once. Static Analysis can also be used to derive
+interesting test cases automatically. Symbolic Execution is one technique that
+can do this.
+
+\section{Symbolic Execution}
+
+Symbolic Execution does not involve actually executing a program for real.
+Instead, Symbolic Execution works through a program, building up a series of
+equations over its inputs, one for each program path, known as {\it path
+conditions}. A path condition for a particular path describes the set of inputs
+that will execute it.
+
+Whereas a typical program test only explores one particular program execution
+--- where we {\it hope} the test case generates (but of course, there are no
+guarantees of this) --- the aim of Symbolic Execution is to build an abstraction
+over {\it all} possible program executions, on a path-by-path basis.
+
+Hopefully, you'll have already spotted a potential drawback to Symbolic
+Execution already --- in general it is not possible to explore {\it every}
+program path, because in general, there may be an infinite number of program
+paths. Let's suspend that thought for a moment --- we'll come back to this issue.
+
+\section{Worked Example}
+
+To understand how Symbolic Execution works, let's visualise a program as a
+binary tree (with possibly infinite depth). This is called the {\it computation
+tree}. A computation tree can be formed from the nodes of a CFG. Each series of
+nodes from the root of the tree to a leaf is a path through the CFG/program.
+
+Here is the computation tree for the \classifymethod~method of the
+\triangleclass~class, for example:
+
+
+Symbolic Execution works through the computation tree starting at the root node,
+beginning with an empty path condition. Instead of being assigned a value, each
+input variable is instead assigned a symbol. In the case of \classifymethod,
+that is $\alpha=$~{\tt side1}$, \beta= $~{\tt side2}$, \gamma=$~{\tt side3}.
+Symbolic Execution maintains a symbolic state for each of these variables. 
+
+A {\it depth-first} exploration of the computation tree then works at follows.
+Proceeding down the tree, Symbolic Execution invokes a constraint solver at each
+branching point, to see if the branches is feasible. If a branch is not
+feasible, it ignores it. If one branch is feasible it takes the branch, if both
+branches are feasible, it takes one of the branches, leaving the other on a
+stack to return to when the exploration of the current path has completed. 
+
+In our worked example, we're going to explore the left-most path of the
+computation tree where each branch predicate is true.
+
+The first branch Symbolic Execution finds is {\tt side1 > side2}. The path
+condition is updated to $\alpha > \beta$. The body of the {\tt if} statement
+updates the symbolic state of the inputs. The variables {\tt side1} and {\tt
+side2} are swapped, so {\tt side1}$ = \beta$ and {\tt side2}$ = \alpha$. 
+
+The second branch encountered is {\tt side1 > side3}. Taking the true branch,
+the path condition now needs to be updated, using the symbolic states of those
+two variables, hence $\alpha > \beta \wedge \beta > \gamma$. In the body of this
+{\tt if} statement, {\tt side1} and {\tt side3} are swapped, so their symbolic
+states are updated --- {\tt side1}$ = \gamma$, and {\tt side3}$ = \beta$.
+
+The third branch encountered is {\tt side2 > side3}. The path condition is now
+updated to $\alpha > \beta \wedge \beta > \gamma \wedge \alpha > \beta$
+
+{\tt side2}$ = \beta$, and {\tt side3}$ = \alpha$.
+
+The fourth branch is {\tt if (side1 + side2 <= side3)} so the path condition now
+becomes $\alpha > \beta \wedge \beta > \gamma \wedge \gamma + \beta \leq
+\alpha$. The program then terminates after executing the body of this {\tt if}
+statement, and we now have a complete path condition that can be re-written in
+terms of the original inputs:
+
+side1 > side2 \wedge side2 > side3 \wedge side3 + side2 \leq side1 
+
+This represents the inputs that will take this particular path. Solving the
+predicate gives us a concrete input that can be used in a test case.
+
+\section{Drawbacks}
+
+Because of the exponential explosion in paths, it's clear that Symbolic
+Execution will not scale for large programs. Another problem for Symbolic
+Execution is that constraint solvers are not always powerful enough to find
+inputs that satisfy the path constraints. Constraint solvers have historically
+found non-linear equations difficult to reason about (some have even applied
+optimisation techniques like Gradient Descent to try to circumvent these
+issues). Further problems are inherent when a program takes a dynamic data
+structure as an input (e.g., a map, tree, or a list) that are not fixed in terms
+of shape and size. 
+
+In situations like this, researchers like to try to combine two different
+approaches in order to get the benefits of both without suffering the
+limitations of either. This led to a new technique {\it Dynamic Symbolic
+Execution}, which combines the concrete execution of Random Testing with
+Symbolic Execution. We'll discuss this next.
+
+\end{document}
