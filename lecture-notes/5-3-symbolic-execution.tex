@@ -53,10 +53,11 @@ Here is the computation tree for the \classifymethod~method of the
 
 
 Symbolic Execution works through the computation tree starting at the root node,
-beginning with an empty path condition. Instead of being assigned a value, each
-input variable is instead assigned a symbol. In the case of \classifymethod,
-that is $\alpha=$~{\tt side1}$, \beta= $~{\tt side2}$, \gamma=$~{\tt side3}.
-Symbolic Execution maintains a symbolic state for each of these variables. 
+beginning with an empty path condition that the technique builds up as it moves
+down the computation tree. While this is happening, the technique simultaneously
+maintains the {\it symbolic state} of each input variable. To begin with, at the
+root node of the computation tree, and instead of being assigned a value, each
+input variable is instead assigned to a symbol. 
 
 A {\it depth-first} exploration of the computation tree then works at follows.
 Proceeding down the tree, Symbolic Execution invokes a constraint solver at each
@@ -66,34 +67,85 @@ branches are feasible, it takes one of the branches, leaving the other on a
 stack to return to when the exploration of the current path has completed. 
 
 In our worked example, we're going to explore the left-most path of the
-computation tree where each branch predicate is true.
+computation tree where each branch predicate is true. A Symbolic Execution of
+this particular path works as follows:
 
-The first branch Symbolic Execution finds is {\tt side1 > side2}. The path
-condition is updated to $\alpha > \beta$. The body of the {\tt if} statement
-updates the symbolic state of the inputs. The variables {\tt side1} and {\tt
-side2} are swapped, so {\tt side1}$ = \beta$ and {\tt side2}$ = \alpha$. 
+\begin{center}
+\scalebox{0.85}{
+\begin{tabular}{rllllll}
+\toprule 
+CFG         &                                                  & \multicolumn{4}{c}{Symbolic State}      & \\
+\cline{3-6}              
+Node        & Code                                             & {\tt side1} & {\tt side2} & {\tt side3} & {\tt temp} & Path Condition  \\
+\midrule          
+s           &                                                  & $\alpha$    & $\beta$     & $\gamma$    & -          & $\mathit{true}$  \\
+            & {\tt if (side1 > side2)} {\it as TRUE}           & $\alpha$    & $\beta$     & $\gamma$    & $\alpha$   & $\alpha > \beta$ \\
+            & {\tt int temp = side1}                           & $\alpha$    & $\beta$     & $\gamma$    & $\alpha$   & $\alpha > \beta$ \\
+            & {\tt side1 = side2}                              & $\beta$     & $\beta$     & $\gamma$    & $\alpha$   & $\alpha > \beta$ \\
+            & {\tt side2 = temp}                               & $\beta$     & $\alpha$    & $\gamma$    & $\alpha$   & $\alpha > \beta$ \\
+            & {\tt if (side1 > side3)} {\it as TRUE}           & $\beta$     & $\alpha$    & $\gamma$    & -          & $\alpha > \beta \wedge \beta > \gamma$ \\
+            & {\tt int temp = side1}                           & $\beta$     & $\alpha$    & $\gamma$    & $\beta$    & $\alpha > \beta \wedge \beta > \gamma$ \\
+            & {\tt side1 = side3}                              & $\gamma$    & $\alpha$    & $\gamma$    & $\beta$    & $\alpha > \beta \wedge \beta > \gamma$ \\
+            & {\tt side3 = temp}                               & $\gamma$    & $\alpha$    & $\beta$     & $\beta$    & $\alpha > \beta \wedge \beta > \gamma$ \\            
+            & {\tt if (side2 > side3)} {\it as TRUE}           & $\gamma$    & $\alpha$    & $\beta$     & -          & $\alpha > \beta \wedge \beta > \gamma$ {\scriptsize (no change)}\\    
+            & {\tt int temp = side2}                           & $\gamma$    & $\alpha$    & $\beta$     & $\alpha$   & $\alpha > \beta \wedge \beta > \gamma$ \\
+            & {\tt side2 = side3}                              & $\gamma$    & $\beta$     & $\beta$     & $\alpha$   & $\alpha > \beta \wedge \beta > \gamma$ \\
+            & {\tt side3 = temp}                               & $\gamma$    & $\beta$     & $\alpha$    & $\alpha$   & $\alpha > \beta \wedge \beta > \gamma$ \\
+            & {\tt if (side1 + side2 <= side3)} {\it as TRUE}  & $\gamma$    & $\beta$     & $\alpha$    & $\alpha$   & $\alpha > \beta \wedge \beta > \gamma \wedge \gamma + \beta \leq \alpha$ \\
+\bottomrule
+\end{tabular}}
+\end{center}
 
-The second branch encountered is {\tt side1 > side3}. Taking the true branch,
-the path condition now needs to be updated, using the symbolic states of those
-two variables, hence $\alpha > \beta \wedge \beta > \gamma$. In the body of this
-{\tt if} statement, {\tt side1} and {\tt side3} are swapped, so their symbolic
-states are updated --- {\tt side1}$ = \gamma$, and {\tt side3}$ = \beta$.
+To begin with, the three inputs are assigned to symbols. As such {\tt side 1}$ =
+\alpha$, {\tt side2}$ = \beta$, and {\tt side3}$ = \gamma$, respectively. There
+is also another variable in the program, {\tt temp}, that we need to account
+for. This variable appears in the body of each of the {\tt if} statements, and
+then goes out of scope. 
 
-The third branch encountered is {\tt side2 > side3}. The path condition is now
-updated to $\alpha > \beta \wedge \beta > \gamma \wedge \alpha > \beta$
+The first branch predicate Symbolic Execution finds is {\tt side1 > side2}. To
+execute this as {\it true}, the path condition is updated to $\alpha > \beta$.
+The body of the {\tt if} statement updates the symbolic state of the inputs. The
+variables {\tt side1} and {\tt side2} are swapped, so {\tt side1} becomes equal
+to $\beta$ while {\tt side2} becomes equal to $\alpha$. 
 
-{\tt side2}$ = \beta$, and {\tt side3}$ = \alpha$.
+The second branch predicate encountered is {\tt side1 > side3}. To take the true
+branch, the path condition now needs to be updated with this predicate, but
+substituted with the current symbolic states of {\tt side1} and {\tt side3},
+that is, $\beta > \gamma$. The path condition now becomes $\alpha > \beta \wedge
+\beta > \gamma$. In the body of this {\tt if} statement, {\tt side1} and {\tt
+side3} are swapped, so their symbolic states are updated --- {\tt side1} now
+becomes equal to $\gamma$, while {\tt side3} becomes $\beta$.
 
-The fourth branch is {\tt if (side1 + side2 <= side3)} so the path condition now
-becomes $\alpha > \beta \wedge \beta > \gamma \wedge \gamma + \beta \leq
-\alpha$. The program then terminates after executing the body of this {\tt if}
-statement, and we now have a complete path condition that can be re-written in
-terms of the original inputs:
+The third branch predicate encountered is {\tt side2 > side3}. Taking the true
+branch would result in $\alpha > \beta$ being appended to the path condition.
+However this already appears in the path condition as a conjunct. Since $\alpha
+> \beta \wedge \beta > \gamma$ is equivalent to $\alpha > \beta \wedge \beta >
+\gamma \wedge \alpha > \beta$, the path condition does not change in practice.
+In the body of the {\tt if} condition, {\tt side2} becomes equal to $\beta$
+again, while {\tt side3} becomes equal to $\alpha$.
 
-side1 > side2 \wedge side2 > side3 \wedge side3 + side2 \leq side1 
+The fourth and final branch predicate is {\tt side1 + side2 <= side3}.
+Substituting again for the current symbolic states of the three variables, 
+executing this predicate as true requires $\gamma + \beta \leq \alpha$ to be
+added to the path condition. 
 
-This represents the inputs that will take this particular path. Solving the
-predicate gives us a concrete input that can be used in a test case.
+The program then terminates after executing the body of this {\tt if} statement.
+(Since there are no more branching predicates to execute, we stop tracking the
+symbolic states of the program's variables at this point.) We now have a
+complete path condition that can be re-written in terms of the original inputs.
+We do this by subsituting the symbols by the original input variables they
+originally represented, by performing the reverse of the first step. That is, As
+such $\alpha = ${\tt side 1}, $\beta = ${\tt side2}, and $\gamma = ${\tt side3}.
+
+\begin{center}
+{\tt side1}~$ > $~{\tt side2}~$ \wedge $~{\tt side2}~$ > $~{\tt side3}~$ \wedge
+$~{\tt side3}~$ + $~{\tt side2}~$ \leq $~{\tt side1}
+\end{center}
+
+This equation represents the inputs that will take this particular path. We can
+now give this to a constraint solver, such as Z3, which can provide us with an
+example of a real input, e.g. {\tt side1}$ =
+3$, {\tt side2}$ = 2$, and {\tt side3}$ = 1$.
 
 \section{Drawbacks}
 
