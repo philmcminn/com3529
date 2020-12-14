@@ -41,7 +41,7 @@ Execution already --- in general it is not possible to explore {\it every}
 program path, because in general, there may be an infinite number of program
 paths. Let's suspend that thought for a moment --- we'll come back to this issue.
 
-\section{Worked Example}
+\subsection{Worked Example}
 
 To understand how Symbolic Execution works, let's visualise a program as a
 binary tree (with possibly infinite depth). This is called the {\it computation
@@ -51,6 +51,7 @@ nodes from the root of the tree to a leaf is a path through the CFG/program.
 Here is the computation tree for the \classifymethod~method of the
 \triangleclass~class, for example:
 
+%
 
 Symbolic Execution works through the computation tree starting at the root node,
 beginning with an empty path condition that the technique builds up as it moves
@@ -147,7 +148,7 @@ now give this to a constraint solver, such as Z3, which can provide us with an
 example of a real input, e.g. {\tt side1}$ =
 3$, {\tt side2}$ = 2$, and {\tt side3}$ = 1$.
 
-\section{Drawbacks}
+\subsection{Drawbacks}
 
 Because of the exponential explosion in paths, it's clear that Symbolic
 Execution will not scale for large programs. Another problem for Symbolic
@@ -163,6 +164,11 @@ In situations like this, researchers like to try to combine two different
 approaches in order to get the benefits of both without suffering the
 limitations of either. This led to a new technique {\it Dynamic Symbolic
 Execution}, which combines the concrete execution of Random Testing with
-Symbolic Execution. We'll discuss this next.
+Symbolic Execution.
+
+\section{Dynamic Symbolic Execution}
+
+Dynamic Symbolic Execution, sometimes called {\it Concolic Execution} (for {\it
+Conc}rete Symb{\it olic} Execution),
 
 \end{document}
