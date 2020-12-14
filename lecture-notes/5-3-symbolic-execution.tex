@@ -169,6 +169,38 @@ Symbolic Execution.
 \section{Dynamic Symbolic Execution}
 
 Dynamic Symbolic Execution, sometimes called {\it Concolic Execution} (for {\it
-Conc}rete Symb{\it olic} Execution),
+Conc}rete Symb{\it olic} Execution), or DSE for short, involves executing the
+program with a random input. The random input may take the path required by
+chance, or perhaps a part of it. DSE leverages this to simplify the
+path condition and the work required of the constraint solver. 
+
+Suppose the \classifymethod~method of the \triangleclass~class was executed with
+the inputs 4, 2, 3. The first branch predicate, {\tt side1 > side2} is true, so
+no work needs to be done. However, the path goes ``wrong'' at the next branch
+predicate --- {\tt side1 > side3} is executed as false, since {\tt side1} now
+equals 2, and {\tt side3} is 3. At this point, DSE involves Symbolic Execution
+to find the path condition up to that point, and gives it to the constraint
+solver. 
+
+So far, this sounds like we should have just used Symbolic Execution from the
+start, except for the ``easy'' paths that Random Testing can cover. However,
+there’s one further subtlety. If a condition becomes complex enough that the
+solver cannot find a satisfying assignment, then the solver ``plugs in'' the
+concrete values that DSE is working with to one or more variables in the
+constraints to simplify them. So instead of solving for $\alpha > \beta \wedge
+\beta > \gamma$, the solver may instead work with $4 > 2 \wedge 2 > \gamma$ or
+more simply, $2 > \gamma$. The solver, then may return a value of 1 for $\gamma$
+(i.e., {\tt side3}), for example.
+
+This strategy makes the constraint solver into what is called an ``incomplete''
+theorem prover: it will never declare an unsatisfiable constraint to be
+satisfiable, but it may fail to satisfy some satisfiable constraints because of
+the simplification being made. In particular it will help solve for inputs for
+paths that Random Testing does find difficult in practice, i.e. the branches
+where two or more sides of the triangle need to be equal.
+
+\section{Tools}
+
+
 
 \end{document}
