@@ -134,7 +134,7 @@ The program then terminates after executing the body of this {\tt if} statement.
 (Since there are no more branching predicates to execute, we stop tracking the
 symbolic states of the program's variables at this point.) We now have a
 complete path condition that can be re-written in terms of the original inputs.
-We do this by subsituting the symbols by the original input variables they
+We do this by substituting the symbols by the original input variables they
 originally represented, by performing the reverse of the first step. That is, As
 such $\alpha = ${\tt side 1}, $\beta = ${\tt side2}, and $\gamma = ${\tt side3}.
 
@@ -144,21 +144,19 @@ $~{\tt side3}~$ + $~{\tt side2}~$ \leq $~{\tt side1}
 \end{center}
 
 This equation represents the inputs that will take this particular path. We can
-now give this to a constraint solver, such as Z3, which can provide us with an
-example of a real input, e.g. {\tt side1}$ =
-3$, {\tt side2}$ = 2$, and {\tt side3}$ = 1$.
+now give this to a constraint solver, such as Z3
+(\url{https://github.com/Z3Prover/z3}), which can provide us with an example of
+a real input, e.g. {\tt side1}$ = 3$, {\tt side2}$ = 2$, and {\tt side3}$ = 1$. 
 
 \subsection{Drawbacks}
 
 Because of the exponential explosion in paths, it's clear that Symbolic
 Execution will not scale for large programs. Another problem for Symbolic
-Execution is that constraint solvers are not always powerful enough to find
-inputs that satisfy the path constraints. Constraint solvers have historically
-found non-linear equations difficult to reason about (some have even applied
-optimisation techniques like Gradient Descent to try to circumvent these
-issues). Further problems are inherent when a program takes a dynamic data
-structure as an input (e.g., a map, tree, or a list) that are not fixed in terms
-of shape and size. 
+Execution is that constraint solvers may not always be able to find inputs that
+satisfy the path constraints, despite the fact that modern constraint solvers
+such as Z3 are still very powerful. Further problems are inherent when a program
+takes a dynamic data structure as an input (e.g., a map, tree, or a list) that
+are not fixed in terms of shape and size. 
 
 In situations like this, researchers like to try to combine two different
 approaches in order to get the benefits of both without suffering the
@@ -199,8 +197,14 @@ the simplification being made. In particular it will help solve for inputs for
 paths that Random Testing does find difficult in practice, i.e. the branches
 where two or more sides of the triangle need to be equal.
 
+In practice, DSE makes Symbolic Execution faster and more efficient. 
+
 \section{Tools}
 
+KLEE (\url{https://klee.github.io/}) is a DSE engine for C. You can try it out
+via its website.
 
+EvoSuite (\url{https://www.evosuite.org/}) includes DSE capabilities for Java,
+but only up to Java 8.
 
 \end{document}
