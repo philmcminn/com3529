@@ -1,0 +1,115 @@
+\input{common/setup}
+
+\begin{document}
+
+\title{Assignment 2021}{Automated Tool Support for Logic Coverage of Java Code}
+
+\section{Overview}
+
+The aim of this assignment is to develop automated tool support for logic
+testing of Java methods.
+
+The more automated support your tool can provide, the higher the mark you will
+get. 
+
+A very basic submission that is worthy of a pass mark, for example, might
+involve implementing Random Testing for Condition Coverage (i.e., a very basic
+coverage criterion), along with a scheme for manually instrumenting conditions.
+(This is much like what we did in lectures for randomly generating test cases
+for Branch Coverage of the \classifymethod~method of the \triangleclass~class in
+lectures.)
+
+A more advanced submission might seek to provide automated tool support for a
+more advanced Coverage Criterion like MCDC. It might automatically parse Java
+methods to obtain branch predicates and figure out what the test requirements
+are that are needed by such a criterion. It might automatically instrument the
+Java code, as opposed to relying on a tester manually having to insert logging
+statements. It might apply a more advanced test generation method, for example
+Search-Based Testing. A more advanced submission might even automatically write
+out the Java code statements needed to produce a JUnit test suite. 
+
+There are two key things you should know about this assignment, before we go
+into further details about it:
+
+\begin{itemize}
+    \item {\bf You can use third-party Java libraries as part of your
+    assignment.} For example, I wouldn't expect you to write a full-featured
+    parser for Java, if you need one. (Alternatively, you may want to write a
+    very basic parser yourself, that provides simple and limited support, it is
+    up to you.)
+    
+    If you can source a package to do certain key tasks (that might take months
+    to program yourself), then you can use it. (This is a Software Engineering
+    module, after all!)
+    
+    However, you must include the package ``as is'' (i.e., without modifying
+    it), for example as a {\tt .jar} file, and declare it as a dependency of
+    your tool. (This is quite easy to achieve in Maven, which we have been using
+    throughout the course.) That is, you must not copy anybody's code and use it
+    as part of your own tool, as though you had written it yourself (this is
+    plagiarism, of course).
+
+    \item {\bf You can work as an individual or in teams of up to four people.}    
+    Marks will be awarded on the basis of what you have achieved and the number
+    of people in your team. The advantage of working in a team is that you will
+    be able to achieve more and give eachother help, as opposed to working on
+    your own. Unless you specify otherwise, the overall mark for the assignment
+    will be given to each team member.
+\end{itemize}
+
+%%%%%%
+
+\section{Submission of Your Work}
+
+Your submission should take the form of a GitHub repository. Your repository
+should contain all the code needed to run and operate your tool, along with
+example code on which it will run and for which it works with.
+
+Your GitHub repository should contain a {\tt README.md} file in the root
+directory, written in MarkDown. The {\tt README.md} should contain:
+
+\begin{itemize}
+    \item Details of your team, listing each person involved, their Sheffield
+    email address, and what they contributed to the project. 
+    
+    \item A section overviewing what your tool support does and what it achieve.
+    This section should further include a detailed list of all of your tool's
+    different features and how they would assist a tester in practice.
+
+    \item A section detailing how to install and run your tool (or how to run
+    the different parts of your tool, if different stages are required). This
+    section should include a list of libraries or utilities your tool is
+    dependent on, and how to get hold of them. (A simple way to handle this
+    requirement is to limit yourself that can be obtained via Maven
+    (\url{https://maven.apache.org/}) or Gradle (\url{https://gradle.org/}) and
+    use one of those build automation tools. 
+
+    \item A worked example that demonstrates how to use your tool with one of
+    your examples. 
+\end{itemize}
+
+The deadline for this assignment is {\bf Monday, 26 April 2020, 5pm (Week 9)}.
+
+By this date, you should have emailed me, Phil McMinn ({\tt
+p.mcminn@sheffield.ac.uk}), the URL of your repository.
+
+You must not make any further changes to your repository after this date. If you
+do, you will incur a penalty of 5\% per day following the submission date, up to
+a maximum of five days, after which you will score zero.
+
+%%%%%%
+
+\section{Help and Questions}
+
+The lab session in Week 5 will be devoted any immediate questions about the
+assignment. 
+
+You may ask further questions about the assignment via the module discussion
+board, where a member of the teaching team will respond to your query.
+
+
+\section{Detailed Requirements}
+
+
+
+\end{document}
