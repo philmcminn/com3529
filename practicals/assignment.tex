@@ -186,11 +186,11 @@ unless the branch predicate on line 17 evaluates to false, while the branch
 predicate on line 21 would be encountered unless both predicates on lines 17 and
 19 evaluate to false.
 
-At a basic level, the tool could simple expect to be inputted this information
+At a basic level, the tool could simple expect this information to be inputted
 manually by the tester. This could be provided via some additional file, or the
 tester could use your framework as an API (i.e., a package of useful Java
 methods for supporting automated testing), writing the required information as
-parameters to methods provided by your framework. 
+Java code --- in the form of parameters to methods provided by your framework. 
 %
 Of course, this wouldn't be providing much automated support at all, since the
 burden of work is on the human. But it provides a basis by which to start ---
@@ -306,7 +306,7 @@ Your tool needs to provide some level of test data generation support. This
 could be random, as per the example in the Week~5 lecture. However, you may wish
 to provide a more advanced mechanism, using Search-Based techniques. You could
 use the Alternating Variable Method (e.g., via the publicly available
-open-source AVMf --- \url{https://avmframework.org} or by incorporating a simple
+open-source AVMf --- \url{https://avmframework.org}), or by incorporating a simple
 Evolutionary Algorithm of your own.
 
 (Hint: The AVMf provides an example of test data generation that you could study
