@@ -23,13 +23,13 @@ In order to provide guidance to the required test case, Search-Based Testing
 needs a {\it fitness function}. The fitness function takes an input to the
 program and returns a {fitness value} indicating ``how good'' the input is to
 the one that is actually needed. If the fitness function is being {\it
-minimised}, the close the value to zero, the better the input is. On the other
+minimised}, the closer the value to zero, the better the input is. On the other
 hand, if the fitness function is being maximised, the higher the value
 (potentially with some ceiling), the better the input is.
 %
 Note that the fitness function doesn't need to know {\it what} the required
 input is (that would be tantamount to having solved the problem already!), just
-how exactly some candidate input measures up to the one that we want.
+how exactly some candidate input ``measures up'' to the one that we want.
 
 It's easier to explain with an example. Let's return to the classify triangle
 problem again. Recall that Random Testing could not easily find inputs where the
@@ -75,7 +75,19 @@ first addend of the equation) by plotting the fitness values:
 
 We call the surface of fitness values like this the fitness ``landscape''. 
 
+\begin{center}
+    \vspace{-1em}
+    \includegraphics[width=11cm]{plots/sbst-side1-equals-side2.pdf}
+    \vspace{-1em}
+\end{center}
+
 Compare this to what Random Testing ``sees'':
+
+\begin{center}
+    \vspace{-1em}
+    \includegraphics[width=11cm]{plots/rt-side1-equals-side2.pdf}
+    \vspace{-1em}
+\end{center}
 
 Random Testing is not guided by any information, so every input is treated the
 same, unless it executes the branch in question. The plot clearly portrays the
@@ -172,17 +184,29 @@ that makes random changes to individuals. So for a test case, this may mean
 changing one the inputs to a completely new value, or changing it by some delta
 value. 
 
-
 % A complete EA
 
 \section{More on Fitness Functions}
 
-For testing relational predicates beyond equality, researchers have developed
-the following series of fitness functions. The term $K$ represents a small,
-positive value.
+For testing branch predicates beyond equality (i.e., {\tt a == b} in the table),
+researchers have developed the following series of fitness functions. The term
+$K$ represents a small, positive value.
 
-% table
-
+\begin{center}
+    \begin{tabular}{ll}
+        \toprule
+        {\bf Condition Type} & {\bf Fitness Function} \\
+        \midrule
+        {\tt a == b} & if $|${\tt a} $-$ {\tt b}$| = 0$ then $0$ else $|${\tt a} $-$ {\tt b}$| + K$ \\
+        {\tt a != b} & if $|${\tt a} $-$ {\tt b}$| \neq 0$ then $0$ else $K$ \\
+        {\tt a < b}  & if {\tt a} $-$ {\tt b} $< 0$ then $0$ else {\tt a} $-$ {\tt b} $+ K$ \\
+        {\tt a <= b} & if {\tt a} $-$ {\tt b} $\leq 0$ then $0$ else {\tt a} $-$ {\tt b} $+ K$ \\
+        {\tt a > b}  & if {\tt b} $-$ {\tt a} $< 0$ then $0$ else {\tt b} $-$ {\tt a} $+ K$ \\
+        {\tt a >= b} & if {\tt b} $-$ {\tt a} $\leq 0$ then $0$ else {\tt b} $-$ {\tt a} $+ K$ \\
+        \bottomrule
+    \end{tabular}
+\end{center}    
+    
 One problem with using fitness function based on the predicates in branches
 only is that the branch needs to be actually {\it reached} in the code for the fitness
 to be calculated. Otherwise, inputs will get the same, poor fitness value. If
@@ -283,5 +307,27 @@ execute. Optimisation algorithms can be used to produce smaller test suites from
 the original whole, or be used to produce a running order of test cases whereby
 the most important are run first. These topics are the subject of a later
 lecture in this module!
+
+\section{Tools for Search-Based Testing}
+
+\section{Tools}
+
+You might want to check out the following Search-Based Testing tools:
+
+\begin{itemize}
+
+    \item {\bf EvoSuite} (\url{https://www.evosuite.org/}) is a Search-Based
+    Testing tool for Java. The latest version supports up to Java 11.
+
+    \item {\bf IGUANA} (\url{http://iguanatool.org}) is a Search-Based Test Data
+    Generation tool for branch coverage of C programs. It is written in Java,
+    but will only run on Java 7.
+
+    \item {\bf The AVM Framework (AVMf)} (\url{http://avmframework.org}) is a
+    Java implementation of the AVM and is an API for using the AVM for search
+    problems. The GitHub repository includes examples, include one of test data
+    generation for the triangle classification problem.
+
+\end{itemize}
 
 \end{document}
