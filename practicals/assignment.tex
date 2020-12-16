@@ -2,25 +2,27 @@
 
 \begin{document}
 
-\title{Assignment 2021}{Automated Tool Support for Logic Coverage of Java Code}
+\title{Assignment, Spring 2021}{Automated Tool Support for Logic Coverage of Java Code}
 
 \section{Overview}
 
 The aim of this assignment is to develop automated tool support for logic
-testing of Java methods.
-
-The more automated support your tool can provide, the higher the mark you will
-get. 
+testing of Java methods. The aim of this tool, or framework, is to minimise the
+amount of effort required by a human tester when faced with the task of manually
+writing a test suite for some arbitrary Java method that they might be given.
+%
+The more automated support your tool/framework can provide, the higher the mark
+you will get. 
 
 A very basic submission that is worthy of a pass mark, for example, might
 involve implementing Random Testing for Condition Coverage (i.e., a very basic
 coverage criterion), along with a scheme for manually instrumenting conditions.
-(This is much like what we did in lectures for randomly generating test cases
-for Branch Coverage of the \classifymethod~method of the \triangleclass~class in
-lectures.)
+(This would be a simple extension of what we did in the Week~5 lecture for
+randomly generating test cases for Branch Coverage of the \classifymethod~method
+of the \triangleclass~class.)
 
 A more advanced submission might seek to provide automated tool support for a
-more advanced Coverage Criterion like MCDC. It might automatically parse Java
+more advanced coverage criterion like MCDC. It might automatically parse Java
 methods to obtain branch predicates and figure out what the test requirements
 are that are needed by such a criterion. It might automatically instrument the
 Java code, as opposed to relying on a tester manually having to insert logging
@@ -28,8 +30,12 @@ statements. It might apply a more advanced test generation method, for example
 Search-Based Testing. A more advanced submission might even automatically write
 out the Java code statements needed to produce a JUnit test suite. 
 
-There are two key things you should know about this assignment, before we go
-into further details about it:
+Section~\ref{sec:requirements} goes into further detail about the requirements
+behind this assignment, and the different aspects that you are expected to
+tackle. 
+
+Before we go into further detail, there are two key things you should know about
+this assignment:
 
 \begin{itemize}
     \item {\bf You can use third-party Java libraries as part of your
@@ -37,79 +43,365 @@ into further details about it:
     parser for Java, if you need one. (Alternatively, you may want to write a
     very basic parser yourself, that provides simple and limited support, it is
     up to you.)
+    %
+    If you can source a package to do certain key tasks (that might normally
+    take months to program yourself), then you can use it. (This is a Software
+    Engineering module, after all.)
     
-    If you can source a package to do certain key tasks (that might take months
-    to program yourself), then you can use it. (This is a Software Engineering
-    module, after all!)
-    
-    However, you must include the package ``as is'' (i.e., without modifying
-    it), for example as a {\tt .jar} file, and declare it as a dependency of
-    your tool. (This is quite easy to achieve in Maven, which we have been using
-    throughout the course.) That is, you must not copy anybody's code and use it
-    as part of your own tool, as though you had written it yourself (this is
-    plagiarism, of course).
+    However, you must include any Java packages or tools ``as is'' (i.e.,
+    without modifying them) --- for example as a {\tt .jar} file --- and declare
+    it as a dependency of your tool. (This is quite easy to achieve in Maven,
+    which we have been using throughout the course.) That is, you must not copy
+    anybody's code and use it as part of your own tool, as though you had
+    written it yourself. This would amount to plagiarism, of course.
 
     \item {\bf You can work as an individual or in teams of up to four people.}    
-    Marks will be awarded on the basis of what you have achieved and the number
-    of people in your team. The advantage of working in a team is that you will
-    be able to achieve more and give eachother help, as opposed to working on
-    your own. Unless you specify otherwise, the overall mark for the assignment
-    will be given to each team member.
+    Marks will be awarded on the basis of what you have achieved in proportion
+    to the number of people in your team. The advantage of working in a team is
+    that you will be able to tackle more aspects of the project, while also
+    being free to discuss the different aspects of the problem it entails and
+    give eachother help, without fear of falling foul of academic rules
+    regarding assignment collusion. Unless you specify otherwise (e.g., because
+    of a large discrepancy in the distribution of the work among team members),
+    the overall mark you achieve for the assignment will be awarded to each
+    member of the group.
 \end{itemize}
 
 %%%%%%
 
 \section{Submission of Your Work}
+\label{sec:submission}
 
 Your submission should take the form of a GitHub repository. Your repository
-should contain all the code needed to run and operate your tool, along with
-example code on which it will run and for which it works with.
+should contain all the Java code needed to run and operate your tool, along with
+example Java methods on which your tool with run, and for which it successfully
+works with. (Note there is no choice of language here, this assignment must be
+completed in Java.)
 
 Your GitHub repository should contain a {\tt README.md} file in the root
 directory, written in MarkDown. The {\tt README.md} should contain:
 
 \begin{itemize}
     \item Details of your team, listing each person involved, their Sheffield
-    email address, and what they contributed to the project. 
+    email address, and the work they contributed to the project. 
     
-    \item A section overviewing what your tool support does and what it achieve.
-    This section should further include a detailed list of all of your tool's
-    different features and how they would assist a tester in practice.
+    \item A section overviewing the support your tool provides and what
+    automtation it delivers. This section should further include a detailed list
+    of all of your tool's different features and how they would assist a human
+    tester perform logic testing in practice.
 
     \item A section detailing how to install and run your tool (or how to run
     the different parts of your tool, if different stages are required). This
     section should include a list of libraries or utilities your tool is
     dependent on, and how to get hold of them. (A simple way to handle this
-    requirement is to limit yourself that can be obtained via Maven
-    (\url{https://maven.apache.org/}) or Gradle (\url{https://gradle.org/}) and
-    use one of those build automation tools. 
+    requirement is to limit yourself to packages that can be automatically
+    obtained via Maven (\url{https://maven.apache.org/}) or Gradle
+    (\url{https://gradle.org/}) and use one of those build automation tools. 
 
-    \item A worked example that demonstrates how to use your tool with one of
-    your examples. 
+    \item One or more worked examples that demonstrate how to use your tool in
+    practice. 
 \end{itemize}
 
 The deadline for this assignment is {\bf Monday, 26 April 2020, 5pm (Week 9)}.
 
 By this date, you should have emailed me, Phil McMinn ({\tt
-p.mcminn@sheffield.ac.uk}), the URL of your repository.
+p.mcminn@sheffield.ac.uk}), with the URL of your repository.
 
 You must not make any further changes to your repository after this date. If you
-do, you will incur a penalty of 5\% per day following the submission date, up to
-a maximum of five days, after which you will score zero.
+do, your work will be subject to standard Department of Computer Science
+lateness penalties, i.e. 5\% per working day following the submission date, up
+to a maximum of five days --- after which you will score zero.
 
 %%%%%%
 
 \section{Help and Questions}
 
-The lab session in Week 5 will be devoted any immediate questions about the
+The lab session in Week~5 will be devoted any immediate questions about the
 assignment. 
 
 You may ask further questions about the assignment via the module discussion
 board, where a member of the teaching team will respond to your query.
 
+%%%%%%
 
 \section{Detailed Requirements}
+\label{sec:requirements}
 
+There are many aspects to writing an automated test case generation
+tool/framework. Your submission will consider each of the following aspects, but
+may not need to address them completely. In other words, your submission may
+only provide limited automation for some aspect, requiring a human tester to do
+the rest of the work. The more automation you can provide ``out of the box'',
+however, the higher the mark you will achieve. 
 
+In this section, we will consider the \calculatemethod~method of the
+\bmicalculatorclass~class, provided in the \practicalspackage~package of the
+online code repository supporting this module (available at \coderepourl) and
+listed here:
+
+\begin{center} 
+    \scriptsize
+    \begin{tabular}{rl}
+        \toprule
+        1 & \verb$package uk.ac.shef.com3529.practicals;$\\
+        2 & \verb$$\\
+        3 & \verb$public class BMICalculator {$\\
+        4 & \verb$$\\
+        5 & \verb$    public enum Type {$\\
+        6 & \verb$        UNDERWEIGHT,$\\
+        7 & \verb$        NORMAL,$\\
+        8 & \verb$        OVERWEIGHT,$\\
+        9 & \verb$        OBESE;$\\
+        10 & \verb$    }$\\
+        11 & \verb$$\\
+        12 & \verb$    public static Type calculate(double weightInPounds, int heightFeet, int heightInches) {$\\
+        13 & \verb$        double weightInKilos = weightInPounds * 0.453592;$\\
+        14 & \verb$        double heightInMeters = ((heightFeet * 12) + heightInches) * .0254;$\\
+        15 & \verb$        double bmi = weightInKilos / Math.pow(heightInMeters, 2.0);$\\
+        16 & \verb$$\\
+        17 & \verb$        if (bmi < 18.5) {$\\
+        18 & \verb$            return Type.UNDERWEIGHT;$\\
+        19 & \verb$        } else if (bmi >= 17.5 && bmi < 25) {$\\
+        20 & \verb$            return Type.NORMAL;$\\
+        21 & \verb$        } else if (bmi >= 25 && bmi < 30) {$\\
+        22 & \verb$            return Type.OVERWEIGHT;$\\
+        23 & \verb$        } else {$\\
+        24 & \verb$            return Type.OBESE;$\\
+        25 & \verb$        }$\\
+        26 & \verb$    }$\\
+        27 & \verb$}$\\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+\subsection{Analysis of the Method Under Test}
+
+To start at the beginning, your tool needs to know what conditions are present
+in the method under test and their form. For example, the
+\calculatemethod~method has branch predicates on lines 17, 19, and 21. The
+predicate on line 17 only has one condition, while the predicates on lines 19
+and 21 both consist of two conditions composed by the {\tt \&\&} logical
+operators. Furthermore, the branch predicate on line 19 won't be encountered
+unless the branch predicate on line 17 evaluates to false, while the branch
+predicate on line 21 would be encountered unless both predicates on lines 17 and
+19 evaluate to false.
+
+At a basic level, the tool could simple expect to be inputted this information
+manually by the tester. This could be provided via some additional file, or the
+tester could use your framework as an API (i.e., a package of useful Java
+methods for supporting automated testing), writing the required information as
+parameters to methods provided by your framework. 
+%
+Of course, this wouldn't be providing much automated support at all, since the
+burden of work is on the human. But it provides a basis by which to start ---
+your framework will need some data structures in which to store all of this
+information. 
+
+Later on, you may choose to provide further automation in this area, for example
+by parsing the Java method. You could write your own simple parser that is
+capable of detecting {\it if}, {\it while}, and {\tt for} statements, and
+dissecting the conditions within them.
+%
+Or, you may wish to enlist the support of a full-blown parsing tool, such as the
+JavaParser library (\url{https://javaparser.org/}).
+
+\subsection{Generating Test Requirements}
+
+Once you've figured out the conditions in the method under test, you can figure
+out the test requirements needed by various logic coverage criteria. This is
+easy for a basic criterion like Condition Coverage, but more technical for a
+coverage criterion like MCDC (in restricted or correlated form). 
+
+For the branch predicate on line~17, there is only one condition, so this is
+trivial. All logic coverage criteria for this predicate are the same as Branch
+Coverage --- two test requirements, where the predicate/condition evaluates to
+true in one requirement, and false in the other.
+
+Things get more complicated for the branch predicates on lines~19 and~21,
+however, which are composed of two conditions. Generating the test requirements
+for Condition Coverage involves test requirements that executing each individual
+condition as true and false. MCDC is more complicated, and you will need to
+consider whether you will support either the restricted or correlated variant
+(or both). Of course, you can support multiple coverage criteria for further
+marks! 
+
+%%%%
+
+\subsection{Instrumentation}
+
+One challenge your tool needs to solve is how to know which conditions have been
+covered, i.e. whether they were executed or not, and if they were, whether they
+evaluated to true or false. 
+
+At the very least, you will need to provide a scheme so that a tester can insert
+logging statements themselves that are needed by the tool in order to run. 
+
+We did this for the \classifymethod~method of the \triangleclass~class in the
+Week~5 lecture, for example. For considering individual conditions, you might
+want to do something cleverer. For example, instrumentation of line~21 of the
+\calculatemethod~method of the \bmicalculatorclass~class could take the form:
+
+\begin{center}
+{\tt \scriptsize ... if (logCondition(3, bmi >= 17.5) \&\& logCondition(4, bmi <
+25) \{ ...} 
+\end{center}
+
+where {\tt logCondition} is a method provided by your framework that logs the ID
+number of the condition as the first parameter, takes the condition as the
+second parameter, and returns the boolean result of the evaluation of the
+condition so that the program preserves its normal functionality. 
+
+\begin{center} 
+    \scriptsize
+    \begin{tabular}{l}
+        \toprule
+        \verb$public void logCondition(int id, boolean condition) {$\\
+        \verb$    boolean result = condition;$\\
+        \verb$    // ... log the id somewhere, along with the result, $\\
+        \verb$    // thereby storing whether the condition was executed$\\
+        \verb$    // as true or false, for computing coverage later on...$\\
+        \verb$    return result;$\\
+        \verb$}$\\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+If you're planning on incorporating a Search-Based method into your tool (see
+below), the instrumentation will likely need to log the values of variables so
+that your tool can also compute fitness. For example:
+
+\begin{center} 
+    \scriptsize
+    \begin{tabular}{l}
+        \toprule
+        \verb$public void logGreaterThanOrEqualsCondition(int id, double leftOperand, double rightOperand) {$\\
+        \verb$    double fitness = leftOperand - rightOperand;$\\
+        \verb$    boolean result = false;$\\
+        \verb$    if (fitness <= 0) {$\\
+        \verb$        result = true;$\\
+        \verb$    } else {$\\
+        \verb$        fitness += K;$\\
+        \verb$    }$\\
+        \verb$    // ... log the id somewhere, along with the result,$\\
+        \verb$    // thereby storing whether the condition was executed$\\
+        \verb$    // as true or false, for computing coverage later on...$\\
+        \verb$$\\
+        \verb$    // ... also log fitness ...$\\
+        \verb$$\\
+        \verb$    return result;$\\
+        \verb$}$\\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+Or,
+you may wish to have the tool insert those instrumentation statements itself.
+This could be achieved in conjunction with the Java Parser, mentioned earlier.
+
+%%%%
+
+\subsection{Test Data Generation}
+
+Your tool needs to provide some level of test data generation support. This
+could be random, as per the example in the Week~5 lecture. However, you may wish
+to provide a more advanced mechanism, using Search-Based techniques. You could
+use the Alternating Variable Method (e.g., via the publicly available
+open-source AVMf --- \url{https://avmframework.org} or by incorporating a simple
+Evolutionary Algorithm of your own.
+
+(Hint: The AVMf provides an example of test data generation that you could study
+to see what ideas you could borrow for this assignment.)
+
+%%%%
+
+\subsection{Computing Coverage}
+
+For a given test case, and given the logging information provided by your
+instrumentation, you need to be able to figure out which test requirements were
+covered by the test case and its coverage level. This would contribute to the
+coverage level for a series of test cases that together maximise coverage,
+provided as an automatically generated test suite for a tester to use.
+
+%%%%
+
+\subsection{Outputting Test Cases}
+
+Your tool needs to output the test cases it generates in some form or other.
+This could take the form of a very basic series of {\tt System.out.println}
+statements that write information to the console. To provide comprehensive tool
+support though, a tester would want a JUnit test suite. This may only be partial
+--- containing calls to the method under test with test data only, requiring the
+human tester to fill in the assertions. Or, it could have a go at providing
+those assertions as well by observing the outputs of the method given the
+inputs. For example, suppose the values 182, 6, and 0 were generated for the
+\calculatemethod~method:
+
+\begin{center}
+{\tt \scriptsize assertTrue(BMICalculator.calculate(182, 6, 0) == Type.NORMAL);}
+\end{center}
+
+For methods that return integers or doubles, you could use {\tt assertEquals} instead.
+
+\subsection{Examples}
+
+You need to devise some examples on which to try your test tool/framework, and
+present them as evidence of what your tool does as part of your submission. You
+can use the \bmicalculatorclass as one of these examples. 
+
+%%%%
+
+\subsection{Documentation}
+
+Finally, you should document what your tool does, and how to use it via a {\tt
+README.md} file provided in the root directory of your GitHub repository. See
+Section~\ref{sec:submission} for more details on what to do here.
+
+%%%%
+
+\section{Indicative Marking Scheme}
+
+Your submission will be graded according to the following criteria. 
+
+Each of the criteria will be equally weighted to produce a final mark,  taking
+into account of the number of people in your team, or whether you are working
+individually. 
+
+\begin{tabular}{p{10em}p{15em}p{5em}}
+
+    \toprule
+
+    {\bf Automation Aspect} & {\bf Level of Achievement} & {\bf Indicative Grade} \\
+
+    \midrule
+
+    Analysis of the Method Under Test \\
+
+    \midrule
+
+    Test Requirement Generation \\
+
+    \midrule
+
+    Instrumentation \\
+
+    \midrule
+
+    Test Data Generation \\
+
+    \midrule
+
+    Computing Coverage \\
+
+    \midrule
+
+    Test Suite Output \\
+
+    \midrule
+
+    Quality of GitHub Repository and Documentation \\
+
+    \bottomrule
+
+\end{tabular}
 
 \end{document}
