@@ -2,26 +2,27 @@
 
 \begin{document}
 
-\title{Automatic Test Case Generation}{5.1 Symbolic Execution}
+\title{Automatic Test Case Generation}{5.3 Symbolic Execution}
 
 \section{Introduction --- Static and Dynamic Analysis}
 
-Software Testing usually takes the form of what's known as {\it dynamic
-Analysis} activity. {\it Dynamic} simply means that we {\it execute} the program
+Software Testing usually takes the form of what's known as a {\it dynamic
+analysis} activity. {\it Dynamic} simply means that we {\it execute} the program
 under test to test it. You may think this distinction is crazy --- how could we
 test a program without running it? 
 
 Well, there exist a number of techniques that are capable of performing {\it
-Static Analysis} of a program. This means they take the program code (or some
-model of it), and scrutinise properties of it using theorem provers or
-constraint solvers. This can help us find interesting issues with our software,
-such as deadlocks, or infeasible paths. While Dynamic Analysis involves
-executing software one input at a time (and the overheads that brings for any
-program of a reasonable size --- as we saw in the introductory material to this
-module), techniques based on Static Analysis are capable of reasoning about
-multiple sets of inputs at once. Static Analysis can also be used to derive
-interesting test cases automatically. Symbolic Execution is one technique that
-can do this.
+static analysis} of a program that is useful for helping us test and verify a
+program's correctness. This means they take the program code (or some model of
+it), and scrutinise properties of it using theorem provers or constraint
+solvers. This can help us find interesting issues with our software, such as
+deadlocks, or infeasible paths. While dynamic analysis involves executing
+software one input at a time (and the overheads that brings for any program of a
+reasonable size --- as we saw in the introductory material to this module),
+techniques based on static analysis are capable of reasoning about multiple sets
+of inputs at once. Static analysis can also be used to derive interesting test
+cases automatically. {\it Symbolic Execution} is one static analysis technique
+that can do this.
 
 \section{Symbolic Execution}
 
@@ -68,7 +69,7 @@ branches are feasible, it takes one of the branches, leaving the other on a
 stack to return to when the exploration of the current path has completed. 
 
 In our worked example, we're going to explore the left-most path of the
-computation tree where each branch predicate is true. A Symbolic Execution of
+computation tree where each branch predicate is true. Symbolic Execution of
 this particular path works as follows:
 
 \begin{center}
@@ -97,7 +98,7 @@ s           &                                                  & $\alpha$    & $
 \end{tabular}}
 \end{center}
 
-To begin with, the three inputs are assigned to symbols. As such {\tt side 1}$ =
+To begin with, the three inputs are assigned to symbols. As such {\tt side1}$ =
 \alpha$, {\tt side2}$ = \beta$, and {\tt side3}$ = \gamma$, respectively. There
 is also another variable in the program, {\tt temp}, that we need to account
 for. This variable appears in the body of each of the {\tt if} statements, and
@@ -121,7 +122,9 @@ The third branch predicate encountered is {\tt side2 > side3}. Taking the true
 branch would result in $\alpha > \beta$ being appended to the path condition.
 However this already appears in the path condition as a conjunct. Since $\alpha
 > \beta \wedge \beta > \gamma$ is equivalent to $\alpha > \beta \wedge \beta >
-\gamma \wedge \alpha > \beta$, the path condition does not change in practice.
+\gamma \wedge \alpha > \beta$, the path condition does not need to change in
+practice with this branch predicate.
+%
 In the body of the {\tt if} condition, {\tt side2} becomes equal to $\beta$
 again, while {\tt side3} becomes equal to $\alpha$.
 
@@ -135,8 +138,8 @@ The program then terminates after executing the body of this {\tt if} statement.
 symbolic states of the program's variables at this point.) We now have a
 complete path condition that can be re-written in terms of the original inputs.
 We do this by substituting the symbols by the original input variables they
-originally represented, by performing the reverse of the first step. That is, As
-such $\alpha = ${\tt side 1}, $\beta = ${\tt side2}, and $\gamma = ${\tt side3}.
+originally represented, by performing the reverse of the first step. As
+such, $\alpha = ${\tt side 1}, $\beta = ${\tt side2}, and $\gamma = ${\tt side3}.
 
 \begin{center}
 {\tt side1}~$ > $~{\tt side2}~$ \wedge $~{\tt side2}~$ > $~{\tt side3}~$ \wedge
@@ -167,9 +170,9 @@ Symbolic Execution.
 \section{Dynamic Symbolic Execution}
 
 Dynamic Symbolic Execution, sometimes called {\it Concolic Execution} (for {\it
-Conc}rete Symb{\it olic} Execution), or DSE for short, involves executing the
-program with a random input. The random input may take the path required by
-chance, or perhaps a part of it. DSE leverages this to simplify the
+Conc}rete Symb{\it olic} Execution), but usually just DSE for short, involves
+executing the program with a random input. The random input may take the path
+required by chance, or perhaps a part of it. DSE leverages this to simplify the
 path condition and the work required of the constraint solver. 
 
 Suppose the \classifymethod~method of the \triangleclass~class was executed with
@@ -190,21 +193,30 @@ constraints to simplify them. So instead of solving for $\alpha > \beta \wedge
 more simply, $2 > \gamma$. The solver, then may return a value of 1 for $\gamma$
 (i.e., {\tt side3}), for example.
 
-This strategy makes the constraint solver into what is called an ``incomplete''
-theorem prover: it will never declare an unsatisfiable constraint to be
-satisfiable, but it may fail to satisfy some satisfiable constraints because of
-the simplification being made. In particular it will help solve for inputs for
-paths that Random Testing does find difficult in practice, i.e. the branches
-where two or more sides of the triangle need to be equal.
-
 In practice, DSE makes Symbolic Execution faster and more efficient. 
+
+\section{Dealing with Exploding Paths}
+
+As already noted, one problem with techniques based on Symbolic Execution is the
+potential explosion in paths. In practice, users of these techniques only
+explore the computation tree to a certain depth (i.e., cutting off the longer
+paths), or only considering paths involving loops up to a certain number of
+iterations of the loop. This helps alleviate the exploding path problem, but
+does solve it completely.
 
 \section{Tools}
 
-KLEE (\url{https://klee.github.io/}) is a DSE engine for C. You can try it out
-via its website.
+You might want to check out the following tools that symbolically execute
+programs:
 
-EvoSuite (\url{https://www.evosuite.org/}) includes DSE capabilities for Java,
-but only up to Java 8.
+\begin{itemize}
+
+    \item {\bf KLEE} (\url{https://klee.github.io/}) is a DSE engine for C. You
+can try it out via its website.
+
+    \item {\bf EvoSuite} (\url{https://www.evosuite.org/}) includes DSE
+capabilities for Java, but only up to Java 8.
+
+\end{itemize}
 
 \end{document}
