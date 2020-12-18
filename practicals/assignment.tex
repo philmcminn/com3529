@@ -362,46 +362,105 @@ Section~\ref{sec:submission} for more details on what to do here.
 
 Your submission will be graded according to the following criteria. 
 
-Each of the criteria will be equally weighted to produce a final mark,  taking
-into account of the number of people in your team, or whether you are working
-individually. 
+A grade will be awarded to each criterion. The grades assigned over all criteria
+will then be aggregated depending on the number of people in your team. For
+example, an individual working on their own would not be expected to hit as many
+high levels of achievement as a group of four to obtain the same overall final grade.
 
-\begin{tabular}{p{10em}p{15em}p{5em}}
+{
+\scriptsize
+\begin{tabular}{lp{30em}l} 
 
     \toprule
 
-    {\bf Automation Aspect} & {\bf Level of Achievement} & {\bf Indicative Grade} \\
+    {\bf Criterion (Automation Aspect)} & {\bf Level of Achievement} & {\bf Indicative Grade} \\
 
     \midrule
 
-    Analysis of the Method Under Test \\
+    {\it 1. Analysis of the Method Under Test} 
+    
+    & & Pass \\
+    & Requires significant manual input & 3rd  \\ \cline{2-3}
+    & & 2:2  \\
+    & Requires some manual input, partial automated support & 2:1  \\ \cline{2-3}
+    & Method under test fully parsed, with conditions and structure of
+    predicates extracted and analysed & 1st  \\
 
     \midrule
 
-    Test Requirement Generation \\
+    {\it 2. Test Requirement Generation}
+
+    & & Pass \\
+    & Simple coverage criterion implemented (e.g., Condition Coverage) & 3rd  \\
+    \cline{2-3}
+    & & 2:2  \\ 
+    & Advanced coverage criterion implemented (e.g., Restricted or Correlated
+    MCDC) & 2:1  \\ \cline{2-3}
+    & Multiple criteria implemented & 1st  \\
 
     \midrule
 
-    Instrumentation \\
+    {\it 3. Instrumentation}
+
+    & & Pass \\
+    & Supplies a simple API that is applied within code blocks & 3rd  \\  \cline{2-3}
+    & & 2:2  \\
+    & Supplies an advanced API that is applied within conditions & 2:1  \\ \cline{2-3}
+    & Method under test is automatically parsed and intrumented & 1st  \\
 
     \midrule
 
-    Test Data Generation \\
+    {\it 4. Test Data Generation}
+
+    & Very basic random number generation & Pass \\ \cline {2-3}
+    & Configurable random number generation (e.g., input parameters can be configured
+    with upper and lower bounds) & 3rd  \\ \cline {2-3}
+    & Advanced random number generation (e.g., can be used to generate
+    non-numerical inputs randomly, such as strings and other types, like
+    objects) & 2:2  \\ \cline {2-3}
+    & Advanced random number generation (e.g., can use example inputs as the
+    basis of seeds, similar to fuzzing), 
+    or, applies a search-based technique ``out of the box'' (e.g., the AVMf) &
+    2:1  \\ \cline {2-3}
+    & Applies own search-based method (e.g., implemented own evolutionary algorithm) or similarly advanced technique & 1st  \\
+    
+    \midrule
+
+    {\it 5. Coverage Level Computation}
+
+    & & Pass \\
+    {\it ~~~and Reporting} & & 3rd  \\
+    & Coverage level computed for simple criterion as implemented for (2) above
+    & 2:2  \\ \cline{2-3}
+    & & 2:1 \\ 
+    & Coverage level computed and individual uncovered elements reported  & 1st  \\
 
     \midrule
 
-    Computing Coverage \\
+    {\it 6. Test Suite Output}
+
+    & & Pass \\
+    & & 3rd  \\
+    & Simple output of inputs to the command line & 2:2  \\ \cline{2-3}
+    & & 2:1  \\
+    & Writes out JUnit Java code that can be compiled separately and run & 1st  \\
 
     \midrule
 
-    Test Suite Output \\
+    {\it 7. GitHub Repo and {\tt README.md}}
 
-    \midrule
-
-    Quality of GitHub Repository and Documentation \\
+    & & Pass \\
+    & & 3rd  \\
+    & Problems with repo (e.g., files missing) and/or instructions deficient &
+    2:2  \\ \cline{2-3}
+    & Everything works and can be setup from the repo, according to instructions
+    supplied in the {\tt README.md} & 2:1  \\ \cline{2-3}
+    & {\tt README.md} especially well-polished, installation and running tool
+    worked flawlessly& 1st  \\
 
     \bottomrule
 
 \end{tabular}
+}
 
 \end{document}
