@@ -49,10 +49,18 @@ binary tree (with possibly infinite depth). This is called the {\it computation
 tree}. A computation tree can be formed from the nodes of a CFG. Each series of
 nodes from the root of the tree to a leaf is a path through the CFG/program.
 
-Here is the computation tree for the \classifymethod~method of the
+Here is (part of) the computation tree for the \classifymethod~method of the
 \triangleclass~class, for example:
 
 %
+
+As you can see, it's kind of an ``unrolled'' Control Flow Graph. Since node 9,
+for example can be encountered after node 7 {\it or} node 4, it appears twice in
+the graph. The same is true of node 14 and others. For space reasons, I can't
+get the whole graph on the slide. The only full path from nodes s to e displayed
+is the path s $\rightarrow$ 4 $\rightarrow$ 9 $\rightarrow$ 14 $\rightarrow$ 20
+$\rightarrow$ 21 $\rightarrow$ e. Had there been space, all paths would be
+shown, each ending with the node e
 
 Symbolic Execution works through the computation tree starting at the root node,
 beginning with an empty path condition that the technique builds up as it moves
@@ -81,19 +89,21 @@ CFG         &                                                  & \multicolumn{4}
 Node        & Code                                             & {\tt side1} & {\tt side2} & {\tt side3} & {\tt temp} & Path Condition  \\
 \midrule          
 s           &                                                  & $\alpha$    & $\beta$     & $\gamma$    & -          & $\mathit{true}$  \\
-            & {\tt if (side1 > side2)} {\it as TRUE}           & $\alpha$    & $\beta$     & $\gamma$    & $\alpha$   & $\alpha > \beta$ \\
-            & {\tt int temp = side1}                           & $\alpha$    & $\beta$     & $\gamma$    & $\alpha$   & $\alpha > \beta$ \\
-            & {\tt side1 = side2}                              & $\beta$     & $\beta$     & $\gamma$    & $\alpha$   & $\alpha > \beta$ \\
-            & {\tt side2 = temp}                               & $\beta$     & $\alpha$    & $\gamma$    & $\alpha$   & $\alpha > \beta$ \\
-            & {\tt if (side1 > side3)} {\it as TRUE}           & $\beta$     & $\alpha$    & $\gamma$    & -          & $\alpha > \beta \wedge \beta > \gamma$ \\
-            & {\tt int temp = side1}                           & $\beta$     & $\alpha$    & $\gamma$    & $\beta$    & $\alpha > \beta \wedge \beta > \gamma$ \\
-            & {\tt side1 = side3}                              & $\gamma$    & $\alpha$    & $\gamma$    & $\beta$    & $\alpha > \beta \wedge \beta > \gamma$ \\
-            & {\tt side3 = temp}                               & $\gamma$    & $\alpha$    & $\beta$     & $\beta$    & $\alpha > \beta \wedge \beta > \gamma$ \\            
-            & {\tt if (side2 > side3)} {\it as TRUE}           & $\gamma$    & $\alpha$    & $\beta$     & -          & $\alpha > \beta \wedge \beta > \gamma$ {\scriptsize (no change)}\\    
-            & {\tt int temp = side2}                           & $\gamma$    & $\alpha$    & $\beta$     & $\alpha$   & $\alpha > \beta \wedge \beta > \gamma$ \\
-            & {\tt side2 = side3}                              & $\gamma$    & $\beta$     & $\beta$     & $\alpha$   & $\alpha > \beta \wedge \beta > \gamma$ \\
-            & {\tt side3 = temp}                               & $\gamma$    & $\beta$     & $\alpha$    & $\alpha$   & $\alpha > \beta \wedge \beta > \gamma$ \\
-            & {\tt if (side1 + side2 <= side3)} {\it as TRUE}  & $\gamma$    & $\beta$     & $\alpha$    & $\alpha$   & $\alpha > \beta \wedge \beta > \gamma \wedge \gamma + \beta \leq \alpha$ \\
+4           & {\tt if (side1 > side2)} {\it as TRUE}           & $\alpha$    & $\beta$     & $\gamma$    & $\alpha$   & $\alpha > \beta$ \\
+5           & {\tt int temp = side1}                           & $\alpha$    & $\beta$     & $\gamma$    & $\alpha$   & $\alpha > \beta$ \\
+6           & {\tt side1 = side2}                              & $\beta$     & $\beta$     & $\gamma$    & $\alpha$   & $\alpha > \beta$ \\
+7           & {\tt side2 = temp}                               & $\beta$     & $\alpha$    & $\gamma$    & $\alpha$   & $\alpha > \beta$ \\
+9           & {\tt if (side1 > side3)} {\it as TRUE}           & $\beta$     & $\alpha$    & $\gamma$    & -          & $\alpha > \beta \wedge \beta > \gamma$ \\
+10          & {\tt int temp = side1}                           & $\beta$     & $\alpha$    & $\gamma$    & $\beta$    & $\alpha > \beta \wedge \beta > \gamma$ \\
+11          & {\tt side1 = side3}                              & $\gamma$    & $\alpha$    & $\gamma$    & $\beta$    & $\alpha > \beta \wedge \beta > \gamma$ \\
+12          & {\tt side3 = temp}                               & $\gamma$    & $\alpha$    & $\beta$     & $\beta$    & $\alpha > \beta \wedge \beta > \gamma$ \\            
+14          & {\tt if (side2 > side3)} {\it as TRUE}           & $\gamma$    & $\alpha$    & $\beta$     & -          & $\alpha > \beta \wedge \beta > \gamma$ {\scriptsize (no change)}\\    
+15          & {\tt int temp = side2}                           & $\gamma$    & $\alpha$    & $\beta$     & $\alpha$   & $\alpha > \beta \wedge \beta > \gamma$ \\
+16          & {\tt side2 = side3}                              & $\gamma$    & $\beta$     & $\beta$     & $\alpha$   & $\alpha > \beta \wedge \beta > \gamma$ \\
+17          & {\tt side3 = temp}                               & $\gamma$    & $\beta$     & $\alpha$    & $\alpha$   & $\alpha > \beta \wedge \beta > \gamma$ \\
+20          & {\tt if (side1 + side2 <= side3)} {\it as TRUE}  & $\gamma$    & $\beta$     & $\alpha$    & $\alpha$   & $\alpha > \beta \wedge \beta > \gamma \wedge \gamma + \beta \leq \alpha$ \\
+21          & \dots \\
+e           & \dots \\
 \bottomrule
 \end{tabular}}
 \end{center}
