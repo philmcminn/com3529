@@ -1,0 +1,78 @@
+Q) Given the following program
+
+Node no. 
+1) public int aMethod(int y) {
+2)     x = 0;
+3)     if (y > 0) {
+4)         x ++;
+5)     }
+6)     System.out.println(x);
+7)     return x;
+8) }
+
+Which of the following statements are true?
+
+1) Node 1 is a use
+2) Node 4 is a use
+3) The path 2->3->5->6 is definition-clear with respect to x
+4) 1->2->3 is a definition-use path
+
+a) all of them
+* b) 2, 3, and 4 only
+c) 2 and 4 only 
+d) 1 and 3 only
+
+Q) Given the same program, which of the following statements are false?
+
+1) Node 4 kills the definition of x assigned at node 2 T
+2) Node 3 kills the definition of y assigned at node 1 F
+3) defs(4) = uses(4) T
+4) defs(4) = uses(6) T
+
+a) all of them
+b) 1 and 4 only
+* c) 2 only
+d) 1, 3 and 4 only
+
+
+Q) Which of the following statements is the odd one out?
+
+a) A CCFG has a special node "c"
+* b) The set DU is the set of all definitions and uses in a program
+(it's false, the others are true)
+c) In All-Uses Coverage, each definition reaches each use
+d) Definitions are where values are created
+
+Q) Given the following program
+
+ 1) public void anotherMethod(int a) {
+ 2)     int r = a + 1;
+ 3)     int s = a - 1;
+ 4)     if (a == 0) {
+ 5)         r = 2;
+ 6)     } else if (a == 1) {
+ 7)         s = r;
+ 8)     }
+ 9)     return r * s;
+10) }
+
+And the paths
+1) 2->3->4->6->7->8->9 
+2) 2->3->4->5
+3) 3->4->5->8->9
+4) 3->4->8->9
+
+Which of the following is the odd one out?
+
+a) All Defs coverage includes one of paths 1 and 2 but not both
+b) All Uses coverage includes both paths 1 and 2
+* c) All Uses coverage includes both paths 3 and 4
+(it's false, the others are true)
+d) All Def-Use Paths coverage includes both paths 1 and 2
+
+Q) Which of the following is FALSE?
+
+a) All Def-Use Paths subsumes All-Uses
+* b) All Def-Use Paths subsumes Path Coverage
+c) All Def-Use Paths subsumes All-Defs
+d) All-Uses subsumes All-Defs

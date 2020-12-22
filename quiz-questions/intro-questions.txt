@@ -1,4 +1,4 @@
-1) Which of the following is a false statement?
+Q) Which of the following is a false statement?
 
 A. Software testing can show the presence of bugs, but not their absence
 B. Exhaustive software testing is intractable
@@ -6,7 +6,7 @@ C. Finding all bugs is uncomputable
 * D. Solving the software testing problem is equivalent to finding a way to
 execute a piece of software will all possible inputs 
 
-2) Which of the following is the most "mature" view of Software Testing, according
+Q) Which of the following is the most "mature" view of Software Testing, according
 to Beizer?
 
 A. The purpose of software testing is to show that software doesn't work
@@ -16,21 +16,21 @@ higher quality software
 D. The purpose of software testing is not to show anything in particular, but to
 reduce the risk of using software
 
-3) In the context of Software Testing, RIP stands for:
+Q) In the context of Software Testing, RIP stands for:
 
 A. Rest In Peace
 * B. Reachability, Infection, Propagation
 C. Revealability, Infection, Propagation
 D. Runability, Infection, Propagation
 
-4) Which of the following is a true statement?
+Q) Which of the following is a true statement?
 
 A. Failures and Test Failures mean the same thing
 B. Testing and Debugging are the same thing
 C. Bugs, faults, and failures are all the same thing
 * D. A test set and a test suite mean the same thing
 
-5) A test case has four ingredients:
+Q) A test case has four ingredients:
 
 1. The inputs necessary to put the software into the appropriate state for
 testing
@@ -45,14 +45,14 @@ A. 1 only
 C. 4 only
 D. 1, 3, and 4
 
-6) In RIPR, the second 'R' could be satisfied by
+Q) In RIPR, the second 'R' could be satisfied by
 
 A. Performing Regression Testing
 * B. An assertion examining the right part of a program's output
 C. A test using an input that reaches a fault in the program 
 D. Relaying the output of a program to a test oracle
 
-7) Consider the following statements:
+Q) Consider the following statements:
 
 1. Faults of omission are caused by missing tests
 2. Faults of commission are when the program code goes beyond its requirements 
@@ -68,7 +68,7 @@ B. 1, 3 and 4
 C. All of them
 D. 2 and 3 only
 
-8) Which of the following types of testing is NOT a formal part of the V-Model?
+Q) Which of the following types of testing is NOT a formal part of the V-Model?
 
 A. Acceptance Testing
 B. System Testing

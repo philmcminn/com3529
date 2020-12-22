@@ -1,0 +1,56 @@
+Q) How many conditions are there in the following predicate?
+
+(a > b) && (c != d || e > f) && (!g)
+
+A. 3
+B. 2
+C. 1
+D. * 4
+
+Q) Which criterion would result in the most test requirements for 
+the predicate?
+
+(a > b) && (c != d || e > f) && (!g)
+
+A. * Multiple Condition
+B. MCDC
+C. Branch
+D. Condition Decision
+
+Q) Which of the following statements is TRUE?
+
+1. Condition Decision Coverage subsumes Branch Coverage
+2. Condition Decision Coverage subsumes Condition Coverage
+3. With Correlated MCDC, the truth values of the minor conditions are fixed
+4. With MCDC, the truth value of the major condition flips with the
+branch predicate
+
+A. * 1, 2 and 4 only
+B. 1, 2 and 3 only
+C. 2, 3 and 4 only
+D. All of them
+
+Q) The following represents two test requirements for Correlated MCDC. Which
+condition(s) qualify as the major condition?
+
+1 2 3 4 B
+T F T F F
+F F F T T
+
+A. 1 and 3 only
+B. 2 only
+C. 1, 3 and 4 only
+D. None of them
+
+Q) The following represents two test requirements for Restricted MCDC. Which
+condition(s) qualify as the major condition?
+
+1 2 3 4 B
+T F T F F
+F F T F T
+
+A. 1 only
+B. 1 and 3 only
+C. 2 and 4 only
+D. None of them
+

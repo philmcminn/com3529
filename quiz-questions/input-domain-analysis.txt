@@ -1,0 +1,59 @@
+Q) The following is a partition of a floating point variable f:
+
+e1: f < 1
+e2: f = 0
+e3: f > 1
+
+Which of the following is FALSE?
+
+a) There are three equivalence classes
+b) The partition is disjoint
+c) The partition is complete
+X it's not complete, what about f -1..0 and 0..1, f is a floating point
+d) The partition is based on one characteristic of f
+
+Q) A method called isLineCoveredByRectangle takes twelve integers, four representing
+the two sets of co-ordinates of the end points of a line and another eight
+representing the four sets of co-ordinates of the corners of a rectangle.
+
+Which of the following is FALSE?
+
+The input domain of the method is ...
+
+a) The domain of an integer to the power of twelve
+b) Twelve integer variables
+c) A line and a rectangle
+d) All of A-C
+X A-C are all true
+
+Q) Which of the following results in the most test requirements?
+
+a) All Combinations Coverage
+X
+b) Each Choice Coverage
+c) Pair-Wise Coverage
+d) Base Choice Coverage
+
+Q) The following is a partition of an integer variable i:
+
+e1: i <= 1
+e2: i >= 1 and i < 10
+e3: i > 10
+
+Which of the following is FALSE?
+
+a) There are three equivalence classes
+b) The partition is disjoint
+X It's not disjoint
+c) The partition is complete
+d) The partition is based on one characteristic of f
+
+Q) Given the statement "if x >= 10", which values are "boundary" values 
+for the branching predicate?
+
+a) 9, 10, 11
+b) 9 and 10 only
+x 9 and 10 fall either side of the boundary
+
+c) 10 and 11 only
+d) 9 and 11 only
