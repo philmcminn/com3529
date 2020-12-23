@@ -1,4 +1,4 @@
-1) Which of these subsumption hierarchies is correct?
+Q) Which of these subsumption hierarchies is correct?
 (Where ">" means "subsumes")
 
 1. Path > Branch > Statement
@@ -11,7 +11,7 @@ B. 2 only
 C. * 1, 3, and 4 only
 D. 1 only
 
-2) Which of the following statements are FALSE?
+Q) Which of the following statements are FALSE?
 
 1. Covering all the paths in a program is not sensible when there are unbounded
 loops
@@ -20,12 +20,12 @@ loops
 4. A test suite that covers all the branches of a program will also cover all of
 its statements
 
-A. 2 and 3 only
+* A. 2 and 3 only
 B. 1 and 4 only
 C. 2 only
 D. 1 only
 
-3) Which of the following statements are TRUE?
+Q) Which of the following statements are TRUE?
 
 1. If we have 100% coverage of a program, we will find all the bugs in it.
 2. A coverage criterion A subsumes B if by achieving full coverage of A, we have
@@ -36,25 +36,25 @@ software to devise test requirements
 
 A. All of them
 B. 1, 3 and 4 only
-C. 2 only
+* C. 2 only
 D. 4 only
 
-4) Which of the following statements are TRUE?
+Q) Which of the following statements are TRUE?
 
 1. 50% Statement Coverage represents higher program coverage than 25% Branch
 Coverage
 2. Coverage Level is the percentage of the number of test requirements of the
 coverage criterion that the test suite fulfils
 3. An infeasible test requirement is when there is no test case that could be
-written to fufil the test requirement
+written to fulfil the test requirement
 4. Coverage Level is the percentage of bugs a test suite finds in a program
 
 A. 1, 2 and 3 only
 B. 1, 2 and 4 only
 C. 2 and 4 only
-D. 2 and 3 only
+* D. 2 and 3 only
 
-5. Take the following program. CFG node labels appear in comments like this: /* A */
+Q) Take the following program. CFG node labels appear in comments like this: /* A */
 
 public int fib(int count) {
     int num1 = 0;
@@ -72,61 +72,4 @@ public int fib(int count) {
 
 Where does the edge from node X go to?
 
-A, B, C, or D?
-
-6. How many conditions are there in the following predicate?
-
-(a > b) && (c != d || e > f) && (!g)
-
-A. 3
-B. 2
-C. 1
-D. * 4
-
-7. Which criterion would result in the most test requirements for 
-the predicate?
-
-(a > b) && (c != d || e > f) && (!g)
-
-A. * Multiple Condition
-B. MCDC
-C. Branch
-D. Condition Decision
-
-8. Which of the following statements is TRUE?
-
-1. Condition Decision Coverage subsumes Branch Coverage
-2. Condition Decision Coverage subsumes Condition Coverage
-3. With Correlated MCDC, the truth values of the minor conditions are fixed
-4. With MCDC, the truth value of the major condition flips with the
-branch predicate
-
-A. * 1, 2 and 4 only
-B. 1, 2 and 3 only
-C. 2, 3 and 4 only
-D. All of them
-
-9. The following represents two test requirements for Correlated MCDC. Which
-condition(s) qualify as the major condition?
-
-1 2 3 4 B
-T F T F F
-F F F T T
-
-A. 1 and 3 only
-B. 2 only
-C. 1, 3 and 4 only
-D. None of them
-
-10. The following represents two test requirements for Restricted MCDC. Which
-condition(s) qualify as the major condition?
-
-1 2 3 4 B
-T F T F F
-F F T F T
-
-A. 1 only
-B. 1 and 3 only
-C. 2 and 4 only
-D. None of them
-
+A, * B, C, or D?
