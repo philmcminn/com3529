@@ -6,17 +6,31 @@
 
 \section{Introduction}
 
+\note{Video}{First slide}
+
 One disadvantage of Random Testing, or Fuzzing, is that if certain sets of
 inputs needed for a test case, or to violate some property, occupy a very small
 fraction of the overall input domain, they won't be found very quickly. And if
 the overall input domain is very large, or even infinite, they may not be found
 at all.
 
+\note{Video}{Next slide}
+
 What if we could somehow {\it guide} the process to the right areas of the input
-domain? Well, this is what Search-Based Testing aims to do. Search-Based Testing
-treats the input domain of a program as a {\it search space}. Viewed through
-this lens, some testing problems are effectively ``needle in a haystack'' search
-problems. Without some hints as to where the needle is, we will never find it.
+domain? Well, this is what Search-Based Testing aims to do. 
+
+\note{Video}{Click for next point}
+
+Search-Based Testing treats the input domain of a program as a {\it search
+space}. 
+
+\note{Video}{Click for next point}
+
+Using heuristics, Search-Based Testing can find inputs for test cases that for
+Random Testing cannot. Viewed through this lens, Random Testing tries to
+(unsuccessfully) tackle ``needle in a haystack'' search problems --- without
+some hints as to where the needle is (i.e., the required test data), it will
+never find it.
 
 \section{Fitness Functions}
 In order to provide guidance to the required test case, Search-Based Testing
@@ -24,8 +38,8 @@ needs a {\it fitness function}. The fitness function takes an input to the
 program and returns a {fitness value} indicating ``how good'' the input is to
 the one that is actually needed. If the fitness function is being {\it
 minimised}, the closer the value to zero, the better the input is. On the other
-hand, if the fitness function is being maximised, the higher the value
-(potentially with some ceiling), the better the input is.
+hand, if the fitness function is being maximised, the higher the value (usually
+relative to some ceiling, maximum fitness value), the better the input is.
 %
 Note that the fitness function doesn't need to know {\it what} the required
 input is (that would be tantamount to having solved the problem already!), just
@@ -81,7 +95,11 @@ We call the surface of fitness values like this the fitness ``landscape''.
     \vspace{-1em}
 \end{center}
 
-Compare this to what Random Testing ``sees'':
+Notice that in this fitness landscape, there is a clear gradient from every
+point in the input domain to the ``valley'' where the required inputs lie (i.e.,
+the line where {\tt side1} equals {\tt side2}). 
+
+Compare this to what Random Testing ``sees'': 
 
 \begin{center}
     \vspace{-1em}
@@ -90,15 +108,19 @@ Compare this to what Random Testing ``sees'':
 \end{center}
 
 Random Testing is not guided by any information, so every input is treated the
-same, unless it executes the branch in question. The plot clearly portrays the
-``needle in a haystack'' nature of this individual test case generation problem.
+same, unless it executes the branch in question. Statistically speaking, Random
+Testing will spend most of its time exploring the plateaus either side of the
+valley, since there is no impetus to incrementally move towards values of {\tt
+side1} and {\tt side2} that are closer together.
 
 \section{Search Techniques}
 
 It's all very well and good having guidance, but we need a method of exploiting
-it. That's where the ``search'' part of Search-Based Testing comes in.
+it. That's where the ``search'' part of Search-Based Testing comes in ---
 Search-Based Testing uses the fitness function in combination with an
 optimisation algorithm. 
+
+\subsection{Simple Gradient Descent}
 
 One of the simplest optimisation algorithms is a search technique called {\it
 Gradient Descent}. Gradient Descent aims to travel down the gradient of the
@@ -177,14 +199,14 @@ individual. So a string with digits early in the string may be recombined with a
 string with digits later in the string, to produce a new string with digits at
 the start and the end, with an even better fitness value. 
 
-% diagram
+% Diagram of crossover --- from slide 
 
 Evolutionary Algorithms also employ another search operator called ``mutation''
 that makes random changes to individuals. So for a test case, this may mean
 changing one the inputs to a completely new value, or changing it by some delta
 value. 
 
-% A complete EA
+% A complete EA --- from slide 
 
 \section{More on Fitness Functions}
 
@@ -199,31 +221,44 @@ $K$ represents a small, positive value.
         \midrule
         {\tt a == b} & if $|${\tt a} $-$ {\tt b}$| = 0$ then $0$ else $|${\tt a} $-$ {\tt b}$| + K$ \\
         {\tt a != b} & if $|${\tt a} $-$ {\tt b}$| \neq 0$ then $0$ else $K$ \\
-        {\tt a < b}  & if {\tt a} $-$ {\tt b} $< 0$ then $0$ else {\tt a} $-$ {\tt b} $+ K$ \\
-        {\tt a <= b} & if {\tt a} $-$ {\tt b} $\leq 0$ then $0$ else {\tt a} $-$ {\tt b} $+ K$ \\
-        {\tt a > b}  & if {\tt b} $-$ {\tt a} $< 0$ then $0$ else {\tt b} $-$ {\tt a} $+ K$ \\
-        {\tt a >= b} & if {\tt b} $-$ {\tt a} $\leq 0$ then $0$ else {\tt b} $-$ {\tt a} $+ K$ \\
+        {\tt a < b}  & if {\tt a} $-$ {\tt b} $< 0$ then $0$ else {\tt a} $-$ {\tt b} $+$ $K$ \\
+        {\tt a <= b} & if {\tt a} $-$ {\tt b} $\leq 0$ then $0$ else {\tt a} $-$ {\tt b} $+$ $K$ \\
+        {\tt a > b}  & if {\tt b} $-$ {\tt a} $< 0$ then $0$ else {\tt b} $-$ {\tt a} $+$ $K$ \\
+        {\tt a >= b} & if {\tt b} $-$ {\tt a} $\leq 0$ then $0$ else {\tt b} $-$ {\tt a} $+$ $K$ \\
         \bottomrule
     \end{tabular}
 \end{center}    
     
-One problem with using fitness function based on the predicates in branches
-only is that the branch needs to be actually {\it reached} in the code for the fitness
-to be calculated. Otherwise, inputs will get the same, poor fitness value. If
-the branch is hard to reach (e.g., because some other branch in the program
-needs to be taken that is only executed by only a few inputs), the search does
-not get any guidance and behaves more like Random Testing.
+One problem with using fitness function based on the predicates in branches only
+is that the branch needs to be actually {\it reached} in the code for the
+fitness to be calculated. Otherwise, inputs will get the same, poor fitness
+value. If the branch is hard to reach (e.g., because some other branch in the
+program needs to be taken that is only executed by only a few inputs), the
+search does not get any guidance and behaves more like Random Testing.
 
 To get around this problem, the fitness function needs to care about all of the
 branch predicates that need to be executed leading up to the ``target'' branch,
 not just the target itself. To figure out which branches are important, we need
-to go back to control flow graphs (CFGs). A branching node is a node of CFG with
-two branches (one true and one false). An edge or node of a CFG is said to be
-control-dependent on a branching node in the CFG if that branching node needs to
-be executed in a certain way (i.e., either true or false) for the edge/node to
-be reached in the program. Take, for instance, the following example:
+to go back to the concept of control flow graphs (CFGs). 
 
-In well-structured programs, control dependencies are obvious from its nesting
+A node of a CFG (which we'll refer to as the ``execution target'') is said to be
+{\it control dependent} on a branch predicate in the CFG if that branch
+predicate needs to be executed in a certain way (i.e., evaluated as either true
+or false) for the execution target to be reached in the program. 
+
+Recall, the \classifymethod~method of the \triangleclass~class. Suppose node~24
+is the test generation target. Node~24 is control dependent on the branch
+predicate of node~20. Unless the predicate evaluates to false, node~24 will
+never be reached. Furthermore, node~25 is control dependent on the branch
+predicate of node~24. If the branch predicate at node~24 evaluates to false,
+node~25 will not be reached by any execution path. To further understand control
+dependence, note the CFG nodes that {\it do not} have control dependencies. For
+example, node~9 is {\it not} control dependent on the outcome at node~4, it will
+always be executed. All paths reach node 9. 
+
+% Slide for the Triangle program (from Symbolic Execution)
+
+In well-structured programs, control dependencies are more or less obvious from its nesting
 structure. However, when programs deploy language constructs like {\tt break},
 {\tt goto} or multiple {\tt return} statements, control dependencies are not as
 easy to figure out, and more complex algorithms are needed. This will be
@@ -234,16 +269,31 @@ Using the concept of control dependency, we can now assign a fitness score to
 inputs based on how close they were to reaching the target branch. This fitness
 score is called the {\it approach level}. For example:
 
-% example
+Suppose the execution target of the \classifymethod~method is node~26. Node~26
+is control dependent on the branch predicate of node~25, which is control
+dependent on the branch predicate of node~24, which in turn is control dependent
+on the branch predicate of node~20 --- three levels of control dependency.
+Inputs that take the path that takes the true branch at node~20, thereby missing
+nodes~24 and~25 are assigned an approach level of {\bf 2}. Inputs that take the
+false branch at node~20, reaching node~24, but then evaluating the branch
+predicate at node~24 as false, thereby missing node~25 are assigned an approach
+level of~{\bf 1}. Finally, all inputs that take the path reaching the final
+branch predicate in the control dependence chain, node~26, receive the lowest
+(i.e., best, in this context) approach level of {\bf 0}.
+
+% diagram 
 
 At each approach level, we can add the fitness for the predicate. We refer to
 this part as the {\it branch distance}. The branch distance is normalised
 (i.e., set to a value between 0 and 1) so that it never exceeds the approach
 level component of the fitness function for that particular branching statement.
 
-
 % fitness function and program 
+% the usual diagram of combining branch predicate with approach level.
 
+(There are various formulas that can achieve this normalisation without an
+explicit upper bound, one being $\frac{d}{d+1}$, where $d$ is the value to be
+normalised.)
 
 \section{Other Applications of Search-Based Testing and Optimisation Algorithms
 in Testing}
@@ -309,8 +359,6 @@ the most important are run first. These topics are the subject of a later
 lecture in this module!
 
 \section{Tools for Search-Based Testing}
-
-\section{Tools}
 
 You might want to check out the following Search-Based Testing tools:
 
