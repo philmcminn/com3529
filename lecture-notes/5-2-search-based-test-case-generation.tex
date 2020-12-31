@@ -199,14 +199,16 @@ individual. So a string with digits early in the string may be recombined with a
 string with digits later in the string, to produce a new string with digits at
 the start and the end, with an even better fitness value. 
 
-% Diagram of crossover --- from slide 
+% TODO Diagram of crossover --- from slide 
 
 Evolutionary Algorithms also employ another search operator called ``mutation''
 that makes random changes to individuals. So for a test case, this may mean
 changing one the inputs to a completely new value, or changing it by some delta
 value. 
 
-% A complete EA --- from slide 
+% TODO A complete EA --- from slide 
+
+% TODO -- complete description of EAs
 
 \section{More on Fitness Functions}
 
@@ -256,7 +258,7 @@ dependence, note the CFG nodes that {\it do not} have control dependencies. For
 example, node~9 is {\it not} control dependent on the outcome at node~4, it will
 always be executed. All paths reach node 9. 
 
-% Slide for the Triangle program (from Symbolic Execution)
+% TODO Add in slide for the Triangle program (from Symbolic Execution)
 
 In well-structured programs, control dependencies are more or less obvious from its nesting
 structure. However, when programs deploy language constructs like {\tt break},
@@ -281,15 +283,15 @@ level of~{\bf 1}. Finally, all inputs that take the path reaching the final
 branch predicate in the control dependence chain, node~26, receive the lowest
 (i.e., best, in this context) approach level of {\bf 0}.
 
-% diagram 
+% TODO diagram 
 
 At each approach level, we can add the fitness for the predicate. We refer to
 this part as the {\it branch distance}. The branch distance is normalised
 (i.e., set to a value between 0 and 1) so that it never exceeds the approach
 level component of the fitness function for that particular branching statement.
 
-% fitness function and program 
-% the usual diagram of combining branch predicate with approach level.
+% TODO: fitness function and program 
+% TODO: the usual diagram of combining branch predicate with approach level.
 
 (There are various formulas that can achieve this normalisation without an
 explicit upper bound, one being $\frac{d}{d+1}$, where $d$ is the value to be
@@ -343,7 +345,7 @@ to handle. However, as the Evolutionary Algorithm progressed, it was able to
 develop trickier scenarios that eventually produced a collision, i.e., a test
 failure.
 
-% include pictures used in previous slides
+% TODO: include pictures used in previous slides
 
 \subsection{Beyond Test Case Generation}
 
