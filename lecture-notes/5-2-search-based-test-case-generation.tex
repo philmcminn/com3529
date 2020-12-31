@@ -73,7 +73,7 @@ examples in the following table:
 \begin{center}
     \begin{tabular}{rrrr}
         \toprule 
-        {\tt side1} & {\tt side2} & {\tt side3} & $\mathit{fintess}$ \\
+        {\tt side1} & {\tt side2} & {\tt side3} & $\mathit{fitness}$ \\
         \midrule
         10 & 20 & 30 & 20 \\
         10 & 15 & 20 & 10 \\
@@ -206,9 +206,11 @@ that makes random changes to individuals. So for a test case, this may mean
 changing one the inputs to a completely new value, or changing it by some delta
 value. 
 
-% TODO A complete EA --- from slide 
+% TODO Diagram of mutation --- from slide
 
 % TODO -- complete description of EAs
+
+% TODO Diagram of an EA --- from slide
 
 \section{More on Fitness Functions}
 
@@ -255,8 +257,8 @@ never be reached. Furthermore, node~25 is control dependent on the branch
 predicate of node~24. If the branch predicate at node~24 evaluates to false,
 node~25 will not be reached by any execution path. To further understand control
 dependence, note the CFG nodes that {\it do not} have control dependencies. For
-example, node~9 is {\it not} control dependent on the outcome at node~4, it will
-always be executed. All paths reach node 9. 
+example, node~20 is {\it not} control dependent on the outcome at node~14, it will
+always be executed. All paths reach node~20. 
 
 % TODO Add in slide for the Triangle program (from Symbolic Execution)
 
