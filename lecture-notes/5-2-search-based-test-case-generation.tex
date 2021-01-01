@@ -287,7 +287,19 @@ value, or changing it by some delta value.
 
 % TODO Diagram of mutation --- from slide
 
-% TODO -- complete description of EAs
+\note{Video}{Advance slide to get the key stage bubbles to ``pop''}
+
+Evolutionary Algorithms seek to evolve successive populations of
+individuals, called {\it generations}. The first generation {\it starts} with random
+individuals that are assessed for fitness, by running them as actual test cases
+and monitoring them. If the test goal is satisfied following fitness assessment,
+the Evolutionary Algorithm can stop there. If not, individuals with better
+fitness are {\it selected} for the stages of {\it crossover} and {\it mutation}.
+Following this process, a certain number of these new individuals are {\it
+inserted} into the population, removing a certain number of the existing
+population with poor fitness. And, so the algorithm continues, until either the
+test goal is satisfied, or a certain number of iterations of the loop have been
+performed with no success.
 
 % TODO Diagram of an EA --- from slide
 
