@@ -32,24 +32,40 @@ Random Testing cannot. Viewed through this lens, Random Testing tries to
 some hints as to where the needle is (i.e., the required test data), it will
 never find it.
 
+\note{Video}{Next slide}
+
 \section{Fitness Functions}
+
+\note{Video}{Click for next point}
+
 In order to provide guidance to the required test case, Search-Based Testing
-needs a {\it fitness function}. The fitness function takes an input to the
-program and returns a {fitness value} indicating ``how good'' the input is to
-the one that is actually needed. If the fitness function is being {\it
-minimised}, the closer the value to zero, the better the input is. On the other
-hand, if the fitness function is being maximised, the higher the value (usually
-relative to some ceiling, maximum fitness value), the better the input is.
-%
+needs a {\it fitness function}. 
+
+\note{Video}{Click for next point}
+
+The fitness function takes an input to the program and returns a {fitness value}
+indicating ``how good'' the input is to the one that is actually needed. If the
+fitness function is being {\it minimised}, the closer the value to zero, the
+better the input is. On the other hand, if the fitness function is being
+maximised, the higher the value (usually relative to some ceiling, maximum
+fitness value), the better the input is.
+
+\note{Video}{Click for next point}
+
 Note that the fitness function doesn't need to know {\it what} the required
 input is (that would be tantamount to having solved the problem already!), just
 how exactly some candidate input ``measures up'' to the one that we want.
 
+\note{Video}{Click for next slide}
+
 It's easier to explain with an example. Let's return to the classify triangle
 problem again. Recall that Random Testing could not easily find inputs where the
-three sides are equal, i.e. {\tt side1 == side2} and {\tt side2 == side3}.
+three sides are equal, i.e. {\tt side1 == side2} and {\tt side2 == side3}. This
+corresponds to executing the true branch from the predicate on line~25.
 
-Essentially with this particular test case generation problem, Random Testing
+\note{Video}{Click to push the example to the left and zoom, with the branch circled}
+
+Essentially, with this particular test case generation problem, Random Testing
 does not ``know'' if it's getting close to the input needed to trigger the
 problematic branch or not. For example, it may get equal numbers for two of the
 sides, but narrowly miss out on the third. This input would be judged in exactly
@@ -58,6 +74,8 @@ Search-Based Testing, on the other hand, seeks to retain ``close'' inputs and
 develop them further to try to seek to execute the goal of the test case. The
 fitness function it would seek to minimise in this case would be:
 
+\note{Video}{Click to reveal the fitness equation}
+
 \begin{center}
 $\mathit{fitness} = |$ {\tt side1} $-$ {\tt side2} $| + |$ {\tt side2} $-$ {\tt
 side3} $|$
@@ -65,6 +83,8 @@ side3} $|$
 
 That is, absolute difference of {\tt side1} compared with {\tt side2} added to
 the same calculation with {\tt side2} and {\tt side3}.
+
+\note{Video}{Click to reveal the table}
 
 Notice how the result of this equation is closer to zero the closer the values
 of the three sides are to being the same as one another, as shown by the
@@ -89,6 +109,8 @@ first addend of the equation) by plotting the fitness values:
 
 We call the surface of fitness values like this the fitness ``landscape''. 
 
+\note{Video}{Click to advance the slide}
+
 \begin{center}
     \vspace{-1em}
     \includegraphics[width=11cm]{plots/sbst-side1-equals-side2.pdf}
@@ -100,6 +122,8 @@ point in the input domain to the ``valley'' where the required inputs lie (i.e.,
 the line where {\tt side1} equals {\tt side2}). 
 
 Compare this to what Random Testing ``sees'': 
+
+\note{Video}{Click to advance the slide}
 
 \begin{center}
     \vspace{-1em}
@@ -113,6 +137,8 @@ Testing will spend most of its time exploring the plateaus either side of the
 valley, since there is no impetus to incrementally move towards values of {\tt
 side1} and {\tt side2} that are closer together.
 
+\note{Video}{Click to advance the slide}
+
 \section{Search Techniques}
 
 It's all very well and good having guidance, but we need a method of exploiting
@@ -120,11 +146,15 @@ it. That's where the ``search'' part of Search-Based Testing comes in ---
 Search-Based Testing uses the fitness function in combination with an
 optimisation algorithm. 
 
+\note{Video}{Click to advance the slide}
+
 \subsection{Simple Gradient Descent}
 
 One of the simplest optimisation algorithms is a search technique called {\it
 Gradient Descent}. Gradient Descent aims to travel down the gradient of the
 fitness landscape to the nearest minimum. It works as follows:
+
+\note{Video}{Click to advance each of these:}
 
 \begin{enumerate}
     \item Pick a point $p$ at random in the search space (the input domain), and
@@ -140,8 +170,9 @@ fitness landscape to the nearest minimum. It works as follows:
     improved fitness over $p$.
 \end{enumerate}
 
-Gradient Descent (often called {\it Hill Climbing} if the fitness function is to
-be maximised) is often described as a ``local'' search algorithm, because as
+\note{Video}{Click to advance the slide}
+
+Gradient Descent is often described as a ``local'' search algorithm, because as
 each point, it evaluates all of its neighbours for a position of improved
 fitness in the landscape, until it cannot improve fitness any more. That is, it
 has reached a local minima in the fitness landscape. If this local minima
@@ -155,6 +186,13 @@ or some resource limit (e.g., number of iterations or test data evaluations) is
 exhausted. The search will always fail, for example, if the test requirement is
 infeasible. 
 
+(Note that here the fitness function is being minimised, so the name ``descent''
+works --- if the fitness function is being maximised, the technique is sometimes
+referred to as {\it Hill Climbing} instead, to reflect the inversion of the
+fitness landscape!)
+
+\note{Video}{Click to advance the slide}
+
 \subsection{The Alternating Variable Method (AVM)}
 
 The Alternating Variable Method (AVM) is an advanced Gradient Descent algorithm
@@ -162,23 +200,40 @@ designed for generating numerical inputs for test cases quickly. The AVM is
 faster than normal Gradient Descent, because, when given the opportunity, it
 accelerates down a gradient rather than inching down it, step-by-step. 
 
+\note{Video}{Click to advance the slide}
+
 The AVM alternates between small ``exploratory'' moves in the search space to
 establish the direction of the gradient, and then makes ``pattern'' moves of
 increasing step size in the direction of fitness improvement. 
 
+\note{Video}{Click to advance the slide, reveals method header and animates with arrows to denote the ``moves''. Careful not to overclick!} 
+
 It does this by starting with a random set of inputs, as with Gradient Descent.
 It then considers each input variable in turn, increasing it by a small amount
 and decreasing it (exploratory moves) --- e.g., +1 and -1 for an input of
-integer type. If one of the two moves leads to an improvement in fitness, a
-larger increase/decrease (a pattern move) is made (e.g., +2 or -2). If the
-fitness continues to improve, the step size is continually doubled until fitness
-gets worse. At this point, further exploratory moves are made to re-establish a
-new ``direction'' of improved fitness. This exploratory/pattern move cycle
-continues until both exploratory moves result in a non-improvement in fitness.
-The AVM then moves onto the next variable and repeats the same steps. This
-continues until the AVM has made a complete sweep of the input variables and
-there are no exploratory improvements --- or, inputs have been found that
+integer type. 
+
+\note{Video}{Click to advance the slide}
+
+If one of the two moves leads to an improvement in fitness, a larger
+increase/decrease (a pattern move) is made (e.g., +2 or -2). 
+
+\note{Video}{Click to advance the slide, twice, to get a bigger arrow}
+
+\note{Video}{Click to show the fitness landscape animation}
+
+\note{Video}{Wait for the animation to stop}
+
+If the fitness continues to improve, the step size is continually doubled until
+fitness gets worse. At this point, further exploratory moves are made to
+re-establish a new ``direction'' of improved fitness. This exploratory/pattern
+move cycle continues until both exploratory moves result in a non-improvement in
+fitness. The AVM then moves onto the next variable and repeats the same steps.
+This continues until the AVM has made a complete sweep of the input variables
+and there are no exploratory improvements --- or, inputs have been found that
 satisfy the test requirement.
+
+% TODO add in AVM in landscape slide pic
 
 \subsection{Evolutionary Algorithms}
 
@@ -189,28 +244,54 @@ Algorithm-speak, each point in the search space (i.e., an input to the program,
 in this problem domain) is an ``individual''. The idea is that the good parts of
 one individual can be combined with another to reach a solution to the problem. 
 
+% When have more time in future, add in the multiple points on the curve slide
+
 For example, suppose we have a branch in our program that is executed when a
 inputted string contains digits only. However, strings generated purely at
 random may contain any character. Strings with one or two digits initially
-receive a good fitness value compared to others in the population. Evolutionary
-Algorithms emphasis a search operator called ``recombination'', which involves
-combining the parts of one individual with another to make an ``offspring''
-individual. So a string with digits early in the string may be recombined with a
-string with digits later in the string, to produce a new string with digits at
-the start and the end, with an even better fitness value. 
+receive a good fitness value compared to others in the population. 
+
+\note{Video}{Advance slide to make ``crossover'' pop}
+
+Evolutionary Algorithms emphasis a search operator called ``crossover'', which
+involves combining the parts of one individual with another to make an
+``offspring'' individual. So a string with digits early in the string may be
+recombined with a string with digits later in the string, to produce a new
+string with digits at the start and the end, with an even better fitness value. 
+
+\note{Video}{Advance slide}
+
+Or, in the following example --- a method with four integer inputs. The first
+pair of integers and the second pair must be equal to one another to execute the
+target branch. There may be one individual in the population with the first two
+values equal to one another, and another individual with the last two values
+equal. 
+
+\note{Video}{Advance slide for crossover animation}
+
+These two individuals might be randomly ``crossed over'' to obtain an individual
+where each pair of integers is equal to one another, and the branch is
+successfully executed.
 
 % TODO Diagram of crossover --- from slide 
 
+\note{Video}{Advance slide}
+
 Evolutionary Algorithms also employ another search operator called ``mutation''
-that makes random changes to individuals. So for a test case, this may mean
-changing one the inputs to a completely new value, or changing it by some delta
-value. 
+that makes random changes to individuals. 
+
+\note{Video}{Advance slide for mutation animation}
+
+So for a test case, this may mean changing one the inputs to a completely new
+value, or changing it by some delta value. 
 
 % TODO Diagram of mutation --- from slide
 
 % TODO -- complete description of EAs
 
 % TODO Diagram of an EA --- from slide
+
+\note{Video}{Advance slide}
 
 \section{More on Fitness Functions}
 
@@ -223,12 +304,17 @@ $K$ represents a small, positive value.
         \toprule
         {\bf Condition Type} & {\bf Fitness Function} \\
         \midrule
-        {\tt a == b} & if $|${\tt a} $-$ {\tt b}$| = 0$ then $0$ else $|${\tt a} $-$ {\tt b}$| + K$ \\
+        {\tt a == b} & if $|${\tt a} $-$ {\tt b}$| = 0$ then $0$ else $|${\tt a}
+        $-$ {\tt b}$| + K$ \\
         {\tt a != b} & if $|${\tt a} $-$ {\tt b}$| \neq 0$ then $0$ else $K$ \\
-        {\tt a < b}  & if {\tt a} $-$ {\tt b} $< 0$ then $0$ else {\tt a} $-$ {\tt b} $+$ $K$ \\
-        {\tt a <= b} & if {\tt a} $-$ {\tt b} $\leq 0$ then $0$ else {\tt a} $-$ {\tt b} $+$ $K$ \\
-        {\tt a > b}  & if {\tt b} $-$ {\tt a} $< 0$ then $0$ else {\tt b} $-$ {\tt a} $+$ $K$ \\
-        {\tt a >= b} & if {\tt b} $-$ {\tt a} $\leq 0$ then $0$ else {\tt b} $-$ {\tt a} $+$ $K$ \\
+        {\tt a < b}  & if {\tt a} $-$ {\tt b} $< 0$ then $0$ else {\tt a} $-$
+        {\tt b} $+$ $K$ \\
+        {\tt a <= b} & if {\tt a} $-$ {\tt b} $\leq 0$ then $0$ else {\tt a} $-$
+        {\tt b} $+$ $K$ \\
+        {\tt a > b}  & if {\tt b} $-$ {\tt a} $< 0$ then $0$ else {\tt b} $-$
+        {\tt a} $+$ $K$ \\
+        {\tt a >= b} & if {\tt b} $-$ {\tt a} $\leq 0$ then $0$ else {\tt b} $-$
+        {\tt a} $+$ $K$ \\
         \bottomrule
     \end{tabular}
 \end{center}    
@@ -245,55 +331,90 @@ branch predicates that need to be executed leading up to the ``target'' branch,
 not just the target itself. To figure out which branches are important, we need
 to go back to the concept of control flow graphs (CFGs). 
 
+\note{Video}{Advance slide}
+
 A node of a CFG (which we'll refer to as the ``execution target'') is said to be
 {\it control dependent} on a branch predicate in the CFG if that branch
 predicate needs to be executed in a certain way (i.e., evaluated as either true
 or false) for the execution target to be reached in the program. 
 
-Recall, the \classifymethod~method of the \triangleclass~class. Suppose node~24
-is the test generation target. Node~24 is control dependent on the branch
-predicate of node~20. Unless the predicate evaluates to false, node~24 will
-never be reached. Furthermore, node~25 is control dependent on the branch
-predicate of node~24. If the branch predicate at node~24 evaluates to false,
-node~25 will not be reached by any execution path. To further understand control
-dependence, note the CFG nodes that {\it do not} have control dependencies. For
-example, node~20 is {\it not} control dependent on the outcome at node~14, it will
-always be executed. All paths reach node~20. 
+Recall the \classifymethod~method of the \triangleclass~class. 
 
-% TODO Add in slide for the Triangle program (from Symbolic Execution)
+\note{Video}{Advance slide to highlight node 24}
 
-In well-structured programs, control dependencies are more or less obvious from its nesting
-structure. However, when programs deploy language constructs like {\tt break},
-{\tt goto} or multiple {\tt return} statements, control dependencies are not as
-easy to figure out, and more complex algorithms are needed. This will be
-covered in a later lecture, on the subject of {\it Program Slicing}. For now,
-however, we just need to understand the general concept. 
+Suppose node~24 is the test generation target. Node~24 is control dependent on
+the branch predicate of node~20. 
+
+\note{Video}{Advance slide to highlight node 20}
+
+Unless the predicate evaluates to false, node~24 will never be reached. 
+
+\note{Video}{Advance slide to highlight red, true path}
+
+If the predicate evaluates to true, the execution path ``misses'' node~24
+completely and flows to the {\tt return} statement of the method.
+
+% TODO – change node 34 to e in the slides
+
+\note{Video}{Advance slide to highlight node 25}
+
+Furthermore, node~25 is control dependent on the branch predicate of node~24. If
+the branch predicate at node~24 evaluates to false, node~25 will not be reached
+by any execution path. To further understand control dependence, note the CFG
+nodes that {\it do not} have control dependencies. For example, node~20 is {\it
+not} control dependent on the outcome at node~14, it will always be executed.
+All paths reach node~20. 
+
+In well-structured programs, control dependencies are more or less obvious from
+its nesting structure. However, when programs deploy language constructs like
+{\tt break}, {\tt goto} or multiple {\tt return} statements, control
+dependencies are not as easy to figure out, and more complex algorithms are
+needed. This will be covered in a later lecture, on the subject of {\it Program
+Slicing}. For now, however, we just need to understand the general concept. 
 
 Using the concept of control dependency, we can now assign a fitness score to
 inputs based on how close they were to reaching the target branch. This fitness
-score is called the {\it approach level}. For example:
+score is called the {\it approach level}. 
 
-Suppose the execution target of the \classifymethod~method is node~26. Node~26
-is control dependent on the branch predicate of node~25, which is control
-dependent on the branch predicate of node~24, which in turn is control dependent
-on the branch predicate of node~20 --- three levels of control dependency.
-Inputs that take the path that takes the true branch at node~20, thereby missing
-nodes~24 and~25 are assigned an approach level of {\bf 2}. Inputs that take the
-false branch at node~20, reaching node~24, but then evaluating the branch
-predicate at node~24 as false, thereby missing node~25 are assigned an approach
-level of~{\bf 1}. Finally, all inputs that take the path reaching the final
-branch predicate in the control dependence chain, node~26, receive the lowest
-(i.e., best, in this context) approach level of {\bf 0}.
+\note{Video}{Advance slide to highlight node 26}
 
-% TODO diagram 
+For example: suppose the execution target of the \classifymethod~method is
+node~26. 
+
+\note{Video}{Advance slide to cut away to the important part of the CFG}
+
+Node~26 is control dependent on the branch predicate of node~25, which is
+control dependent on the branch predicate of node~24, which in turn is control
+dependent on the branch predicate of node~20 --- three levels of control
+dependency. Inputs that take the path that takes the true branch at node~20,
+thereby missing nodes~24 and~25 are assigned an approach level of {\bf 2}. 
+
+\note{Video}{Advance slide}
+
+Inputs that take the false branch at node~20, reaching node~24, but then
+evaluating the branch predicate at node~24 as false, thereby missing node~25 are
+assigned an approach level of~{\bf 1}. 
+
+\note{Video}{Advance slide}
+
+Finally, all inputs that take the path reaching the final branch predicate in
+the control dependence chain, node~26, receive the lowest (i.e., best, in this
+context) approach level of {\bf 0}.
+
+\note{Video}{Advance slide}
+
+\note{Video}{Pause, then advance slide again and start talking}
 
 At each approach level, we can add the fitness for the predicate. We refer to
-this part as the {\it branch distance}. The branch distance is normalised
-(i.e., set to a value between 0 and 1) so that it never exceeds the approach
-level component of the fitness function for that particular branching statement.
+this part as the {\it branch distance}. 
 
-% TODO: fitness function and program 
-% TODO: the usual diagram of combining branch predicate with approach level.
+\note{Video}{Advance slide to reveal fitness formula}
+
+The branch distance is normalised (i.e., set to a value between 0 and 1) so that
+it never exceeds the approach level component of the fitness function for that
+particular branching statement.
+
+\note{Video}{Advance slide to reveal normalisation function}
 
 (There are various formulas that can achieve this normalisation without an
 explicit upper bound, one being $\frac{d}{d+1}$, where $d$ is the value to be
@@ -304,6 +425,8 @@ in Testing}
 
 As well as being applied to automatically obtain structural coverage,
 Search-Based Testing has been applied to other types of test requirement.
+
+\note{Video}{Advance slide}
 
 \subsection{Real-Time Systems}
 
@@ -332,22 +455,33 @@ the software run for. In doing this, the search can navigate a potentially large
 input space to find inputs that produce some long execution times in scenarios
 that engineers may not have thought of or conceived could happen.
 
+\note{Video}{Advance slide}
+
 \subsection{Functional Safety}
 
 Search-Based Testing has also been applied to testing functional properties
 about software (similar to property-based testing, but on a system level). It
 has been used to simulate automated parking controllers. 
 
-Some of these plots show simulated car positions and parking spaces, produced
-from a simulated parking controller test at the car company Daimler. The fitness
-function simply measured and rewarded test cases with the smallest distance to a
-collision during as simulated ``park''. The first generation of the Evolutionary
-Algorithm, the randomly generated parking scenarios were easy for the controller
-to handle. However, as the Evolutionary Algorithm progressed, it was able to
-develop trickier scenarios that eventually produced a collision, i.e., a test
-failure.
+\note{Video}{Advance slide}
+
+% TODO -- add in slide.
+
+This slide shows some of the measurements taken in simulations of car positions
+and parking spaces, produced from a simulated parking controller test at the car
+company Daimler. The fitness function simply measured and rewarded test cases
+with the smallest distance to a collision during as simulated ``park''. 
+
+\note{Video}{Advance slide, click four times}
+
+The first generation of the Evolutionary Algorithm, the randomly generated
+parking scenarios were easy for the controller to handle. However, as the
+Evolutionary Algorithm progressed, it was able to develop trickier scenarios
+that eventually produced a collision, i.e., a test failure.
 
 % TODO: include pictures used in previous slides
+
+\note{Video}{Advance slide}
 
 \subsection{Beyond Test Case Generation}
 
@@ -361,6 +495,8 @@ execute. Optimisation algorithms can be used to produce smaller test suites from
 the original whole, or be used to produce a running order of test cases whereby
 the most important are run first. These topics are the subject of a later
 lecture in this module!
+
+\note{Video}{Advance slide}
 
 \section{Tools for Search-Based Testing}
 
