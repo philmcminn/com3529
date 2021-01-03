@@ -233,7 +233,7 @@ This continues until the AVM has made a complete sweep of the input variables
 and there are no exploratory improvements --- or, inputs have been found that
 satisfy the test requirement.
 
-% TODO add in AVM in landscape slide pic
+\slide{5-2-avm}
 
 \subsection{Evolutionary Algorithms}
 
@@ -273,7 +273,7 @@ These two individuals might be randomly ``crossed over'' to obtain an individual
 where each pair of integers is equal to one another, and the branch is
 successfully executed.
 
-% TODO Diagram of crossover --- from slide 
+\slide{5-2-crossover}
 
 \note{Video}{Advance slide}
 
@@ -285,7 +285,7 @@ that makes random changes to individuals.
 So for a test case, this may mean changing one the inputs to a completely new
 value, or changing it by some delta value. 
 
-% TODO Diagram of mutation --- from slide
+\slide{5-2-mutation}
 
 \note{Video}{Advance slide to get the key stage bubbles to ``pop''}
 
@@ -301,7 +301,7 @@ population with poor fitness. And, so the algorithm continues, until either the
 test goal is satisfied, or a certain number of iterations of the loop have been
 performed with no success.
 
-% TODO Diagram of an EA --- from slide
+\slide{5-2-ea}
 
 \note{Video}{Advance slide}
 
@@ -365,8 +365,6 @@ Unless the predicate evaluates to false, node~24 will never be reached.
 
 If the predicate evaluates to true, the execution path ``misses'' node~24
 completely and flows to the {\tt return} statement of the method.
-
-% TODO – change node 34 to e in the slides
 
 \note{Video}{Advance slide to highlight node 25}
 
@@ -473,16 +471,16 @@ that engineers may not have thought of or conceived could happen.
 
 Search-Based Testing has also been applied to testing functional properties
 about software (similar to property-based testing, but on a system level). It
-has been used to simulate automated parking controllers. 
+has been used to test automated parking controllers at the car company
+Daimler. 
 
 \note{Video}{Advance slide}
 
-% TODO -- add in slide.
-
-This slide shows some of the measurements taken in simulations of car positions
-and parking spaces, produced from a simulated parking controller test at the car
-company Daimler. The fitness function simply measured and rewarded test cases
-with the smallest distance to a collision during as simulated ``park''. 
+The search would ``evolve'' different (simulated) parking scenarios based on the dimensions
+of the potential parking space and the initial position of the car. 
+The fitness function measured and rewarded test cases
+with the smallest distance to a collision during a ``park'', using the
+controller to guide a vehicle, in simulation, into a generated parking space.
 
 \note{Video}{Advance slide, click four times}
 
@@ -490,8 +488,6 @@ The first generation of the Evolutionary Algorithm, the randomly generated
 parking scenarios were easy for the controller to handle. However, as the
 Evolutionary Algorithm progressed, it was able to develop trickier scenarios
 that eventually produced a collision, i.e., a test failure.
-
-% TODO: include pictures used in previous slides
 
 \note{Video}{Advance slide}
 

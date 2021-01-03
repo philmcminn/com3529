@@ -122,9 +122,11 @@ execution of the program, respectively.
 
 These nodes are labelled ``s'' and ``e''. If we treat the method as the program,
 we can label it with specific start and end nodes. We can say that the end node
-corresponds to line 5. If there was a ``{\tt return}'' statement, that
-instead would represent the end node. Likewise, we can say that the start node
-corresponds to line 1 (the method header).
+corresponds to line 5. Likewise, if there was a ``{\tt return}'' statement, that
+could represent the end node. However, there may be multiple return statements,
+and there can be only one end node, so usually the end node is a separate node
+that doesn't correspond to any particular part of the code.We can say that the
+start node corresponds to line 1 (the method header). 
 
 \note{Video}{Next slide}
 
