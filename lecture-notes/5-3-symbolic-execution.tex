@@ -206,19 +206,44 @@ Symbolic Execution.
 
 \section{Dynamic Symbolic Execution}
 
-Dynamic Symbolic Execution, sometimes called {\it Concolic Execution} (for {\it
-Conc}rete Symb{\it olic} Execution), but usually just DSE for short, involves
+\note{Video}{Advance slide}
+
+Dynamic Symbolic Execution, 
+
+\note{Video}{Advance slide to reveal ``Concolic Execution''}
+
+sometimes called {\it Concolic Execution} 
+
+\note{Video}{Advance slide to reveal ``Concrete Symbolic Execution''}
+
+(for {\it Conc}rete Symb{\it olic} Execution), 
+
+\note{Video}{Advance slide to reveal ``DSE''}
+
+but usually just DSE for short, involves
 executing the program with a random input. The random input may take the path
 required by chance, or perhaps a part of it. DSE leverages this to simplify the
 path condition and the work required of the constraint solver. 
 
+\note{Video}{Advance slide}
+
 Suppose the \classifymethod~method of the \triangleclass~class was executed with
-the inputs 4, 2, 3. The first branch predicate, {\tt side1 > side2} is true, so
-no work needs to be done. However, the path goes ``wrong'' at the next branch
+the inputs 4, 2, 3. 
+
+\note{Video}{Advance slide to highlight first branch}
+
+The first branch predicate, {\tt side1 > side2} is true, so
+no work needs to be done. 
+
+\note{Video}{Advance slide to highlight second branch}
+
+However, the path goes ``wrong'' at the next branch
 predicate --- {\tt side1 > side3} is executed as false, since {\tt side1} now
 equals 2, and {\tt side3} is 3. At this point, DSE involves Symbolic Execution
 to find the path condition up to that point, and gives it to the constraint
 solver. 
+
+% TODO: In future, add a concrete state alongside symbolic state
 
 So far, this sounds like we should have just used Symbolic Execution from the
 start, except for the ``easy'' paths that Random Testing can cover. However,
@@ -230,9 +255,11 @@ constraints to simplify them. So instead of solving for $\alpha > \beta \wedge
 more simply, $2 > \gamma$. The solver, then may return a value of 1 for $\gamma$
 (i.e., {\tt side3}), for example.
 
+\note{Video}{Advance slide to highlight the next sentence}
+
 In practice, DSE makes Symbolic Execution faster and more efficient. 
 
-\section{Dealing with Exploding Paths}
+\section{Dealing with Path Explosion}
 
 As already noted, one problem with techniques based on Symbolic Execution is the
 potential explosion in paths. In practice, users of these techniques only
