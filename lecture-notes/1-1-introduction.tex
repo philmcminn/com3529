@@ -200,7 +200,7 @@ mental discipline that increases quality}. Various ways exist to increase
 quality, of which creating tests that cause the software to fail is only one.
 
 Adopting this mindset, test engineers can become the technical leaders of the
-project (as is common in many other engineering disciples). They have the
+project (as is common in many other engineering disciplines). They have the
 primary responsibility of measuring and improving software quality, and their
 expertise should help the developers.
 
@@ -209,7 +209,7 @@ spell checker is to find misspelled words. But in fact, the best purpose of a
 spell checker is to improve our ability to spell.
 
 Every time the spell checker finds an incorrectly spelled word, we have the
-opportunity to lear how to spell the word correctly.  The spell checker is the
+opportunity to learn how to spell the word correctly.  The spell checker is the
 ``expert'' on spelling quality. In the same way, Level~4 testing means that the
 purpose of testing is to improve the ability of the developers to produce high
 quality software.
@@ -376,7 +376,7 @@ software testing problem --- choosing a set of inputs that will reveal as much
 information about the quality of the software as possible. But we don't {\it
 know} that we've selected {\it all} the inputs that will reveal {\it all} of the
 bugs. As the famous Computer Scientist Edsger Dijkstra's commented {\it
-``Software testing can only show the presence, not the absence of failures''}.
+``Software testing can only show the presence, not the absence of bugs''}.
 To have a hope of showing all failures, we'd really need to try all inputs. So
 we've come full circle. 
 
@@ -384,10 +384,10 @@ And this is with the {\tt daysBetweenDates} method, a situation where we {\it
 can}, in theory, enumerate all of the inputs. Yet the number of potential inputs
 for most programs is so large that they are effectively infinite. Consider a
 Java compiler --- the number of potential inputs to the compiler is not just all
-Java programs or even all almost correct Java programs, but all strings. The
-only limitation is the size of the file that can be read by the parse.
-Therefore, the number of inputs is effectively infinite, and cannot be
-explicitly enumerated.
+Java programs or even all almost syntactically-correct Java programs, but all
+possible strings. The only limitation is the size of the file that can be read
+by the parse. Therefore, the number of potential inputs is effectively infinite,
+and cannot be explicitly enumerated.
 
 \note{Video}{Advance to Oracle slide, click to cross out company logo when mentioned}
 
@@ -423,7 +423,7 @@ actually, one of 13,000 high performance relays commissioned for this particular
 machine. The current killed it instantly, and its remains caused the machine to
 fail.
 
-The technician taped the moth into the logbook with the comment ``1545 Relay
+The technician taped the moth into the logbook with the comment ``15:45 Relay
 \#70 Panel F (moth) in relay. First actual case of bug being found''. The moth
 thus became the living proof that computer problems could indeed be caused by
 actual bugs.
@@ -441,8 +441,10 @@ Calculating Machines}'', an inaugural conference in Cambridge.
 
 In the paper, Turing opens with the question ``How can one check a routine in
 the sense of making sure it is right?''. In it, he proposes that a programmer
-should make a number of assertions (not unlike those you'd find in JUnit tests)
-``in order that the man who checks may not have too difficult a task''.
+should make a number of assertions ``in order that the man who checks may not
+have too difficult a task''. This early proposal to use assertions as part of
+checking a program is working correctly is bourne out today in many test
+frameworks, such as JUnit.
 
 \slide{1-1-turing}
 

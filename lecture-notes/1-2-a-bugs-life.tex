@@ -265,13 +265,13 @@ firstly the string {\tt "software testing"} and secondly the string {\tt
 
 Note that, in actual fact, {\it both} tests induce failures, thereby satisfying
 the required conditions of reachability, infection and propagation. But, only
-the latter test satisfies the {\it reachability} condition and actually {\it
+the latter test satisfies the {\it revealability} condition, and actually {\it
 observes} the failure, triggering an assertion violation that results in a test
 failure. 
 
-Why is that the case, and how does that happen? Well, when the method is
-executed with the string {\tt "software testing"}, the set of letters returned
-by the faulty method is: 
+Why is that the case, and how does that happen? Let's check what's outputted by
+the method when it is executed with the string {\tt "software testing"}. The set
+of letters returned is: 
 
 \begin{center}
     \{ {\tt a}, {\tt e}, {\tt f}, {\tt g}, {\tt i}, {\tt n}, {\tt o}, {\tt r},

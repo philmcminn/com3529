@@ -58,9 +58,10 @@ each equivalence class for actual testing.
 
 Suppose we have a Java method with the signature {\tt public static boolean
 isPositive(int n)}. The input domain is the set of values belonging to the type
-{\tt int}, comprising all integers from -2,147,483,648 to 2,147,483,647. It
-would make sense to test this method with at least two test cases --- one
-involving a positive value, and one involving a negative value. 
+{\tt int}, comprising all integers from the bottom of the range, $-2,147,483,648$
+to the top, $2,147,483,647$. It would make sense to test this method with at
+least two test cases --- one involving a positive value, and one involving a
+negative value. 
 %
 The set of positive values and the set of negative values are examples of
 equivalence classes --- we're basically saying that the program should behave

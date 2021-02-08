@@ -125,9 +125,9 @@ and connectors that together realise a system whose specification is intended to
 meet the previously identified requirements. {\bf System Testing} is designed to
 determine whether the assembled system meets its specifications. It assumes that
 the pieces work individually, and asks if the system works as a whole. This
-level of testing looks design and specification problems. It is a very expensive
-place to find lower-level faults and is usually not done by the programmers, but
-a separate testing team.
+level of testing looks for design and specification problems. It is a very
+expensive place to find lower-level faults and is usually not done by the
+programmers, but a separate testing team.
 
 The {\bf subsystem design} phase of software development specifies the structure
 and behaviour of subsystems, each of which is intended to satisfy some function
@@ -227,7 +227,7 @@ exhibit reduced precision. The fault was the omission of five entries in a table
 of 1,066 values (part of the chip's circuitry) used by a division algorithm. The
 five entries should have contained the constant +2, but the entries were not
 initialised and contained zero instead. The MIT mathematician Edelman claimed
-that ``the bug in the Pentium was an east=y mistake to make, and a difficult one
+that ``the bug in the Pentium was an easy mistake to make, and a difficult one
 to catch'', an analysis that misses one of the essential points. This was a
 difficult mistake to find during system testing, and indeed, Intel claimed to
 have run millions of tests using this table. But the table entries were left
