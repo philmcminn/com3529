@@ -24,7 +24,7 @@ generally impossible:
 
     % Video suggestion! chuck a load of balls on me or throw marbles everywhere
 
-    \item {\bf Exhaustive Testing is Intractable} for any reasonably-sized
+    \item {\bf Testing is Intractable} for any reasonably-sized
     program, because the size of the input domain is too large or infinite to
     check every input.
 
@@ -66,10 +66,10 @@ to be {\bf covered}.
 \note{Video}{Talking Head}
 
 A simple, well-known coverage criterion that you may already have encountered is
-{\bf Statement Coverage}. Statement Coverage divides a program up statement by
-statement, and generates one test requirement for each statement of a program.
-The requirement is that at least one test case of the test suite executes that
-statement. 
+{\bf Statement Coverage} (also called Line Coverage). Statement Coverage divides
+a program up statement by statement, and generates one test requirement for each
+statement of a program. The requirement is that at least one test case of the
+test suite executes that statement. 
 
 Statement Coverage makes sense as a kind of testing ``baseline'', because it
 makes sense to have exercised each line of code in our software at least once
@@ -189,7 +189,7 @@ an example of a white-box (code) coverage criterion.
 Furthermore, {\bf Grey-Box Coverage Criteria} are those that make use of a mix of
 artefacts considered ``white box'' and ``black box''. 
 
-In the remainder of this lecture, I will introduce the most common white-box
+In the next mini-lecture, I will introduce the most common white-box
 coverage criteria. Next week's lecture will look at testing based on Input
 Domain Analysis, which makes use of both knowledge about the code and its
 requirements, and is hence grey-box.

@@ -14,8 +14,8 @@ requirement entails that each program statement is executed (covered) by a test
 suite. 
 
 Statement Coverage is a good baseline coverage criterion often used in industry
-because it requires that each line of the code has at been exercised at least
-once in the course of testing before its release.
+because it aims to exercise each line of the code at least once in the course of
+testing before its release.
 
 Statement Coverage belongs to a family of coverage criteria based on the
 control-flow of a program. Coverage criteria in this family are defined in terms
@@ -295,8 +295,7 @@ This is taken care of by a stronger coverage criterion, Branch Coverage.
 
 Branch Coverage requires every branch (i.e., every true and false edge in the
 CFG) is executed at least once by the test suite. In executing every true/false
-edge is executed, we will also execute actually all unlabelled edges in the CFG
-too.
+edge is executed, we will also execute all unlabelled edges in the CFG too.
 
 The test case {\tt x = [0]} ensures the branch predicate at node 4 is true, and
 so the true branch will be taken. Since the test case involves an array with an
@@ -439,11 +438,11 @@ testing?
 The truth is that structural coverage tends to be used more as a metric to
 indicate test suite quality than a method for {\it manually} developing test
 cases and test suites. (We will come back to this point when we consider {\it
-automated} test case generators in Week 4.)
+automated} test case generators in Week 5.)
 
-That is, the level of structural coverage obtained by a test suite is useful for
-helping us understand how {\it much} of our code has been executed by an
-existing test suite, rather than writing tests, per se.
+That is to say, the level of structural coverage obtained by a test suite is
+useful for helping us understand how {\it much} of our code has been executed by
+an existing test suite, rather than writing tests, per se.
 
 \note{Video}{Click to reveal}
 
@@ -458,7 +457,7 @@ them to your test suite justifies the effort to do so.
 \note{Video}{Click to reveal}
 
 As such, the simplest form of structural coverage, Statement (or Line) Coverage
-is frequently used metric in industry, and there are many tools available that
+is a frequently used metric in industry, and there are many tools available that
 support its measurement. 
 
 \note{Video}{Click to reveal}
@@ -468,7 +467,7 @@ more additional effort.
 
 \note{Video}{Click to reveal}
 
-Path Coverage, as the strongest criterion, however, is not seldom used and is
-often intractable.
+Path Coverage, as the strongest criterion, however, is seldom used and is often
+intractable.
 
 \end{document}
