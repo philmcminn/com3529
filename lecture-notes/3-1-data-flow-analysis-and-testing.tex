@@ -4,6 +4,9 @@
 
 \title{Coverage Criteria}{3.1 White-Box Coverage Criteria based On \\ Data Flow Analysis}
 
+
+\note{Video}{Talking head}
+
 \section{Introduction}
 
 The set of coverage criteria we're going to look at in this lecture consider
@@ -12,6 +15,8 @@ data values. Specifically, we should try to ensure that data values in the
 program are created and used correctly. Identifying where data values are
 created, used, and the paths that run between points in the program where they
 are created and used is called {\it data flow analysis}. 
+
+\note{Video}{First slide}
 
 \section{An Introduction to Data Flow Analysis}
 
@@ -29,6 +34,15 @@ with parameters (the variables being defined are the parameter variables):
     \end{tabular}}
 \end{center}   
 
+\note{Video}{Advance slide}
+
+Here {\tt x} is defined when it is assigned the value of {\tt y}. Also, the
+input variable {\tt a} to the method called ``{\tt method}'' seen here is
+defined when it is assigned the value that is passed into the method as the
+first parameter.
+
+\note{Video}{Advance slide}
+
 A {\bf use} is a program location where a variable's value is accessed, for
 example, as part of a predicate, when a method on it is invocated (if it is an
 object), it is output (e.g., via a \code{System.out.println} statement), or
@@ -41,31 +55,62 @@ returned from a method via a {\tt return} statement:
     \end{tabular}}
 \end{center}  
 
-Some statements are definitions {\it and} uses, as in the ``{\tt int x = y}''
+\note{Video}{Advance slide}
+
+Here are some examples of uses.
+
+The variable {\tt y} is used to define the value of {\tt x}. Similarly, the variable
+{\tt name} is used as part of the string passed into the {\tt
+System.out.println} method. 
+
+The object {\tt o} is used when the method {\tt update} is called on it. The
+variables {\tt a} and {\tt b} are used in the branch predicate of the {\tt if}
+statement. Finally, the variable {\tt result} is used when it is passed out of
+a method.
+
+\note{Video}{Advance slide}
+
+Note that some statements are definitions {\it and} uses, as in the ``{\tt int x = y}''
 example above --- {\tt x} is defined, while {\tt y} is used. 
 
+\note{Video}{Advance slide}
+\note{Video}{Advance slide to let other part of slide appear}
+\note{Video}{Advance slide to let other part of slide appear}
 The {\it same} variable may be defined and used in the same statement, e.g. {\tt
 x} in ``{x = x + 1}'' or the equivalent statements ``{\tt x += 1}'' and ``{\tt x ++}''.
+
+\note{Video}{Talking Head}
 
 Data flow testing criteria are specifically target values carried from
 definitions to uses, known as {\bf definition-use} pairs. The criteria exercise
 definition-use pairs in various ways.
 
+\note{Video}{Next slide}
+
 The first step of data flow analysis required for data flow testing criteria
 involves annotating the CFG with the variables defined and used at each node of
-the CFG. Formally, we refer to the set of variables defined at a node $n$ as
-$\mathit{defs}(n)$ and the variables used at a node $n$ as $\mathit{uses}(n)$.
+the CFG. Formally, we refer to the set of variables defined at a node $n$ of a
+CFG as $\mathit{defs}(n)$ and the variables used at a node $n$ as $\mathit{uses}(n)$.
 
-Here's an example, using the \signmethod of the \signutilsclass:
+Here's an example, using the \signmethod of the \signutilsclass.
 
-% slide
+As you can see, each node is labelled with the definitions and uses taking place
+at that node, through the sets $\mathit{defs}$ and $\mathit{uses}$.
+
+% TODO slide
 
 \subsection{Definition-Use Paths}
+
+\note{Video}{Next slide}
+
+Here you can also see how the variable {\tt r} is defined at node 2, and then used
+later at node 12 (also the end node $e$, of the CFG). This is called a {\it
+definition-use} pair.
 
 % Define a path as a sequence of nodes?? Should this be in the definition 
 % of path coverage / CFGs from earlier
 
-An important thing to note when performing data flow analysis is that despite a
+It's important to note when performing data flow analysis is that despite a
 variable $v$ being defined at a node $n_i$, the value assigned to $v$ at $n_i$
 may not be the value of $v$ accessed at a use appearing later in the program at
 $n_j$.
@@ -77,11 +122,15 @@ of {\tt r} at node 5. There would be no path from the definition of {\tt r} at
 node 5 to the use of {\tt r} at node e (12), since the method would have already
 exited.
 
+\note{Video}{Next slide -- Killing definitions}
+
 The second, perhaps less obvious reason, is that $v$'s value may be changed by
 {\it another} definition that is executed {\it after} $n_i$ but {\it before}
 $n_j$. Such a ``re-definition'' of the variable is referred to as a {\bf killing
 definition}. For example, the definition of {\tt r} at node 2 is ``killed'', or
 re-defined at node 5 or node 9. 
+
+\note{Video}{Next slide -- Definition-clear path}
 
 We are interested in paths between the definition and use of a variable $v$
 where the path contains no killing definitions of $v$, otherwise known as a {\bf
@@ -98,12 +147,16 @@ If a definition-clear path exists from a definition of $v$ at $n_i$ to a
 use of {\tt v} at $n_j$, the definition of $v$ is said to {\bf reach} the use
 at $n_j$.
 
+\note{Video}{Next slide -- Definition-use path}
+
 We define a {\bf definition-use path} with respect to some variable $v$ as a
 path between $n_i$ and $n_j$, where $v \in \mathit{defs}(n_i)$ and $v \in
 \mathit{uses}(n_j)$, and that is definition-clear with respect to $v$.
 
 We will refer to the complete set of definition-use paths present in a
 program/CFG as the set $\mathit{DU}$. 
+
+\note{Video}{Next slide -- table}
 
 With \signmethod, the $DU$ (the last column of this table) is relatively small:
 
@@ -122,11 +175,21 @@ With \signmethod, the $DU$ (the last column of this table) is relatively small:
 \end{tabular}
 \end{center}
 
+There are six definition-use paths overall, three stemming from the definition of the
+input parameter {\tt n} at the start node $s$, and the other three stemming from
+the three different definitions of the variable {\tt r} at nodes 2, 5, and 9
+respectively. Each definition of {\tt r} is eventually used at the return
+statement, node 12, the end node $e$ of the CFG.
+
+\note{Video}{Talking head}
+
 \section{Data Flow Coverage Criteria}
 
 The test requirements for data flow coverage criteria are to execute different
 subsets of the complete set of definition-use paths present in a program, i.e.,
 $\mathit{DU}$.
+
+\note{Video}{All Defs coverage slide}
 
 \subsection{All Defs Coverage}
 
@@ -139,10 +202,14 @@ More formally, All Defs Coverage involves constructing a series of subsets of
 $\mathit{DU}$, one for each pair $(n, v)$, where $v \in \mathit{defs}(n)$. It
 then requires one path from each subset to have been executed by the test suite.
 
+\note{Video}{Advance slide for first three ticks, then again for 4}
+
 Referencing the table then, All Defs Coverage for the \signmethod would include
 test requirements 1, 2, 3 (each of the different definitions of {\tt r}) and one
 of 4, 5 or 6 (different definition-use paths from the definition of {\tt n} at
 the start node, s).
+
+\note{Video}{All uses coverage slide}
 
 \subsection{All Uses Coverage}
 
@@ -156,6 +223,8 @@ triple $(v, n_i, n_j)$ in the program/CFG, % is it program or CFG?
 for a variable $v$, $v \in \mathit{defs}(n_i)$ and $v \in \mathit{uses}(n_j)$. It then
 requires one path from each subset to have been executed by the test suite.
 
+\note{Video}{Advance slide for first three ticks, then again for 4, then again for 5}
+
 Referencing the table, All Uses Coverage for the \signmethod would include
 test requirements 1, 2, 3 (each of the different definitions of {\tt r}), then 
 test requirement 4, and one of test requirements 5 or 6. Test requirements 5 and
@@ -165,10 +234,14 @@ involves the only definition-use path of {\tt n} from s to 4.
 
 As such, All Uses subsumes All Defs.
 
+\note{Video}{All uses coverage slide}
+
 \subsection{All Def-Use Paths Coverage}
 
 Finally, the {\bf All Def-Use Paths} coverage criterion requires every path in
 $DU$ to be executed. This means including all the test requirements in the table.
+
+\note{Video}{Advance slide for all ticks}
 
 As such, All Def-Use Paths subsumes All Uses and All Defs.
 
@@ -176,6 +249,9 @@ One disadvantage of Data Flow Coverage Criteria is that not all of the
 definition-clear paths are necessarily feasible. Sometimes, a choice of path can
 mitigate this problem, otherwise, the test requirement cannot be satisfied and
 must be dropped.
+
+
+\note{Video}{Talking Head}
 
 \section{When Should You Use Data Flow Testing?}
 
@@ -191,9 +267,11 @@ where it is later used.
 
 Variables representing state are particularly important in objects. Because
 methods can be called in any sequence, an object cannot rely on the order of
-program statements to enscapulate the current state of the program on its own.
+program statements to encapsulate the current state of the program on its own.
 Instead, the state must be stored and saved in an instance variable for methods
 called later to then look up and reference.
+
+\note{Video}{Class slide}
 
 Take for example this class representing a vending machine. Whether a product
 can be vended via the {\tt vend()} method depends on whether the {\tt allowVend}
@@ -220,6 +298,8 @@ perform Data Flow Analysis. We will use a variant of the CFG for an object of a
 class, referred to as the Class Control Flow Graph for the object, or CCFG for
 short. 
 
+\note{Video}{CCFG slide}
+
 % \slide
 
 A CCFG begins with the CFG for the object's constructor, and then the
@@ -231,6 +311,8 @@ node 13 in the {\tt returnCoins} method and used at node 25 in the {\tt vend}
 method.
 
 Does a definition-clear path exist between nodes 13 and 25?
+
+\note{Video}{Advance slide}
 
 Yes, a path exists through the CCFG. It requires {\tt vend()} to be executed
 after {\tt returnCoins()}. 
