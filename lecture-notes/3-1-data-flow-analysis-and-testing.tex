@@ -11,14 +11,16 @@
 
 The set of coverage criteria we're going to look at in this lecture consider
 that in order to adequately test a program we should focus on the ``flow'' of
-data values. Specifically, we should try to ensure that data values in the
-program are created and used correctly. Identifying where data values are
+data values through it. Specifically, we should try to ensure that data values
+in the program are created and used correctly. Identifying where data values are
 created, used, and the paths that run between points in the program where they
 are created and used is called {\it data flow analysis}. 
 
 \note{Video}{First slide}
 
 \section{An Introduction to Data Flow Analysis}
+
+Let's start by defining some terms.
 
 \subsection{Definitions and Uses}
 
@@ -81,7 +83,7 @@ x} in ``{x = x + 1}'' or the equivalent statements ``{\tt x += 1}'' and ``{\tt x
 
 \note{Video}{Talking Head}
 
-Data flow testing criteria are specifically target values carried from
+Data flow testing criteria specifically target values carried from
 definitions to uses, known as {\bf definition-use} pairs. The criteria exercise
 definition-use pairs in various ways.
 
@@ -92,7 +94,8 @@ involves annotating the CFG with the variables defined and used at each node of
 the CFG. Formally, we refer to the set of variables defined at a node $n$ of a
 CFG as $\mathit{defs}(n)$ and the variables used at a node $n$ as $\mathit{uses}(n)$.
 
-Here's an example, using the \signmethod of the \signutilsclass.
+Here's an example, with the \signmethod~method of the \signutilsclass~class,
+found in the code examples repository accompanying this module.
 
 As you can see, each node is labelled with the definitions and uses taking place
 at that node, through the sets $\mathit{defs}$ and $\mathit{uses}$.
@@ -110,19 +113,35 @@ definition-use} pair.
 % Define a path as a sequence of nodes?? Should this be in the definition 
 % of path coverage / CFGs from earlier
 
+\note{Video}{{\bf The below is hard to say! I changed it in the video to –} \\
+It's important to note when performing data flow analysis is that despite a
+variable being defined at a node, the value assigned to the variable may not be
+the value of the variable accessed at a use appearing later in the program.}
+
 It's important to note when performing data flow analysis is that despite a
 variable $v$ being defined at a node $n_i$, the value assigned to $v$ at $n_i$
 may not be the value of $v$ accessed at a use appearing later in the program at
 $n_j$.
 
+\note{Video}{{\bf The below is hard to say! I changed it in the video to –} \\
 The first, perhaps obvious reason for this is that there may be no path running
-between $n_i$ and $n_j$ in the CFG. For example, suppose in the \signmethod,
+between the two nodes in the CFG.}
+
+The first, perhaps obvious reason for this is that there may be no path running
+between $n_i$ and $n_j$ in the CFG. 
+
+For example, suppose in the \signmethod,
 that there was a statement {\tt return r} immediately following the definition
 of {\tt r} at node 5. There would be no path from the definition of {\tt r} at
 node 5 to the use of {\tt r} at node e (12), since the method would have already
 exited.
 
 \note{Video}{Next slide -- Killing definitions}
+
+\note{Video}{{\bf The below is hard to say! I changed it in the video to –} \\
+The second, perhaps less obvious reason, is that the variable's value may be
+changed by {\it another} definition that is executed {\it after} the original
+definition but {\it before} the use in question.}
 
 The second, perhaps less obvious reason, is that $v$'s value may be changed by
 {\it another} definition that is executed {\it after} $n_i$ but {\it before}
@@ -137,6 +156,8 @@ where the path contains no killing definitions of $v$, otherwise known as a {\bf
 definition-clear} path. The path from node 2 to node 12 is only definition-clear
 with respect to {\tt r} if it avoids the re-definition of {\tt r} at nodes 5 and
 9. (For this to happen, {\tt r} needs to be 0.)
+
+\note{Video}{Next slide -- Formal definition on the slide}
 
 Formally, a path from $n_i$ to $n_j$ is definition-clear with respect to a
 variable $v$ if for each node $n_k$ on the path between $n_i$ and $n_j$, (i.e.,
@@ -184,6 +205,9 @@ statement, node 12, the end node $e$ of the CFG.
 \note{Video}{Talking head}
 
 \section{Data Flow Coverage Criteria}
+
+So having defined several terms involved in {\it data flow analysis}, we're
+going to introduce the actual data flow coverage criteria themselves.
 
 The test requirements for data flow coverage criteria are to execute different
 subsets of the complete set of definition-use paths present in a program, i.e.,
@@ -276,21 +300,21 @@ called later to then look up and reference.
 Take for example this class representing a vending machine. Whether a product
 can be vended via the {\tt vend()} method depends on whether the {\tt allowVend}
 boolean instance variable is set to {\tt true}. This happens after two coins
-have been entered, via the {\tt addCoin()} method:
+have been entered, via the {\tt addCoin()} method.
 
 % \slide
 
 The instance variable {\tt currentCoins} represents the number of coins that
 have currently been inserted into the machine, via the {\tt addCoin()} method
-has been invocated on the method. The {\tt returnCoins} method will return these
+has been invocated. The {\tt returnCoins} method will return these
 coins to the user (reseting {\tt currentCoins} to zero).
 
-When the machine successfully vends a product, the total number of coins held by
-the machine (represented by the {\tt totalCoins} instance variable) is increased
-by the number of current coins ({\tt currentCoins}), {\tt currentCoins} is reset
-to zero. Finally, {\tt allowVend} is set to false, since the machine should not
-vend more products until further coins have been inserted into the machine via
-{\tt addCoins}.
+When the machine successfully vends a product, via the {\tt vend} method, the
+total number of coins held by the machine (represented by the {\tt totalCoins}
+instance variable) is increased by the number of current coins ({\tt
+currentCoins}), and then {\tt currentCoins} is reset to zero. Finally, {\tt
+allowVend} is set to false, since the machine should not vend more products
+until further coins have been inserted into the machine via {\tt addCoins}.
 
 Since methods can be called at any time on an object, in any particular
 sequence, we need a special form of CFG to represent this fact, if we are to
@@ -333,7 +357,7 @@ Two coins are added, and {\tt allowVend} is set to true. We can now invocate
 {\tt returnCoins()} (executing node 13) followed by {\tt vend()} (which
 successfully executes node 25). 
 
-There is a bug in the class! Where is the bug?
+There is a fault in the class! Where is the fault?
 
 The {\tt returnCoins} method should also set {\tt allowVend} to false, but it
 neglects to do so. This means that if two coins were previously entered, even if
