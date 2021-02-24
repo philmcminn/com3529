@@ -18,15 +18,16 @@ predicates more finely.
 
 \note{Video}{Slide change}
 
-Let's return to the \daysbetweentwodatesmethod~method from the first lecture
-last week. The method takes six parameters representing two dates ({\tt year1},
+Let's return to the \daysbetweentwodatesmethod~method from lecture in week 1.
+The method takes six parameters representing two dates ({\tt year1},
 {\tt month1}, {\tt day1} and {\tt year2}, {\tt month2}, {\tt day2},
 respectively).
 
 One of the initial tasks of the method is to ensure that the first date ({\tt
 year1}, {\tt month1}, {\tt day1}) is before the second ({\tt year2}, {\tt
 month2}, {\tt day2}) so that the later calculation of the days between the two
-dates will function correctly. This takes place on lines 23--36 of the method:
+dates will function correctly. This takes place on lines 23--36 of the method,
+shown here:
 
 \begin{center} 
     \scalebox{0.8}{
@@ -45,7 +46,7 @@ overall predicate.
 %
 (Recall that a disjunct is a boolean expression that forms the operand of an
 ``or'' operator in a predicate, where the disjunct  cannot be further broken
-down into simpler disjuncts. For example, $D_1 and D_2$ in $D_1 \vee D_2$.)
+down into simpler disjuncts. For example, $D_1$ and $D_2$ in $D_1 \vee D_2$.)
 
 \note{Video}{Slide change}
 
@@ -197,12 +198,12 @@ suite, but the branch is only ever exercised as true.
 \subsection{Multiple Condition Coverage}
 
 {\bf Multiple Condition Coverage} requires that each possible {\it combination}
-of truth values for each condition are tested. As such does subsume Branch
-Coverage, but at the cost of an exponential number of test requirements. 
+of truth values for each condition are tested. As such, Multiple Condition
+Coverage does subsume Branch Coverage, but at the cost of an exponential number
+of test requirements. 
 %
 Given $n$ conditions in a predicate, Multiple Condition Coverage generates $2^n$
-test requirements. requirements where $n$ is the number of conditions in the
-predicate.
+test requirements. 
 
 \note{Video}{Advance slide --- reveal table}
 
@@ -362,13 +363,13 @@ true, and each condition is true in at least one test requirement.
 
 \note{Video}{Advance slide, advance again on ``condition 2 for ...''}
 
-That is, condition 1 can be regarded as the major condition in test cases
-1 and 2; condition 2 for test cases 2 and 3; condition 3 for test
-cases 2 and 3; and so on.
+That is, condition 1 can be regarded as the major condition in test cases 1 and
+3; and condition 2 for test cases 2 and 3. (Note that these aren't the only
+conditions that could qualify as major in these instances.)
 
 There is less scope to re-use truth values across test requirements and test
 cases with Restricted MCDC because the truth values are more tightly controlled.
-And so Correlated MCDC tends to involve fewer test cases, i.e. smaller test
+And so Correlated MCDC tends to involve fewer test cases, and therefore smaller test
 suites. However, Restricted MCDC is better at test thoroughness: notice how the
 the test suite for Correlated MCDC does not independently test Disjuncts 1 and
 3. In fact, due to short circuit evaluation in Java, Disjunct 3 is never even
@@ -398,7 +399,7 @@ of MCDC, since there is no common established term that incorporates the acronym
 we will discuss next.
 %
 There has historically been a lot of confusion around MCDC. Sometimes MCDC is
-referred to mean one of the restricted or correlated variants, but either one of
+referred to mean one of the restricted or correlated variants, but neither one of
 them, specifically. This is probably because many testers are not even aware
 there is a subtle difference. 
 %
@@ -423,11 +424,11 @@ So which logic coverage criterion, should we use, and when?
 
 In terms of all of the logic coverage criteria, the MCDC variants offer the best
 trade-off in terms of number of test requirements and test thoroughness, with
-Correlated MCDC resulting in small test suites in general. Multiple Condition
+Correlated MCDC resulting in smaller test suites in general. Multiple Condition
 Coverage results in too many test requirements, and therefore test cases, while
 plain Condition Coverage does not subsume Branch Coverage.
 
-When should we use it? MCDC is good at testing complicated predicates in
+So when should we use MCDC? MCDC is good at testing complicated predicates in
 your program code. However, many good programmers will have refactored code
 like that which we have encountered in \daysbetweentwodatesmethod,
 so that it is easier to understand when reading a program, for example:
@@ -442,6 +443,10 @@ so that it is easier to understand when reading a program, for example:
         \bottomrule
     \end{tabular}}
 \end{center}  
+
+Here, the original condition has been refactored into several statements that
+make assignments to Boolean variables that contribute to a Boolean variable used
+in the eventual branch predicate.
 
 Such refactorings make it less immediately obvious as to how to apply MCDC. In
 these cases, we would need to do the reverse of the refactoring to reconstruct
