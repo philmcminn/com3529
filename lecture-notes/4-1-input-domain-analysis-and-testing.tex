@@ -45,44 +45,67 @@ It's also a view that {\it input domain analysis} takes, in a very direct way.
 
 \section{An Overview of Testing Using Input Domain Analysis}
 
+\note{Video}{System Level slide}
+
 The {\it input domain} of a program is the set of possible values that its input
-parameters can have. At a system level, inputs can be user entered data, or
-points and clicks of a mouse. At a unit level, input parameters may correspond
-directly to method parameters, or global variables, or objects representing the
-current system state. 
+parameters can have. 
+
+At a system level, inputs can be user entered data, points and clicks of a
+mouse, gestures on a touch screen, or data received over a network.
+
+\note{Video}{Unit Level slide}
+
+At a unit level, input parameters may correspond directly to method parameters,
+or global variables, or objects representing the current system state. 
+
+\note{Video}{Partitioning slide}
 
 Input domain analysis involves partitioning an input domain into so-called {\it
 equivalence classes} that are assumed to contain equally useful values from a
 testing perspective. The tester is then free to select any value belonging to
 each equivalence class for actual testing. 
 
+\note{Video}{Input domain for isPositive}
+
 Suppose we have a Java method with the signature {\tt public static boolean
 isPositive(int n)}. The input domain is the set of values belonging to the type
 {\tt int}, comprising all integers from the bottom of the range, $-2,147,483,648$
-to the top, $2,147,483,647$. It would make sense to test this method with at
+to the top, $2,147,483,647$. 
+
+\note{Video}{Animation click -- click for positive, then click for negative}
+
+It would make sense to test this method with at
 least two test cases --- one involving a positive value, and one involving a
 negative value. 
-%
+
+\note{Video}{Animation click -- click for equivalence classes}
+
 The set of positive values and the set of negative values are examples of
 equivalence classes --- we're basically saying that the program should behave
 the same with any input chosen from each of those respective sets.
 
-This way of testing has several advantages. The tester does not need to
-understand the implementation --- although that can help (and hence why we class
-it as a {\it grey-box} technique). But yet, it is fairly easy to get started,
-because it can be applied with no automation, and very little training.
+This way of testing has several advantages. The tester does not need to {\it
+understand} the implementation --- although that can help (and hence why we
+class it as a {\it grey-box} technique). But yet, it is fairly easy to get
+started, because it can be applied with no automation, and very little training.
 Everything we need to know for testing is based on a description of the inputs.
 This method also has the advantage that it is easy to ``tune'' to generate more
 or fewer tests, with the classic testing trade-off of cost (reduced by creating
 fewer tests) vs fault-finding effectiveness (which is generally increased by
 creating more tests).
 
+\note{Video}{Input domain for isPositive}
+
 An input domain {\bf partition} must satisfy two properties:
+
+\note{Video}{Click to reveal each}
 
 \begin{enumerate}
     \item The partition must cover the entire domain (i.e., it is {\bf complete}) 
     \item The equivalence classes must not overlap (i.e., they are {\bf disjoint})
 \end{enumerate}
+
+\note{Video}{Advance Slide: Input domain for isPositive}
 
 While our our partitioning of the input domain for {\tt isPositive} is indeed
 disjoint, note that it is {\it not} complete: We did not consider zero, which is
@@ -98,7 +121,11 @@ the other hand, zero could be viewed as a special case, so we might want to put
 it in an equivalence class by itself. This would give us three equivalence
 classes overall, $e_1$, $e_2$, $e_3$:
 
+\note{Video}{Advance Slide: isPositive with zero included. Hang here for a few seconds}
+
 \slide{3-2-input-domain-for-ispositive}
+
+\note{Video}{Advance Slide – table} 
 
 We can now {\it cover} the partition by selecting a value from each equivalence class,
 based on the aforementioned principle that any value from an equivalence class
@@ -120,7 +147,9 @@ We said that we can tune this method to give us more or fewer tests. We could
 have put zero in with the negative numbers class, for example, to give us two
 tests rather than three. We can increase the number of tests by subdividing our
 so-called equivalence classes further, to ensure more fine-grained testing.
-%
+
+\note{Video}{Advance Slide – Boundary value analysis} 
+
 For example, we know that programmers are prone to making mistakes around
 boundaries. This is one reason why we might want to keep the zero case.
 Programmers easily make off-by-one errors when writing conditions, e.g. by
@@ -138,6 +167,7 @@ Later in this lecture, we'll see how we can consider several partitions together
 as part of an advanced testing strategy --- one which if not done carefully, can
 lead to a combinatorial explosion of test cases! 
 
+\note{Video}{STOP FOR NOW} 
 
 \subsection{Using the Concept of ``Characteristics'' to Perform Partitioning}
 

@@ -2,20 +2,18 @@
 
 \begin{document}
 
-\title{Coverage Criteria}{3.3 Interim Conclusions on Coverage Criteria}
+\title{Coverage Criteria}{4.2 Interim Conclusions on Coverage Criteria}
 
 \section{Introduction}
 
 We're at the end of this block of the course on coverage, and we've encountered
-a number of criteria already! How do we know which to use, and when? What level
-of coverage should we aim to attain anyway? 
+a number of criteria already! 
 
-We're now going take a look at the pros and cons of coverage criteria, and how
-to best apply them in practice.
+We're now going take a look at some of the pros and cons of coverage criteria.
 
 \section{Industry and Coverage Criteria}
 
-It's fair to say that there's a lot of scepticism about testing from some
+It's fair to say that there's a lot of scepticism about coverage criteria from some
 quarters of industry. Some of this is down to the belief that coverage means
 code coverage only. Even in the software industry though, most people agree that
 code coverage is a useful metric.
@@ -29,19 +27,34 @@ many software standards, as we saw with MCDC.
 Some common criticisms of coverage criteria can be summarised as follows:
 
 \begin{enumerate}
-    \item They can generate too many test requirements.
-    \item Not all the test requirements are useful.
-    \item Higher coverage does not necessarily guarantee that more bugs will be
-    found.
+    \item {\bf They can generate too many test requirements.} Sometimes there
+    are more test requirements than are simply economically viable to test for.
+    The number of test requirements generated can become quickly overwhelming,
+    particularly when testers do not break a system down into subcomponents
+    and/or priortise testing on the riskiest or most safety critical aspects of 
+    a system.
+    
+    \item {\bf Not all the test requirements are useful.} This does not mean
+    that {\it none} of the test requirements are useful, but sometimes industry
+    managers write off systematic processes when they can not see the value in
+    every single test case.
+
+    \item {\bf Higher coverage does not necessarily guarantee that more bugs will be
+    found.} While higher coverage tends to mean that more faults will be discovered,
+    this is not always guaranteed. Merely executing a fault does not mean it will
+    infect the state, and propagate to the output as a failure. 
+    But in general, more testing does not necessarily mean more bugs will be found
+    --- the law of diminishing returns is at play here as well --- this is a general
+    issue for software testers. 
 \end{enumerate}
 
-And these are all true. But there are several pros as well, let's go back to
+These ``cons'' are all true. But there are several pros as well, let's go back to
 some of the original motivations for coverage criteria and re-evaluate them in
 the light of what we've learnt:
 
 \begin{enumerate}
 
-    \item {\bf Coverage Criteria ensure our test suite have certain sets of 
+    \item {\bf Coverage Criteria ensure our test suite has certain sets of 
     properties.}
        
     Professional testers are often following testing strategies similar to those
@@ -69,7 +82,7 @@ the light of what we've learnt:
     less {\it likely} it is that unfound serious bugs remain. Coverage Levels
     give developers, testers, and software managers concrete metrics to talk
     about. We can decide that ``enough'' of the software has been tested once we
-    reach a certain coverage level (more on that later).
+    reach a certain coverage level.
 
 \end{enumerate}
 
@@ -104,7 +117,7 @@ testing about useful things like:
 \end{itemize}    
 
 The list goes on! We are not there with providing solid answers to these
-interesting research topics yet. If they interest you, maybe you'd considered
-doing a PhD in this area!
+interesting research topics yet. If they interest you, maybe you'd like to
+consider doing a PhD in this area!
 
 \end{document}
