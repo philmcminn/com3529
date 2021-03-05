@@ -38,7 +38,7 @@ Let's return to the \classifymethod~method of the \triangleclass~class in the
 generates the three integer inputs and track which branches are covered. 
 
 I've done this in the \randomlytesttriangleclass~class in the
-\lecturesexecutionpackage. The class contains a method
+\lecturesexecutionpackage package. The class contains a method
 \instrumentedclassifymethod (which is the last method of the class). It's the
 same as the original \classifymethod~method in terms of how it classifies
 triangles based on their sides, but it also contains some additional code that
@@ -93,10 +93,10 @@ test suite instead of just raw output, this means checking the JUnit test cases
 generated are correct. As you can imagine, if the automated test case generator
 generates a lot of test cases this could get quite tedious quite quickly.
 
-\section{Randoop}
-
-Some tools, therefore, generate test cases to violate specific properties of the
-software. Randoop, for example, is a tool that has two modes ...
+% \section{Randoop}
+% 
+% Some tools, therefore, generate test cases to violate specific properties of the
+% software. Randoop, for example, is a tool that has two modes ...
 
 \section{Property-Based Testing}
 
@@ -127,11 +127,11 @@ property (which itself may have been incorrectly specified).
 Random Testing goes by another name you may be familiar with, particularly in
 the security community --- that is, {\it Fuzzing}. Fuzzing is like
 Property-Based Random Testing but with more generic kinds of software properties
-in mind --- such as crashing behaviour (thereby demonstrating instability
+in mind --- such as crashing behaviour (th ereby demonstrating instability
 problems) or generic security issues such as buffer overflows.
 
 According to security lore, Fuzzing was born in a ``dark and stormy night in the
-Fall of 1988''. Sitting in his apartment in Wisconsin, Madison, professor Barton
+Fall of 1988''. Sitting in his apartment in Wisconsin, Madison, Professor Barton
 Miller was connected to his university computer via a 1200 baud telephone line.
 The thunderstorm caused noise on the line, and this noise in turn caused the
 UNIX commands on either end to get bad inputs --- and crash. The frequent crashes

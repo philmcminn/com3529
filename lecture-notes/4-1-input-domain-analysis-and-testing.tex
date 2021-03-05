@@ -462,7 +462,7 @@ triangle can have a side of negative length.
 
 It is easy to refine this categorisation to get more fine-grained testing if the
 budget allows. For example, more equivalence classes can be created by
-separating inputs value 1. This decision would lead to partitions with four
+separating out inputs of value 1. This decision would lead to partitions with four
 blocks:
 
 \begin{center}
@@ -608,7 +608,7 @@ A natural extension to this is to require $t$ values, instead of just pairs:
 {\bf T-Wise Coverage} --- a value from each equivalence class for each group of
 $t$ characteristics must be combined.
 
-T-wise coverage is a generalisation of the last two criteria: If the value for
+T-wise coverage is a generalisation of two of the previous criteria: If the value for
 $t$ is equal to the number of partitions, then it is equivalent to all
 combinations. If $t=2$, then t-wise coverage is equivalent to pair-wise
 coverage.
@@ -627,7 +627,7 @@ for each characteristic. This class is called the {\it base choice}.
 {\bf Base Choice Coverage} --- A base choice equivalence class is chosen for
 each characteristic, and a base test is formed by using the base choice for each
 characteristic. Subsequent tests are chosen by holding all but one base choice
-constant and suing each non-base choice in each other characteristic.
+constant and using each non-base choice in each other characteristic.
 
 Sometimes it's difficult to choose a single base choice, and we may decide that
 multiple base choice are needed. The following criterion allows for multiple
@@ -670,7 +670,7 @@ combinations, pair-wise and t-wise coverage, the only reasonable option is to
 drop the infeasible pairs from consideration. 
 
 However, the situation is different for base-choice coverage. If a particular
-class conflicts with teh base case, then the obvious thing to do is to change
+class conflicts with the base case, then the obvious thing to do is to change
 the offending choice for the base case so that the variation is feasible. 
 
 \section{Final Thoughts}
@@ -710,9 +710,7 @@ the other equivalence classes in that characteristic.
 If multiple input domain models are used, completeness should be relative to the
 portion of the input domain that is modelled in each input domain model. When
 the tester is satisfied with the characteristics and their equivalence classes,
-it is time to choose with combinations of values to test with, and identify
+it is time to choose which combinations of values to test with, and identify
 constraints among the equivalence classes.
-
-
 
 \end{document}
