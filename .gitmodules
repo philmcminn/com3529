@@ -1,12 +1,6 @@
 [submodule "latex/latex-teach-common"]
 	path = latex/latex-teach-common
 	url = git@github.com:philmcminn/latex-teach-common.git
-[submodule "assignments/com3529-assignment-2021"]
-	path = assignments/com3529-assignment-2021
-	url = git@github.com:philmcminn/com3529-assignment-2021.git
-[submodule "tools/com3529-java-tools"]
-	path = tools/com3529-java-tools
-	url = git@github.com:philmcminn/com3529-java-tools.git
 [submodule "code/com3529-code"]
-	path = code/com3529-code
+	path = for-students/com3529-code
 	url = git@github.com:philmcminn/com3529-code
