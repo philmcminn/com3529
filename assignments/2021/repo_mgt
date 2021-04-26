@@ -41,23 +41,66 @@ $repos = {
   39 => "https://github.com/Lwng8/com-3529"
 }
 
+$nos_in_team = {
+  2 => 1,
+  3 => 2,
+  4 => 2,
+  5 => 2,
+  6 => 1,
+  7 => 1,
+  8 => 2,
+  9 => 1,
+  10 => 1,
+  11 => 2,
+  12 => 1.5,
+  13 => 1,
+  14 => 1,
+  15 => 1,
+  16 => 1,
+  17 => 1,
+  18 => 1,
+  19 => 2,
+  20 => 1,
+  21 => 3,
+  22 => 1,
+  23 => 1,
+  24 => 1,
+  25 => 1,
+  26 => 1,
+  27 => 1,
+  28 => 1,
+  29 => 1,
+  30 => 1,
+  31 => 2,
+  32 => 1,
+  33 => 2,
+  34 => 2,
+  35 => 1,
+  36 => 1,
+  37 => 1,
+  38 => 1,
+  39 => 1
+}
+
+$scheme = {
+  1 => 2,
+  1.5 => 3,
+  2 => 4,
+  3 => 5
+}
+
 $range = (2..39)
-$late = [22, 29, 24, 36, 28, 26, 32, 10, 33] # maybe also 39
-$deadline = "Mon 26 17:00 2021"
-$categories = 5
+$late = [22, 29, 24, 36, 28, 26, 32, 10, 33, 39]
+$deadline = "Mon 26 17:01 2021"
+$categories = 7
 $mark = "Mark:"
 $overall_mark = "__Overall Mark:__"
 $file = "feedback-and-mark.md"
 
+
 def clone_repo(n, date=nil) 
   repo_url = $repos[n]
   `git clone #{repo_url} #{n}`
-  unless date.nil?
-    Dir.chdir("#{n}")
-    branch = `git symbolic-ref --short HEAD`
-    `git rev-list -1 --before=\"#{date}\" #{branch}`
-    Dir.chdir("..")
-  end
 end
 
 def clone_non_late
@@ -72,6 +115,18 @@ def clone_all
   $range.each do |n|
     clone_repo(n, $deadline)
   end
+end
+
+def revert_to_deadline_version(team)
+  Dir.chdir("#{team}")
+  branch = `git symbolic-ref --short HEAD`
+  version = `git rev-list -1 --before=\"#{date}\" #{branch}`
+  `git checkout #{version}`
+  Dir.chdir("..")
+end
+
+def update_to_latest_version(team)
+
 end
 
 def test_push_late
@@ -91,16 +146,17 @@ def test_push_non_late
 end
 
 def test_push(team)
-  Dir.chdir("#{team}")
+  puts "Test pushing team #{team}"
   file = "test-push"
+  Dir.chdir("#{team}")
   File.write(file, "")
   `git add test-push`
   `git commit -a -m "Automated push test – ignore"`
   `git push`
   File.delete(file)
-  `git commit -m "Automated push test – ignore"`
+  `git commit -a -m "Automated push test – ignore"`
   `git push` 
-  Dir.chdir("..")
+  Dir.chdir("..")  
 end
 
 def total_marks
@@ -109,25 +165,30 @@ def total_marks
   end
 end
 
+def test_total_mark
+  total_mark_for_file(12)
+end
+
 def total_mark_for_file(team)
   lines = ""
-  numerator = 0
-  denominator = 0
+  marks = []
   encountered_overall_mark = false
 
-  file = "#{team}/$file"
+  file = "marking/#{team}.md"
 
-  return unless File.exist?(file)
+  unless File.exist?(file)
+    puts "No file #{file}"
+    return
+  end
 
   File.readlines(file).each do |line|    
     if line.start_with?($mark)
       mark = line.scan(/\d+/).first
-      numerator += mark.to_i
-      denominator += 1
+      marks << mark.to_i
     end
 
     if line.start_with?($overall_mark)
-      line = overall_mark(file, numerator, denominator)
+      line = overall_mark(team, file, marks)
       encountered_overall_mark = true
     end
 
@@ -136,18 +197,30 @@ def total_mark_for_file(team)
 
   unless encountered_overall_mark
     lines += "\n---\n\n"
-    lines += overall_mark(file, numerator, denominator)
+    lines += overall_mark(team, file, marks)
   end
 
   File.write(file, lines)
-  
 end
 
-def overall_mark(team, file, numerator, denominator)
-  abort "Aborting: file #{file} only has #{denominator} categories" unless denominator == $categories
-  mark = (numerator / denominator.to_f).round(1)
-  "#{$overall_mark} #{mark}%"
-  puts "#{team}, mark"
+def overall_mark(team, file, marks)
+  no_of_marks = marks.length
+  abort "Aborting: file #{file} only has #{no_of_marks} categories" unless no_of_marks == $categories
+
+  people = $nos_in_team[team]
+  scheme = $scheme[people]
+
+  marks = marks.sort.reverse
+  
+  total = 0
+  (0..scheme-1).each do |n|
+    total += marks[n]
+  end
+  
+  mark = (total / scheme.to_f).round(1)
+
+  puts "#{team}, #{mark}"
+  "#{$overall_mark} #{mark}% (Number of people in team: #{people}, scheme: average of top #{scheme} grades)"
 end
 
 def push_all
