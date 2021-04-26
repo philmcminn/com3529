@@ -1,0 +1,157 @@
+#!/usr/bin/env ruby
+
+$repos = {
+  2 => "https://github.com/DanPerry1808/com3529Project",
+  3 => "https://github.com/Bazif-Khan/COM3529-Software-Testing-and-Analysis",
+  4 => "https://github.com/hollandjake/McTest",
+  5 => "https://github.com/zl1n/fasttester",
+  6 => "https://github.com/IcyHao/Com3529_assignment",
+  7 => "https://github.com/Gizs/COM3529Assignment.git",
+  8 => "https://github.com/aca18klc/crispy-invention.git",
+  9 => "https://github.com/HubertKrawczyk/com3529-assignment",
+  10 => "https://github.com/SpruceMarcy/COM3529-Assignment",
+  11 => "https://github.com/bradleyrumball/AutoLogic",
+  12 => "https://github.com/Tiltorito/test-impress",
+  13 => "https://github.com/muneebnadeem/COM3529-Testing-Assignment",
+  14 => "https://github.com/Akeyo21/Automatic-Software-Tester",
+  15 => "https://github.com/EdiZaharia/Software-Testing-and-Analysis-Assignment",
+  16 => "https://github.com/awise1/COM3529-assignment",
+  17 => "https://github.com/Klodivio355/Software_Testing",
+  18 => "https://github.com/przemo199/Software-Testing-And-Analysis-Assignment",
+  19 => "https://github.com/ike-private/COM3529-Software-Testing-And-Analysis",
+  20 => "https://github.com/SavvasSolomou/COM3529Assignment",
+  21 => "https://github.com/acc17cg/com3529_assignment.git",
+  22 => "https://github.com/ArtKelly/COM3529SoftwareTesting",
+  23 => "https://github.com/acc18ah/com3529-assignment",
+  24 => "https://github.com/DistressedWhale/SoftwareTesting",
+  25 => "https://github.com/nickjaycee/Com3529Assignment",
+  26 => "https://github.com/JMarsh99/COM3529Assignment",
+  27 => "https://github.com/acb18hl/Com3529",
+  28 => "https://github.com/JustinZhangg/COM3529_assignment1",
+  29 => "https://github.com/VineetGupta-1/com3529-assignment.git",
+  30 => "https://github.com/felixwork21/Felix-COM3529-Assignment1",
+  31 => "https://github.com/ambroser53/com3529Assignment.git",
+  32 => "https://github.com/dgray4/com2529-assignment",
+  33 => "https://github.com/leighton-grabyo/COM3529",
+  34 => "https://github.com/Quantus2/COM3529assignment",
+  35 => "https://github.com/BrynBerkeley/SoftwareTestingAssignment",
+  36 => "https://github.com/Nwosu-Gabriel/COM3529-Assignment",
+  37 => "https://github.com/MathhewDu/com3529.git",
+  38 => "https://github.com/ace18zz/COM3529Assignment.git",
+  39 => "https://github.com/Lwng8/com-3529"
+}
+
+$range = (2..39)
+$late = [22, 29, 24, 36, 28, 26, 32, 10, 33] # maybe also 39
+$deadline = "Mon 26 17:00 2021"
+$categories = 5
+$mark = "Mark:"
+$overall_mark = "__Overall Mark:__"
+$file = "feedback-and-mark.md"
+
+def clone_repo(n, date=nil) 
+  repo_url = $repos[n]
+  `git clone #{repo_url} #{n}`
+  unless date.nil?
+    Dir.chdir("#{n}")
+    branch = `git symbolic-ref --short HEAD`
+    `git rev-list -1 --before=\"#{date}\" #{branch}`
+    Dir.chdir("..")
+  end
+end
+
+def clone_non_late
+  $range.each do |n|
+    unless $late.include? n
+      clone_repo(n, $deadline)
+    end
+  end
+end
+
+def clone_all
+  $range.each do |n|
+    clone_repo(n, $deadline)
+  end
+end
+
+def test_push_late
+  $range.each do |n|
+    if $late.include? n
+      test_push(n)
+    end
+  end  
+end
+
+def test_push_non_late
+  $range.each do |n|
+    unless $late.include? n
+      test_push(n)
+    end
+  end  
+end
+
+def test_push(team)
+  Dir.chdir("#{team}")
+  file = "test-push"
+  File.write(file, "")
+  `git add test-push`
+  `git commit -a -m "Automated push test – ignore"`
+  `git push`
+  File.delete(file)
+  `git commit -m "Automated push test – ignore"`
+  `git push` 
+  Dir.chdir("..")
+end
+
+def total_marks
+  $range.each do |n|
+    total_mark_for_file(n)
+  end
+end
+
+def total_mark_for_file(team)
+  lines = ""
+  numerator = 0
+  denominator = 0
+  encountered_overall_mark = false
+
+  file = "#{team}/$file"
+
+  return unless File.exist?(file)
+
+  File.readlines(file).each do |line|    
+    if line.start_with?($mark)
+      mark = line.scan(/\d+/).first
+      numerator += mark.to_i
+      denominator += 1
+    end
+
+    if line.start_with?($overall_mark)
+      line = overall_mark(file, numerator, denominator)
+      encountered_overall_mark = true
+    end
+
+    lines += line
+  end
+
+  unless encountered_overall_mark
+    lines += "\n---\n\n"
+    lines += overall_mark(file, numerator, denominator)
+  end
+
+  File.write(file, lines)
+  
+end
+
+def overall_mark(team, file, numerator, denominator)
+  abort "Aborting: file #{file} only has #{denominator} categories" unless denominator == $categories
+  mark = (numerator / denominator.to_f).round(1)
+  "#{$overall_mark} #{mark}%"
+  puts "#{team}, mark"
+end
+
+def push_all
+end
+
+abort("No function specified") if ARGV.length.zero?
+eval(ARGV[0])
