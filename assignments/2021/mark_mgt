@@ -10,6 +10,8 @@ $mark = "Mark:"
 $overall_mark = "__Overall Mark:__"
 $file = "feedback-and-mark.md"
 $repos_dir = "~/workspace/com3259-assignments/"
+$marking_dir = "marking/"
+$default_marking_file = "_blank.md"
 
 $repos = {
   2 => "https://github.com/DanPerry1808/com3529Project",
@@ -205,7 +207,7 @@ def total_mark_for_file(team)
   marks = []
   encountered_overall_mark = false
 
-  file = "marking/#{team}.md"
+  file = "#{$marking_dir}#{team}.md"
 
   unless File.exist?(file)
     puts "No file #{file}"
@@ -254,6 +256,12 @@ def overall_mark(team, file, marks)
   "#{$overall_mark} #{mark}% (Number of people in team: #{people} -> method used: average of top #{scheme} grades)"
 end
 
+def make_sheets
+  $range.each do |team|
+    `cp #{$marking_dir}#{$default_marking_file} #{$marking_dir}#{team}.md`
+  end
+end
+
 def push_all
 end
 
@@ -264,6 +272,8 @@ end
 def due(team) 
   DateTime.now > DateTime.parse($deadlines[team])
 end
+
+
 
 abort("No function specified") if ARGV.length.zero?
 eval(ARGV[0])
