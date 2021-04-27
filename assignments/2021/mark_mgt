@@ -9,7 +9,7 @@ $categories = 7
 $mark = "Mark:"
 $overall_mark = "__Overall Mark:__"
 $file = "feedback-and-mark.md"
-$repos_dir = "~/workspace/com3259-assignments/"
+$repos_dir = "/Users/phil/workspace/com3529-assignments/"
 $marking_dir = "marking/"
 $default_marking_file = "_blank.md"
 
@@ -144,6 +144,7 @@ $scheme = {
 }
 
 def clone_due
+  Dir.chdir("#{$repos_dir}")
   $range.each do |team|
     if due(team)
       repo_url = $repos[team]
