@@ -6,7 +6,7 @@ $range = (2..39)
 $deadline = "Apr 26 17:01 2021"
 $deadline2 = "May 04 17:01 2021"
 $categories = 7
-$mark = "Mark:"
+$mark = "__Mark:__"
 $overall_mark = "__Overall Mark:__"
 $file = "feedback-and-mark.md"
 $repos_dir = "/Users/phil/workspace/com3529-assignments/"
@@ -199,8 +199,8 @@ def total_marks
   end
 end
 
-def test_total_mark
-  total_mark_for_file(12)
+def run_total_mark
+  total_mark_for_file(2)
 end
 
 def total_mark_for_file(team)
