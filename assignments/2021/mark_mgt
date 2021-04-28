@@ -201,6 +201,10 @@ end
 
 def run_total_mark
   total_mark_for_file(2)
+  total_mark_for_file(34)
+  total_mark_for_file(35)
+  total_mark_for_file(37)
+  total_mark_for_file(38)
 end
 
 def total_mark_for_file(team)
