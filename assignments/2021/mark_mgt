@@ -13,6 +13,19 @@ $repos_dir = "/Users/phil/workspace/com3529-assignments/"
 $marking_dir = "marking/"
 $default_marking_file = "_blank.md"
 
+$marked = [
+  2,
+  21,
+  23,
+  27,
+  30,
+  31,
+  34,
+  35,
+  37,
+  38
+]
+
 $repos = {
   2 => "https://github.com/DanPerry1808/com3529Project",
   3 => "https://github.com/Bazif-Khan/COM3529-Software-Testing-and-Analysis",
@@ -137,10 +150,10 @@ $deadlines = {
 }
 
 $scheme = {
-  1 => 3,
-  1.5 => 4,
-  2 => 5,
-  3 => 6
+  1 => 4,
+  1.5 => 5,
+  2 => 6,
+  3 => 7
 }
 
 def clone_due
@@ -194,17 +207,9 @@ def test_push(team)
 end
 
 def total_marks
-  $range.each do |team|
+  $marked.each do |team|
     total_mark_for_file(team)
   end
-end
-
-def run_total_mark
-  total_mark_for_file(2)
-  total_mark_for_file(34)
-  total_mark_for_file(35)
-  total_mark_for_file(37)
-  total_mark_for_file(38)
 end
 
 def total_mark_for_file(team)
