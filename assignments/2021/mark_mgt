@@ -15,7 +15,13 @@ $default_marking_file = "_blank.md"
 
 $marked = [
   2,
+  13,
+  14,
+  15,
+  16,
+  17,
   18,
+  19,
   20,
   21,
   23,
