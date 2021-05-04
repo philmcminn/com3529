@@ -17,6 +17,7 @@ $final_marked_file = "mark.md"
 
 $marked = [
   2,
+  3,
   4,
   5,
   6,
