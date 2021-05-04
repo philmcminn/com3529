@@ -10,11 +10,14 @@ $mark = "__Mark:__"
 $overall_mark = "__Overall Mark:__"
 $file = "feedback-and-mark.md"
 $repos_dir = "/Users/phil/workspace/com3529-assignments/"
+$repos_final_dir = "#{$repos_dir}/final/"
 $marking_dir = "marking/"
 $default_marking_file = "_blank.md"
+$final_marked_file = "mark.md"
 
 $marked = [
   2,
+  5,
   6,
   7,
   8,
@@ -177,6 +180,29 @@ def clone_due
       repo_url = $repos[team]
       `git clone #{repo_url} #{team}`
     end
+  end
+end
+
+def clone_marked_final
+  Dir.chdir("#{$repos_final_dir}")
+  $marked.each do |team|
+    repo_url = $repos[team]
+    `git clone #{repo_url} #{team}`
+  end
+end
+
+def copy_marked_feedback_to_repo
+  $marked.each do |team|
+    `cp #{$marking_dir}/#{team}.md #{$repos_final_dir}/#{team}/#{$final_marked_file}`
+  end
+end
+
+def push_marked_feedback
+  $marked.each do |team|
+    Dir.chdir("#{$repos_final_dir}/#{team}")
+    `git add mark.md`
+    `git commit -a -m "Adding #{$final_marked_file}`
+    `git push`
   end
 end
 
