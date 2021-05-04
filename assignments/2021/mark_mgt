@@ -17,6 +17,7 @@ $final_marked_file = "mark.md"
 
 $marked = [
   2,
+  4,
   5,
   6,
   7,
@@ -267,6 +268,8 @@ def total_mark_for_file(team)
   File.readlines(file).each do |line|    
     if line.start_with?($mark)
       mark = line.scan(/\d+/).first
+      puts "WARNING: found non-integer mark" unless /\A[-+]?\d+\z/ === mark
+        
       marks << mark.to_i
     end
 
@@ -294,6 +297,7 @@ def overall_mark(team, file, marks)
   scheme = $scheme[people]
 
   marks = marks.sort.reverse
+  # puts "[#{marks.join(", ")}]"
 
   total = 0
   (0..scheme-1).each do |n|
