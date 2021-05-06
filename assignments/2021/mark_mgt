@@ -15,7 +15,7 @@ $marking_dir = "marking/"
 $default_marking_file = "_blank.md"
 $final_marked_file = "mark.md"
 
-$marked = [
+$all = [
   2,
   3,
   4,
@@ -24,6 +24,7 @@ $marked = [
   7,
   8,
   9,
+  10,
   11,
   12,
   13,
@@ -36,9 +37,7 @@ $marked = [
   20,
   21,
   23,
-
-  26, # new
-
+  26,
   27,
   30,
   31,
@@ -48,7 +47,9 @@ $marked = [
   38
 ]
 
-$new = [
+$marked = [
+  10,
+  22,
   26,
 ]
 
