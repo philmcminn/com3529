@@ -36,6 +36,9 @@ $marked = [
   20,
   21,
   23,
+
+  26, # new
+
   27,
   30,
   31,
@@ -43,6 +46,10 @@ $marked = [
   35,
   37,
   38
+]
+
+$new = [
+  26,
 ]
 
 $repos = {
@@ -201,9 +208,10 @@ end
 
 def push_marked_feedback
   $marked.each do |team|
-    Dir.chdir("#{$repos_final_dir}/#{team}")
+    puts "changing dir to " + "#{$repos_final_dir}#{team}"
+    Dir.chdir("#{$repos_final_dir}#{team}")
     `git add mark.md`
-    `git commit -a -m "Adding #{$final_marked_file}`
+    `git commit -a -m "Adding #{$final_marked_file}"`
     `git push`
   end
 end
@@ -308,7 +316,7 @@ def overall_mark(team, file, marks)
   mark = (total / scheme.to_f).round(1)
 
   puts "#{team}, #{mark}"
-  "#{$overall_mark} #{mark}% (Number of people in team: #{people} -> method used: average of top #{scheme} grades)"
+  "#{$overall_mark} #{mark}% (Number of people in team: #{people} -> method used: average of top #{scheme} grades.) Please note this is a raw mark, that is, any lateness penalties have not been applied (if applicable)."
 end
 
 def make_sheets
@@ -327,8 +335,6 @@ end
 def due(team) 
   DateTime.now > DateTime.parse($deadlines[team])
 end
-
-
 
 abort("No function specified") if ARGV.length.zero?
 eval(ARGV[0])
